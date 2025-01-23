@@ -1,0 +1,64 @@
+/*Menu*/
+.MenuItem {
+    background: rgba( 0, 0, 205, 0.2 ) !important;
+    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.MenuItem:hover {
+    background: rgba(0, 0, 128, 0.6) !important;
+    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+/*DataBase*/
+.Button {
+    background-color: rgba(0, 0, 205, 0.8);
+    color: white;
+    transition: opacity 0.3s ease; /* Para uma transição suave */
+}
+  
+.Button:hover {
+    opacity: 0.4; /* Reduz a opacidade em 0.4 ao passar o mouse */
+}
+.LineHead {
+    background: rgba(0, 0, 205, 0.4) !important;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.Line {
+    background: rgba( 0, 0, 205, 0.2 ) !important;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.truncated {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Ajuste conforme necessário */
+    cursor: pointer; /* Para indicar que é clicável */
+  }
+
+/*Não mexer*/
+.glass 
+{
+    background: rgba( 205, 205, 205, 0.8 ) !important;
+    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+}
+
+.glass-dark
+{
+    background: rgba( 0, 0, 0, 0.5 ) !important;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+::-webkit-scrollbar {
+    display: none; /* Oculta a barra de rolagem */
+}
