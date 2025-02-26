@@ -1,64 +1,154 @@
+/*Tables of DataBase*/
+.TableBox {
+    overflow-x: auto;
+    height: 75vh;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.TableSearchInput {
+    margin-left: 15%;
+    margin-right: 2%;
+    margin-top: 2%;
+    max-height: 80%;
+    max-width: 28%;
+    color: white;
+}
+
+.TableSearchMenuButton {
+    background-color: rgba(30, 30, 100) !important;
+    color: white !important;
+    min-width: 15% !important;
+}
+
+.TableSearchMenuList {
+    background-color: transparent !important;
+    border: transparent !important;
+    color: white !important;
+}
+
+.TableSearchMenuItem {
+    background: rgba(0, 0, 205, 0.2) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+.TableSearchMenuItem:hover {
+    background: rgba(0, 0, 205, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.TableTable {
+    color: white;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2%;
+    max-height: 80%;
+    max-width: 70%;
+}
+
+.TableModal {
+    background-color: rgba(30, 30, 130) !important;
+    color: white !important;
+    max-height: 100% !important;
+    max-width: 40% !important;
+    margin-top: 5.7% !important;
+}
+
+.TableMenu {
+    background-color: rgba(30, 30, 100) !important;
+    color: white !important;
+    min-width: 100% !important;
+}
+
+.TableMenuCorante {
+    background-color: rgba(30, 30, 100) !important;
+    color: white !important;
+}
+
+.TableMenuList {
+    background-color: transparent !important;
+    border: transparent !important;
+    color: white !important;
+}
+
+.TableMenuItem {
+    background: rgba(0, 0, 205, 0.4) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+.TableMenuItem:hover {
+    background: rgba(0, 0, 205, 0.8) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.SaveButton {
+    margin-right: 2%;
+    margin-top: 2%;
+    background-color: rgba(30, 30, 90, 0.8) !important;
+    color: white !important;
+}
+
+.CancelButton {
+    margin-top: 2%;
+    background-color: rgba(30, 30, 90, 1) !important;
+    color: white !important;
+}
+
 /*Menu*/
 .MenuItem {
-    background: rgba( 0, 0, 205, 0.2 ) !important;
-    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+    background: rgba(0, 0, 205, 0.2) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .MenuItem:hover {
     background: rgba(0, 0, 128, 0.6) !important;
-    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
+
 /*DataBase*/
-.Button {
-    background-color: rgba(0, 0, 205, 0.8);
-    color: white;
-    transition: opacity 0.3s ease; /* Para uma transição suave */
-}
-  
-.Button:hover {
-    opacity: 0.4; /* Reduz a opacidade em 0.4 ao passar o mouse */
-}
 .LineHead {
     background: rgba(0, 0, 205, 0.4) !important;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+    color: white;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .Line {
-    background: rgba( 0, 0, 205, 0.2 ) !important;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+    background: rgba(0, 0, 205, 0.2) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .truncated {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 200px; /* Ajuste conforme necessário */
-    cursor: pointer; /* Para indicar que é clicável */
-  }
+    max-width: 200px;
+    cursor: pointer;
+}
 
 /*Não mexer*/
-.glass 
-{
-    background: rgba( 205, 205, 205, 0.8 ) !important;
-    box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+.glass {
+    background: rgba(205, 205, 205, 0.8) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
 }
 
-.glass-dark
-{
-    background: rgba( 0, 0, 0, 0.5 ) !important;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
+.glass-dark {
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 ::-webkit-scrollbar {
-    display: none; /* Oculta a barra de rolagem */
+    display: none;
+    /* Oculta a barra de rolagem */
 }

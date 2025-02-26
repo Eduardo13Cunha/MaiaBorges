@@ -98,7 +98,7 @@ const HomePage: React.FC = () => {
       >
         <VStack spacing={8} mt={8}>
           <Text minW="100%" fontSize="120%" maxW="20%">
-                Este site será utilizado para realizar um PAP(Prova de Aptidão Profissonal), que visa ajudar na parte informática das organizações, neste caso a Escola Profissional Raul Dória.
+                Este site será utilizado para realizar um PAP(Prova de Aptidão Profissonal)
           </Text>
           <HStack fontSize="140%" minW="100%" alignSelf="left">
             <IconButton

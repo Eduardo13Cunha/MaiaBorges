@@ -5,17 +5,20 @@ import {
   theme,
 } from "@chakra-ui/react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import HomePage from "./Pages/Home/HomePage"
 import HomePage2 from "./Pages/Home/HomePage2"
 import Header from "./Components/Header/Header"
 import Body from "./Components/Body/Body"
 import Footer from "./Components/Footer/Footer"
-import DataEquipamento from "./Pages/DateBase/DataEquipamento"
-import DataTecnico from "./Pages/DateBase/DataTecnico"
-import DataLocal from "./Pages/DateBase/DataLocal"
-import DataFornecedor from "./Pages/DateBase/DataFornecedores";
-import DataTicket from "./Pages/DateBase/DataTicket";
+import DataCorante from "./Pages/DateBase/DataCorante";
+import DataMateriasPrima from "./Pages/DateBase/DataMateriaPrima";
+import DataCliente from "./Pages/DateBase/DataCliente";
+import DataColaborador from "./Pages/DateBase/DataColaborador";
+import DataMaquina from "./Pages/DateBase/DataMaquina";
+import DataEncomendas from "./Pages/DateBase/DataEncomendas";
+import DataFigura from "./Pages/DateBase/DataFigura";
+import DataMaterial from "./Pages/DateBase/DataMaterial";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -26,11 +29,14 @@ export const App = () => (
           <AnimatePresence exitBeforeEnter></AnimatePresence>
           <Routes>
             <Route path="/" element={<HomePage/>}/>
-            <Route path="/DataEquipamento" element={<DataEquipamento/>}/>
-            <Route path="/DataTecnico" element={<DataTecnico/>}/>
-            <Route path="/DataLocal" element={<DataLocal/>}/>
-            <Route path="/DataFornecedor" element={<DataFornecedor/>}/>
-            <Route path="/DataTicket" element={<DataTicket/>}/>
+            <Route path="/DataColaborador" element={<DataColaborador/>}/>
+            <Route path="/DataMaquina" element={<DataMaquina/>}/>
+            <Route path="/DataEncomendas" element={<DataEncomendas/>}/>
+            <Route path="/DataFigura" element={<DataFigura/>}/>
+            <Route path="/DataCliente" element={<DataCliente/>}/>
+            <Route path="/DataMateriaPrima" element={<DataMateriasPrima/>}/>
+            <Route path="/DataCorante" element={<DataCorante/>}/>
+            <Route path="/DataMaterial" element={<DataMaterial/>}/>
             <Route path="/HomePage2" element={<HomePage2/>}/>
           </Routes>
         </BrowserRouter>

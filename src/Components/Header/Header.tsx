@@ -76,11 +76,12 @@ export default function Header() {
                         <Menu>
                             <MenuButton as={Box} cursor="pointer">INFORMAÇÕES</MenuButton>
                             <MenuList bg="transparent" borderColor="transparent">
-                                <MenuItem className="MenuItem" as={Link} href="/DataEquipamento" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Equipamentos</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataTecnico" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Técnicos</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataLocal" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Locais</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataFornecedor" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Fornecedores</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataTicket" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Tickets</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataColaborador" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Colaboradores</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataCliente" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Clientes</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataMaterial" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Material</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataFigura" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Figuras</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataMaquina" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Maquinas</MenuItem>
+                                <MenuItem className="MenuItem" as={Link} href="/DataEncomendas" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Encomendas</MenuItem>
                             </MenuList>
                         </Menu>
                     </HStack>
@@ -93,7 +94,6 @@ export default function Header() {
                             </MenuButton>
                             {isAuthenticated && (
                                 <MenuList bg="transparent" borderColor="transparent">
-                                    <MenuItem className="MenuItem" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Dados Pessoais</MenuItem>
                                     <MenuItem className="MenuItem" color="red" onClick={handleLogout} _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Log Out</MenuItem>
                                 </MenuList>
                             )}
