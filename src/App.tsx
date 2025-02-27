@@ -11,14 +11,12 @@ import HomePage2 from "./Pages/Home/HomePage2"
 import Header from "./Components/Header/Header"
 import Body from "./Components/Body/Body"
 import Footer from "./Components/Footer/Footer"
-import DataCorante from "./Pages/DateBase/DataCorante";
-import DataMateriasPrima from "./Pages/DateBase/DataMateriaPrima";
-import DataCliente from "./Pages/DateBase/DataCliente";
-import DataColaborador from "./Pages/DateBase/DataColaborador";
-import DataMaquina from "./Pages/DateBase/DataMaquina";
+import DataCliente from "./Pages/DateBase/Clientes/DataCliente";
+import DataColaborador from "./Pages/DateBase/Colaboradores/DataColaborador";
+import DataMaquina from "./Pages/DateBase/Maquinas/DataMaquina";
 import DataEncomendas from "./Pages/DateBase/DataEncomendas";
-import DataFigura from "./Pages/DateBase/DataFigura";
-import DataMaterial from "./Pages/DateBase/DataMaterial";
+import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
+import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -34,8 +32,6 @@ export const App = () => (
             <Route path="/DataEncomendas" element={<DataEncomendas/>}/>
             <Route path="/DataFigura" element={<DataFigura/>}/>
             <Route path="/DataCliente" element={<DataCliente/>}/>
-            <Route path="/DataMateriaPrima" element={<DataMateriasPrima/>}/>
-            <Route path="/DataCorante" element={<DataCorante/>}/>
             <Route path="/DataMaterial" element={<DataMaterial/>}/>
             <Route path="/HomePage2" element={<HomePage2/>}/>
           </Routes>

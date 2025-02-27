@@ -16,7 +16,7 @@
 }
 
 .TableSearchMenuButton {
-    background-color: rgba(30, 30, 100) !important;
+    background-color: rgba(4, 120, 50, 1) !important;
     color: white !important;
     min-width: 15% !important;
 }
@@ -28,12 +28,13 @@
 }
 
 .TableSearchMenuItem {
-    background: rgba(0, 0, 205, 0.2) !important;
+    min-width: 124% !important;
+    background: rgba(4, 175, 84, 0.2) !important;
     backdrop-filter: blur(4px) !important;
     -webkit-backdrop-filter: blur(4px) !important;
 }
 .TableSearchMenuItem:hover {
-    background: rgba(0, 0, 205, 0.6) !important;
+    background: rgba(4, 175, 84, 0.6) !important;
     backdrop-filter: blur(4px) !important;
     -webkit-backdrop-filter: blur(4px) !important;
 }
@@ -48,7 +49,7 @@
 }
 
 .TableModal {
-    background-color: rgba(30, 30, 130) !important;
+    background-color: rgba(4, 120, 50) !important;
     color: white !important;
     max-height: 100% !important;
     max-width: 40% !important;
@@ -56,13 +57,13 @@
 }
 
 .TableMenu {
-    background-color: rgba(30, 30, 100) !important;
+    background-color: rgba(4, 175, 84) !important;
     color: white !important;
     min-width: 100% !important;
 }
 
 .TableMenuCorante {
-    background-color: rgba(30, 30, 100) !important;
+    background-color: rgba(4, 175, 84) !important;
     color: white !important;
 }
 
@@ -73,12 +74,12 @@
 }
 
 .TableMenuItem {
-    background: rgba(0, 0, 205, 0.4) !important;
+    background: rgba(4, 175, 84, 0.4) !important;
     backdrop-filter: blur(4px) !important;
     -webkit-backdrop-filter: blur(4px) !important;
 }
 .TableMenuItem:hover {
-    background: rgba(0, 0, 205, 0.8) !important;
+    background: rgba(4, 175, 84, 0.8) !important;
     backdrop-filter: blur(4px) !important;
     -webkit-backdrop-filter: blur(4px) !important;
 }
@@ -86,41 +87,38 @@
 .SaveButton {
     margin-right: 2%;
     margin-top: 2%;
-    background-color: rgba(30, 30, 90, 0.8) !important;
+    background-color: rgba(5, 209, 110, 0.8) !important;
     color: white !important;
 }
 
 .CancelButton {
     margin-top: 2%;
-    background-color: rgba(30, 30, 90, 1) !important;
+    background-color: rgba(4, 175, 84, 0.4) !important;
     color: white !important;
 }
 
 /*Menu*/
 .MenuItem {
-    background: rgba(0, 0, 205, 0.2) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    text-decoration: none;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 
 .MenuItem:hover {
-    background: rgba(0, 0, 128, 0.6) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 
 /*DataBase*/
 .LineHead {
-    background: rgba(0, 0, 205, 0.4) !important;
+    background: rgba(4, 125, 50, 0.7) !important;
     color: white;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 
 .Line {
-    background: rgba(0, 0, 205, 0.2) !important;
+    background: rgba(4, 125, 50, 0.5) !important;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }

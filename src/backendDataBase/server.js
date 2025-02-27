@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
-const db = require('./database/connection');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
@@ -43,18 +42,19 @@ app.post('/api/send-email', (req, res) => {
 // Endpoint de login
 app.post('/api/utilizadores', async (req, res) => {
   const { email, password } = req.body;
-  const query = 'SELECT * FROM utilizadores WHERE email = ? AND palavra_passe = ?';
-  db.query(query, [email, password.trim()], (err, results) => {
-    if (err) {
-      console.error('Erro ao executar query:', err);
-      return res.status(500).json({ error: 'Erro ao buscar Utilizador' });
-    }
-    if (results.length > 0) {
-      res.json({ status: 'success', data: results[0] });
-    } else {
-      res.status(401).json({ status: 'error', message: 'Credenciais inválidas' });
-    }
-  });
+  const { data, error } = await supabase.from("utilizadores")
+  .select(`*`)
+  .eq(`email`, email)
+  .eq(`password`, password);
+  if (error) {
+    console.error('Erro ao executar query:', err);
+    return res.status(500).json({ error: 'Erro ao buscar Utilizador' });
+  }
+  if (data.length > 0) {
+    res.json({ status: 'success', data: data[0] });
+  } else {
+    res.status(401).json({ status: 'error', message: 'Credenciais inválidas' });
+  }
 });
 
 //<-----------------------------------------------------TURNOS----------------------------------------------------->

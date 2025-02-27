@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Img, Menu, MenuButton, MenuItem, MenuList, Link, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import ITParkManagerLogoWhite from '../../Assets/ITParkManagerLogoWhite.png';
+import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogo.png';
 
 export default function Header() {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -54,43 +54,38 @@ export default function Header() {
     };
 
     return (
-        <Box bg="MediumBlue" color="white" fontSize="120%" p={4} h="8vh">
+        <Box bg="white" color="rgba(84, 99, 172)" fontSize="120%" p={4} h="8vh">
             <HStack maxW="100%" justifyContent="space-between" alignItems="center">
                 {isAuthenticated ? (
-                <HStack as={Link} href="/HomePage2" cursor="pointer" width="15%">
-                    <Img src={ITParkManagerLogoWhite} maxH="15%" maxW="15%"></Img>
-                    <Box display={{ md: 'flex' }}>
-                        <strong>Park Manager</strong>
+                <HStack as={Link} href="/HomePage2" cursor="pointer" width="15%" textDecor="none">
+                    <Img src={MaiaBorgesLogo} maxH="15%" maxW="15%" ></Img>
+                    <Box display={{ md: 'flex' }} textDecor="none">
+                        <strong>Maia Borges Manager</strong>
                     </Box>
                 </HStack>
                 ) : (
                 <HStack width="15%">
-                    <Img src={ITParkManagerLogoWhite} maxH="15%" maxW="15%"></Img>
+                    <Img src={MaiaBorgesLogo} maxH="15%" maxW="15%"></Img>
                     <Box display={{ md: 'flex' }}>
-                        <strong>Park Manager</strong>
+                        <strong>Maia Borges Manager</strong>
                     </Box>
                 </HStack>    
                 )}
                 {isAuthenticated && (
-                    <HStack display={{ base: 'none', md: 'flex' }} width="70%" spacing="5%" alignItems="center">
-                        <Menu>
-                            <MenuButton as={Box} cursor="pointer">INFORMAÇÕES</MenuButton>
-                            <MenuList bg="transparent" borderColor="transparent">
-                                <MenuItem className="MenuItem" as={Link} href="/DataColaborador" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Colaboradores</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataCliente" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Clientes</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataMaterial" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Material</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataFigura" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Figuras</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataMaquina" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Maquinas</MenuItem>
-                                <MenuItem className="MenuItem" as={Link} href="/DataEncomendas" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0.37 )' }}>Encomendas</MenuItem>
-                            </MenuList>
-                        </Menu>
+                    <HStack display={{ base: 'none', md: 'flex' }} width="70%" spacing="5%" alignItems="center" justifyContent="center">
+                        <a className="MenuItem" href="/DataColaborador" >Colaboradores</a>
+                        <a className="MenuItem" href="/DataCliente" >Clientes</a>
+                        <a className="MenuItem" href="/DataMaterial" >Material</a>
+                        <a className="MenuItem" href="/DataFigura" >Figuras</a>
+                        <a className="MenuItem" href="/DataMaquina" >Maquinas</a>
+                        <a className="MenuItem" href="/DataEncomendas" >Encomendas</a>
                     </HStack>
                 )}
                 <Box fontSize="120%" width="13%">
                     <HStack cursor="pointer">
                         <Menu>
                             <MenuButton width="80%" as={Box} cursor="pointer" onClick={() => isAuthenticated ? null : setLoginModalOpen(true)}>
-                                {isAuthenticated ? userName : 'Login'}
+                                <strong>{isAuthenticated ? userName : 'Login'}</strong>
                             </MenuButton>
                             {isAuthenticated && (
                                 <MenuList bg="transparent" borderColor="transparent">
@@ -106,7 +101,7 @@ export default function Header() {
                 <ModalContent bgColor="rgba(30, 30, 130)" color="white" maxH="100%" maxW="40%" mt="5.7%">
                     <ModalHeader alignSelf="center">
                     <VStack alignSelf="center">
-                        <Img src={ITParkManagerLogoWhite} maxH="15%" maxW="15%" />
+                        <Img src={MaiaBorgesLogo} maxH="15%" maxW="15%" />
                         <Box>
                             Park Manager
                         </Box>

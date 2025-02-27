@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Box, Button, HStack, Img, VStack, Spacer, IconButton, Input, Textarea } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
-import ITParkManagerLogo from '../../Assets/ITParkManagerLogo.png';
+import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogo.png';
 import HomeImage1 from '../../Assets/HomeImage1.jpeg';
 import { FaGlobe } from 'react-icons/fa';
 import axios from 'axios';
@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
         <Box display="flex" justifyContent="center" minW="100%">
         <Img
             width="20%"
-            src={ITParkManagerLogo}
+            src={MaiaBorgesLogo}
             alt="IT Park Manager Logo"
             borderRadius="md"
         />

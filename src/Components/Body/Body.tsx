@@ -4,7 +4,7 @@ import HackingAzul from "../../Assets/HackingAzul2.jpeg";
 export default function Body(props: StackProps) {
     return (
         <Box 
-            bgImage={HackingAzul}
+            bgColor="rgba(84, 99, 172, 1)"
             minH="92vh" 
             display="flex" 
             flexDirection="column" 
