@@ -21,6 +21,17 @@ const DataMateriaPrima: React.FC = () => {
       try {
         const response = await axios.get('http://localhost:3001/api/materiasprima');
         setMateriasPrimas((response.data as { data: MateriaPrima[] }).data);
+        const lowStockMateriasprima: any[] = [];
+        const limite = 15000;
+
+        (response.data as { data: MateriaPrima[] }).data.forEach(async item => {
+          if (item.quantidade < limite) {
+            lowStockMateriasprima.push(item);
+          }
+        });
+        if (lowStockMateriasprima.length > 0) {
+          await axios.post('http://localhost:3001/api/alert-email', { lowItemsMateriasPrimas: lowStockMateriasprima});
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }

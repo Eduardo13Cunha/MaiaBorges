@@ -1,7 +1,8 @@
+import axios from 'axios';
 import express from 'express';
 import supabase from '../config/db.js';
 
-const router = express.Router();
+const router = express.Router(); 
 
 // Endpoint para buscar todos os corantes
 router.get("/", async (req, res) => {
