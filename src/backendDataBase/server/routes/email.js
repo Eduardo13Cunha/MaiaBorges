@@ -1,5 +1,17 @@
 import express from 'express';
+import cors from 'cors';
 import transporter from '../config/mailer.js';
+
+const app = express();
+
+// Middleware para processar JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Habilitar CORS (se estiver chamando de outro domínio ou porta diferente)
+app.use(cors());
+
+// Suas rotas...
 
 const router = express.Router();
 let enviou = false;
@@ -22,7 +34,12 @@ router.post('/send-email', (req, res) => {
   });
 });
 
+// Enviar Alerta de Limite de Material
 router.post('/alert-email', (req, res) => {
+  if (enviou) {
+    return res.status(200).send('O e-mail já foi enviado.');
+  }
+  console.log("tou aqui");
   const { lowItemsCorantes, lowItemsMateriasPrimas } = req.body;
 
   // Verifica se existe e não está vazio
@@ -31,7 +48,7 @@ router.post('/alert-email', (req, res) => {
     mailCorantes = `
       <p>Corantes:</p>
       <ul>
-        ${lowItemsCorantes.map(item => `<li>${item.nome} - ${item.quantidade}G</li>`).join('')}
+        ${lowItemsCorantes.map(item => `<li>${item.nome} - ${item.quantidade} G</li>`).join('')}
       </ul>`;
   }
 
@@ -40,7 +57,7 @@ router.post('/alert-email', (req, res) => {
     mailMateriaprima = `
       <p>Matéria Prima:</p>
       <ul>
-        ${lowItemsMateriasPrimas.map(item => `<li>${item.nome} - ${item.quantidade}Kg</li>`).join('')}
+        ${lowItemsMateriasPrimas.map(item => `<li>${item.nome} - ${item.quantidade} Kg</li>`).join('')}
       </ul>`;
   }
 
@@ -59,12 +76,15 @@ router.post('/alert-email', (req, res) => {
   };
 
   // Enviar o e-mail
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return res.status(500).send(error.toString());
-    }
-    res.status(200).send('E-mail enviado: ' + info.response);
-  });
+  if (!enviou) {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(500).send(error.toString());
+      }
+      res.status(200).send('E-mail enviado: ' + info.response);
+      enviou = true;
+    });
+  }
 });
 
 export default router;

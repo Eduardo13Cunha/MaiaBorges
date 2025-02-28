@@ -21,17 +21,6 @@ const DataCorante: React.FC = () => {
       try {
         const response = await axios.get('http://localhost:3001/api/corante');
         setCorantes((response.data as { data: Corante[] }).data);
-        const lowStockCorantes: any[] = [];
-        const limite = 15000;
-
-        (response.data as { data: Corante[] }).data.forEach(async item => {
-          if (item.quantidade < limite) {
-            lowStockCorantes.push(item);
-          }
-        });
-        if (lowStockCorantes.length > 0) {
-          await axios.post('http://localhost:3001/api/alert-email', { lowItemsCorantes: lowStockCorantes});
-        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
