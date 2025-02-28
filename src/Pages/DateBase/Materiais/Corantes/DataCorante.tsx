@@ -90,7 +90,7 @@ const DataCorante: React.FC = () => {
                   {sortColumn === 'quantidade' && (sortDirection === 'asc' ? <FaSortUp color="white" /> : <FaSortDown color="white" />)}
                 </HStack>
               </Th>
-              <Th color="white" width="12%">Ações</Th>
+              <Th color="white" width="15%">Ações</Th>
             </Tr>
           </Thead>
           <Tbody>

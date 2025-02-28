@@ -303,6 +303,7 @@ const AddEncomendaModal = ({
                 <FormLabel>Quantidade</FormLabel>
                 <Input
                   type="number"
+                  placeholder="Quantidade"
                   value={formData.quantidade}
                   onChange={(e) => setFormData({ ...formData, quantidade: e.target.value })}
                 />

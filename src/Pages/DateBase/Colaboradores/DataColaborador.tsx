@@ -110,7 +110,7 @@ const DataColaborador: React.FC = () => {
                   {sortColumn === 'id_colaborador' && (sortDirection === 'asc' ? <FaSortUp color="white" /> : <FaSortDown color="white" />)}
                 </HStack>
               </Th>
-              <Th color="white">Nome</Th>
+              <Th color="white" width="20%">Nome</Th>
               <Th color="white" width="10%" onClick={() => handleSort('idade')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>Idade</Text>

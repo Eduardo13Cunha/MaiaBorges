@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Img, Menu, MenuButton, MenuItem, MenuList, Link, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogo.png';
+import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
+import MaiaBorgesLogoGrande from '../../Assets/MaiaBorgesLogoGrande.png';
 
 export default function Header() {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Header() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/utilizadores', { email, password });
+            const response = await axios.post('http://localhost:3001/api/auth/utilizadores', { email, password });
             if (response.data.status === 'success') {
                 setName(response.data.data.nome); // Armazena o nome do utilizador
                 setIsAuthenticated(true); // Atualiza o estado de autenticação
@@ -98,26 +99,23 @@ export default function Header() {
             </HStack>
             <Modal isOpen={isLoginModalOpen} onClose={() => setLoginModalOpen(false)}>
                 <ModalOverlay />
-                <ModalContent bgColor="rgba(30, 30, 130)" color="white" maxH="100%" maxW="40%" mt="5.7%">
+                <ModalContent className='TableModal'>
                     <ModalHeader alignSelf="center">
                     <VStack alignSelf="center">
-                        <Img src={MaiaBorgesLogo} maxH="15%" maxW="15%" />
-                        <Box>
-                            Park Manager
-                        </Box>
+                        <Img src={MaiaBorgesLogoGrande} maxH="40%" maxW="40%" />
                     </VStack>
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <FormControl>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel><strong>Email</strong></FormLabel>
                             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </FormControl>
                         <FormControl mt={4}>
-                            <FormLabel>Senha</FormLabel>
+                            <FormLabel><strong>Palavra-Passe</strong></FormLabel>
                             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </FormControl>
-                        <Button mt={4} colorScheme="blue" onClick={handleLogin}>
+                        <Button className='SaveButton' onClick={handleLogin}>
                             Entrar
                         </Button>
                     </ModalBody>

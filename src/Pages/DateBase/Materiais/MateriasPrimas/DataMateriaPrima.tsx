@@ -8,7 +8,6 @@ import { AddMateriaPrimaModal } from "./AddMateriasPrimas";
 
 const DataMateriaPrima: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
-  const [editMateriaPrima, setEditMateriaPrima] = useState<any>(null);
   const [page, setPage] = useState<number>(0);
   const [MateriasPrimas, setMateriasPrimas] = useState<any[]>([]);
   const itemsPerPage = 8;
@@ -91,7 +90,7 @@ const DataMateriaPrima: React.FC = () => {
                   {sortColumn === 'quantidade' && (sortDirection === 'asc' ? <FaSortUp color="white" /> : <FaSortDown color="white" />)}
                 </HStack>
               </Th>
-              <Th color="white" width="12%">Ações</Th>
+              <Th color="white" width="15%">Ações</Th>
             </Tr>
           </Thead>
           <Tbody>
