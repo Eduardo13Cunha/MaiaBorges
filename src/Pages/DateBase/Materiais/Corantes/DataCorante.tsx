@@ -1,10 +1,11 @@
-import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter } from "@chakra-ui/react";
+import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight, FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { EditCoranteModal } from "./EditCorante";
 import { AddCoranteModal } from "./AddCorante";
+import { Corante } from "../../../../Interfaces/interfaces";
 
 const DataCorante: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -19,7 +20,7 @@ const DataCorante: React.FC = () => {
     const fetchCorantes = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/corante');
-        setCorantes(response.data.data);
+        setCorantes((response.data as { data: Corante[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

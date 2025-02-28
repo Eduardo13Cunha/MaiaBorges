@@ -1,37 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import {
-  VStack,
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  HStack,
-  Input,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  NumberInput,
-  NumberInputField,
-} from '@chakra-ui/react';
-import { FaTrash, FaPencilAlt, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaSearch } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
 import axios from 'axios';
 import { AddFiguraModal } from './AddFigura';
 import { EditFiguraModal } from './EditFigura';
 import { Observações } from './MaterialFigura';
+import { Corante, Figura, MateriaPrima } from '../../../Interfaces/interfaces';
 
 const DataFigura = () => {
   const [figuras, setFiguras] = useState<any[]>([]);
@@ -55,9 +29,9 @@ const DataFigura = () => {
         axios.get('http://localhost:3001/api/materiasprima'),
         axios.get('http://localhost:3001/api/corante')
       ]);
-      setFiguras(figuraRes.data.data);
-      setMateriasPrimas(materiaPrimaRes.data.data);
-      setCorantes(coranteRes.data.data);
+      setFiguras((figuraRes.data as { data: Figura[] }).data);
+      setMateriasPrimas((materiaPrimaRes.data as { data: MateriaPrima[] }).data);
+      setCorantes((coranteRes.data as { data: Corante[] }).data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }

@@ -13,6 +13,7 @@ export const AddCoranteModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
     try {
       await axios.post('http://localhost:3001/api/corante', novocorante);
       setUpdateTable("addCorante");  
+      window.location.reload();
     } catch (error) {
       console.error('Error adding corante:', error);
     }
@@ -52,7 +53,7 @@ export const AddCoranteModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
                 <Input type="text" name="nome" value={formData.nome} onChange={handleChange} />
               </FormControl>
               <FormControl isRequired>
-                <FormLabel>Quantidade</FormLabel>
+                <FormLabel>Quantidade - Gramas</FormLabel>
                 <Input type="number" name="quantidade" value={formData.quantidade} onChange={handleChange} />
               </FormControl>
             <Button type="submit" className="SaveButton">Salvar</Button>

@@ -1,11 +1,12 @@
-import { Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight ,FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight , FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import '../../../Styles/styles.css';
 import { ModifyColaborador } from "./EditColaborador";
 import { AddColaborador } from "./AddColaborador";
+import { Colaborador, Turno } from "../../../Interfaces/interfaces";
 
 const DataColaborador: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -22,7 +23,7 @@ const DataColaborador: React.FC = () => {
     const fetchColaboradores = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/colaborador');
-        setColaboradores(response.data.data);
+        setColaboradores((response.data as { data: Colaborador[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -35,7 +36,7 @@ const DataColaborador: React.FC = () => {
     const fetchTurnos = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/turno');
-        setTurnos(response.data.data);
+        setTurnos((response.data as { data: Turno[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

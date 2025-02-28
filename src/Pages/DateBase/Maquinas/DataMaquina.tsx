@@ -4,6 +4,7 @@ import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-
 import axios from 'axios';
 import { EditMaquinaModal } from './EditMaquina';
 import { AddMaquinaModal } from './AddMaquina';
+import { Maquina } from '../../../Interfaces/interfaces';
 
 const DataMaquina = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -18,7 +19,7 @@ const DataMaquina = () => {
     const fetchMaquinas = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/maquina');
-        setMaquinas(response.data.data);
+        setMaquinas((response.data as { data: Maquina[] }).data);
       } catch (error) {
         console.error('Error fetching maquinas:', error);
       }

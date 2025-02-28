@@ -14,6 +14,7 @@ export const EditMateriaPrimaModal: React.FC<{ editMateriaPrima: any; setUpdateT
     try {
       await axios.put(`http://localhost:3001/api/materiasprima/${materiaPrima.id_materiasprima}`, materiaPrima);
       setUpdateTable("updateMateriaPrima");
+      window.location.reload();
     } catch (error) {
       console.error('Error updating materia prima:', error);
     }
@@ -54,7 +55,7 @@ export const EditMateriaPrimaModal: React.FC<{ editMateriaPrima: any; setUpdateT
                 <Input type="text" name="nome" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
               </FormControl>
               <FormControl isRequired>
-                <FormLabel>Quantidade</FormLabel>
+                <FormLabel>Quantidade - KiloGramas</FormLabel>
                 <Input type="number" name="quantidade" value={formData.quantidade} onChange={(e) => setFormData({ ...formData, quantidade: Number(e.target.value) })} />
               </FormControl>
               <Button type="submit" className="SaveButton">Editar</Button>

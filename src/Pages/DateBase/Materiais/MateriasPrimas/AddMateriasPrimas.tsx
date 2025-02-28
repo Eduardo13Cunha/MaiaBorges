@@ -13,6 +13,7 @@ export const AddMateriaPrimaModal: React.FC<{ setUpdateTable:React.Dispatch<Reac
     try {
       await axios.post('http://localhost:3001/api/materiasprima', novamateriaPrima);
       setUpdateTable("addMateriaPrima");
+      window.location.reload();
     } catch (error) {
       console.error('Error adding materia prima:', error);
     }
@@ -48,7 +49,7 @@ export const AddMateriaPrimaModal: React.FC<{ setUpdateTable:React.Dispatch<Reac
                   <Input type="text" name="nome" value={formData.nome} onChange={handleChange} />
                 </FormControl>
                 <FormControl isRequired>
-                  <FormLabel>Quantidade</FormLabel>
+                  <FormLabel>Quantidade - KiloGramas</FormLabel>
                   <Input type="number" name="quantidade" value={formData.quantidade} onChange={handleChange} />
                 </FormControl>
                 <Button type="submit" className="SaveButton">Salvar</Button>

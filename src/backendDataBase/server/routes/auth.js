@@ -6,7 +6,7 @@ const router = express.Router();
 // Endpoint de login
 router.post('/utilizadores', async (req, res) => {
   const { email, password } = req.body;
-  const { data, error } = await supabase.from("utilizadores")
+  const { data, error } = await supabase.from("colaboradores")
     .select(`*`)
     .eq(`email`, email)
     .eq(`password`, password);

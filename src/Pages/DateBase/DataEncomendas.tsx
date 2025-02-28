@@ -27,6 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { FaTrash, FaPencilAlt, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
 import axios from 'axios';
+import { Encomenda, Figura, Cliente } from '../../Interfaces/interfaces';
 
 const DataEncomenda: React.FC = () => {
   const [encomendas, setEncomendas] = useState<any[]>([]);
@@ -51,9 +52,9 @@ const DataEncomenda: React.FC = () => {
         axios.get('http://localhost:3001/api/figura'),
         axios.get('http://localhost:3001/api/cliente')
       ]);
-      setEncomendas(encomendaRes.data.data);
-      setFiguras(figuraRes.data.data);
-      setClientes(clienteRes.data.data);
+      setEncomendas((encomendaRes.data as { data: Encomenda[] }).data);
+      setFiguras((figuraRes.data as { data: Figura[] }).data);
+      setClientes((clienteRes.data as { data: Cliente[] }).data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -68,7 +69,7 @@ const DataEncomenda: React.FC = () => {
   const addEncomenda = async (encomenda: any) => {
     try {
       const response = await axios.post('http://localhost:3001/api/encomenda', encomenda);
-      setEncomendas([...encomendas, response.data.data]);
+      setEncomendas([...encomendas, (response.data as { data: Encomenda[] }).data]);
     } catch (error) {
       console.error('Error adding encomenda:', error);
     }

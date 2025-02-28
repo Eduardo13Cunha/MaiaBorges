@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {Text,VStack,Box,Table,Thead,Tbody,Tr,Th,Td, Button,HStack,Input, Modal,ModalOverlay,ModalContent, ModalHeader,ModalBody,ModalCloseButton,FormControl,FormLabel,} from '@chakra-ui/react';
-import { FaTrash, FaPencilAlt, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import {Text,VStack,Box,Table,Thead,Tbody,Tr,Th,Td, Button,HStack,Input } from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
 import axios from 'axios';
 import { EditClienteModal } from './EditarCliente';
 import { AddClienteModal } from './AddCliente';
+import { Cliente } from '../../../Interfaces/interfaces';
 
 const DataCliente: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -12,15 +13,13 @@ const DataCliente: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortColumn, setSortColumn] = useState<string>('id');
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [editCliente, setEditCliente] = useState<any>(null);
   const itemsPerPage = 8;
 
   useEffect(() => {
     const fetchClientes = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/cliente');
-        setClientes(response.data.data);
+        setClientes((response.data as { data: Cliente[] }).data);
       } catch (error) {
         console.error('Error fetching clientes:', error);
       }

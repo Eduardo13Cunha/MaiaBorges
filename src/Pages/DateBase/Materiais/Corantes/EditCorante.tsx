@@ -14,6 +14,7 @@ export const EditCoranteModal: React.FC<{ editCorante: any; setUpdateTable:React
     try {
       await axios.put(`http://localhost:3001/api/corante/${corante.id_corante}`, corante);
       setUpdateTable("updateCorante");
+      window.location.reload();
     } catch (error) {
       console.error('Error updating corante:', error);
     }
@@ -53,7 +54,7 @@ export const EditCoranteModal: React.FC<{ editCorante: any; setUpdateTable:React
               <Input type="text" name="nome" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>Quantidade</FormLabel>
+              <FormLabel>Quantidade - Gramas</FormLabel>
               <Input type="number" name="quantidade" value={formData.quantidade} onChange={(e) => setFormData({ ...formData, quantidade: Number(e.target.value) })} />
             </FormControl>
             <Button type="submit" className="SaveButton">Editar</Button>

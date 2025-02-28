@@ -1,10 +1,11 @@
-import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter } from "@chakra-ui/react";
+import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight, FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { EditMateriaPrimaModal } from "./EditMateriasPrimas";
 import { AddMateriaPrimaModal } from "./AddMateriasPrimas";
+import { MateriaPrima } from "../../../../Interfaces/interfaces";
 
 const DataMateriaPrima: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -19,7 +20,7 @@ const DataMateriaPrima: React.FC = () => {
     const fetchMateriasPrimas = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/materiasprima');
-        setMateriasPrimas(response.data.data);
+        setMateriasPrimas((response.data as { data: MateriaPrima[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

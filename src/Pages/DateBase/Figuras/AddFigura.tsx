@@ -4,6 +4,8 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 
 export const AddFiguraModal: React.FC<{ setUpdateTable:React.Dispatch<React.SetStateAction<any>>;materiasPrimas:any[];corantes:any[]}> = ({ setUpdateTable ,materiasPrimas,corantes}) => {
+    const [MeasureMateriaPrima, setMeasureMateriaPrima] = useState("KG");
+    const [MeasureCorante, setMeasureCorante] = useState('G');
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [formData, setFormData] = useState({
       referencia: '',
@@ -43,6 +45,15 @@ export const AddFiguraModal: React.FC<{ setUpdateTable:React.Dispatch<React.SetS
   
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
+      if(MeasureCorante === "MG"){
+        formData.corantes = formData.corantes.map(c => ({
+          ...c,
+          quantidade_corante: (Number(c.quantidade_corante) / 1000).toString(),
+        }));
+      }
+      if(MeasureMateriaPrima === "G"){
+        formData.quantidade_materia_prima = (Number(formData.quantidade_materia_prima) / 1000).toString();
+      }
       addFigura({
         ...formData,
         tempo_ciclo: Number(formData.tempo_ciclo),
@@ -121,11 +132,20 @@ export const AddFiguraModal: React.FC<{ setUpdateTable:React.Dispatch<React.SetS
   
                 <FormControl isRequired mt={4}>
                   <FormLabel>Quantidade de Matéria Prima</FormLabel>
-                  <Input
-                    type="number"
-                    value={formData.quantidade_materia_prima}
-                    onChange={(e) => setFormData({ ...formData, quantidade_materia_prima: e.target.value })}
-                  />
+                  <HStack>
+                    <Input
+                      type="number"
+                      value={formData.quantidade_materia_prima}
+                      onChange={(e) => setFormData({ ...formData, quantidade_materia_prima: e.target.value })}
+                    />
+                    <Menu>
+                      <MenuButton as={Button} className='TableMenuCorante' minW="8%" display="flex" justifyContent="center" alignItems="center">{MeasureMateriaPrima}</MenuButton>
+                      <MenuList className='TableMenuList'>
+                        <MenuItem className='TableMenuItem' maxW="20%" isDisabled={MeasureMateriaPrima === "KG"} onClick={() => { setMeasureMateriaPrima("KG"); setFormData({ ...formData, quantidade_materia_prima: (Number(formData.quantidade_materia_prima) / 1000).toString() }); }}>Kg</MenuItem>
+                        <MenuItem className='TableMenuItem' maxW="20%" isDisabled={MeasureMateriaPrima === "G"} onClick={() => { setMeasureMateriaPrima("G"); setFormData({ ...formData, quantidade_materia_prima: (Number(formData.quantidade_materia_prima) * 1000).toString() });}}>G</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </HStack>
                 </FormControl>
   
                 <FormControl mt={4}>
@@ -156,6 +176,13 @@ export const AddFiguraModal: React.FC<{ setUpdateTable:React.Dispatch<React.SetS
                         value={corante.quantidade_corante}
                         onChange={(e) => handleCoranteChange(index, 'quantidade_corante', e.target.value)}
                         />
+                        <Menu>
+                          <MenuButton as={Button} className='TableMenuCorante' minW="8%" display="flex" justifyContent="center" alignItems="center">{MeasureCorante}</MenuButton>
+                          <MenuList className='TableMenuList'>
+                            <MenuItem className='TableMenuItem' maxW="20%" isDisabled={MeasureCorante === "G"} onClick={() => { setMeasureCorante("G"); handleCoranteChange(index, 'quantidade_corante', (Number(corante.quantidade_corante) / 1000).toString()); }}>G</MenuItem>
+                            <MenuItem className='TableMenuItem' maxW="20%" isDisabled={MeasureCorante === "MG"} onClick={() => { setMeasureCorante("MG"); handleCoranteChange(index, 'quantidade_corante', (Number(corante.quantidade_corante) * 1000).toString()); }}>Mg</MenuItem>
+                          </MenuList>
+                        </Menu>
                         <Button onClick={() => handleRemoveCorante(index)} className='TableMenuCorante'>
                           <FaTrash/>
                         </Button>

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, HStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Img, Menu, MenuButton, MenuItem, MenuList, Link, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
 import MaiaBorgesLogoGrande from '../../Assets/MaiaBorgesLogoGrande.png';
+import { Colaborador } from '../../Interfaces/interfaces';
 
 export default function Header() {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -23,17 +24,18 @@ export default function Header() {
     const handleLogin = async () => {
         try {
             const response = await axios.post('http://localhost:3001/api/auth/utilizadores', { email, password });
-            if (response.data.status === 'success') {
-                setName(response.data.data.nome); // Armazena o nome do utilizador
+            if (response.status === 200) {
+                const user = (response.data as { data: Colaborador }).data;
+                setName(user.nome); // Armazena o nome do utilizador
                 setIsAuthenticated(true); // Atualiza o estado de autenticação
                 setLoginModalOpen(false);
                 setEmail('');
                 setPassword('');
 
-                Cookies.set('userName', response.data.data.nome);
-                Cookies.set('userEmail', response.data.data.email);
-                Cookies.set('userNumber', response.data.data.numero);
-                Cookies.set('userId', response.data.data.id_user);
+                Cookies.set('userName', user.nome);
+                Cookies.set('userEmail', user.email);
+                Cookies.set('userNumber', user.numero);
+                Cookies.set('userId', user.id_colaborador.toString());
                 window.location.href = '/HomePage2';
             } else {
                 alert('Login falhou. Verifique suas credenciais.');

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Box, Button, HStack, Img, VStack, Spacer, IconButton, Input, Textarea } from "@chakra-ui/react";
+import { Text, Box, Button, HStack, Img, VStack, IconButton, Textarea } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
 import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoGrande.png';
 import HomeImage1 from '../../Assets/HomeImage1.jpeg';
