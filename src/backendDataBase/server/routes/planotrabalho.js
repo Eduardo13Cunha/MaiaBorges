@@ -23,19 +23,6 @@ router.get("/", async (req, res) => {
 // Endpoint para adicionar um novo plano de trabalho
 router.post("/", async (req, res) => {
   const { maquina_id, encomenda_id, id_colaborador, semana ,quantidade ,quantidade_falta } = req.body;
-  console.log("📥 Dados recebidos na requisição:", req.body);
-
-  const { dataEcomenda, error } = await supabase.from("encomendas").select(`
-    *,
-    figuras (tempo_ciclo)
-  `).eq("id_encomenda", encomenda_id);
-
-  console.log("🔍 Resultado da busca por encomenda:", dataEcomenda, error);
-  const encomenda = dataEcomenda[0]; 
-  console.log("📦 Encomenda encontrada:", encomenda);
-
-  const tempo_conclusao = quantidade / dataEcomenda.figuras.tempo_ciclo;
-
   try {
     const { data, error } = await supabase
       .from("plano_trabalho")

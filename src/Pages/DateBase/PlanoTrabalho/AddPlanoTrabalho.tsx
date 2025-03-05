@@ -1,6 +1,7 @@
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Menu, MenuButton, MenuList, MenuItem, HStack, NumberInput, NumberInputField } from "@chakra-ui/react";
+import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { getWeek } from 'date-fns';
 
 export const AddPlanoTrabalhoModal: React.FC<{ 
   setUpdateTable: React.Dispatch<React.SetStateAction<any>>;
@@ -13,10 +14,35 @@ export const AddPlanoTrabalhoModal: React.FC<{
     maquina_id: '',
     encomenda_id: '',
     id_colaborador: '',
-    semana: '',
+    tempo_conclusao: '',
     quantidade: '',
-    quantidade_falta:''
+    semana: '',
+    quantidade_falta: ''
   });
+
+  // When encomenda is selected, automatically fill in the related data
+  useEffect(() => {
+    if (formData.encomenda_id) {
+      const selectedEncomenda = encomendas.find(e => e.id_encomenda === formData.encomenda_id);
+      if (selectedEncomenda) {
+        // Get the week number from the start date
+        const weekNumber = getWeek(new Date(selectedEncomenda.data_inicio));
+        
+        // Calculate time estimate based on figura's tempo_ciclo
+        const tempoCiclo = selectedEncomenda.figuras.tempo_ciclo; // pieces per hour
+        const quantidade = selectedEncomenda.quantidade;
+        const tempoEstimado = quantidade / tempoCiclo; // hours
+        
+        setFormData(prev => ({
+          ...prev,
+          quantidade: selectedEncomenda.quantidade.toString(),
+          quantidade_falta: selectedEncomenda.quantidade.toString(),
+          semana: weekNumber.toString(),
+          tempo_conclusao: tempoEstimado.toFixed(2)
+        }));
+      }
+    }
+  }, [formData.encomenda_id, encomendas]);
 
   const addPlanoTrabalho = async (planoTrabalho: any) => {
     try {
@@ -27,33 +53,23 @@ export const AddPlanoTrabalhoModal: React.FC<{
     }
   };
 
-  // Quando a encomenda é selecionada, preencher automaticamente a quantidade e quantidade_falta
-  useEffect(() => {
-    if (formData.encomenda_id) {
-      const encomendaSelecionada = encomendas.find(e => e.id_encomenda === formData.encomenda_id);
-      if (encomendaSelecionada) {
-        setFormData(prev => ({
-          ...prev,
-          semana: encomendaSelecionada.semana,
-          quantidade: encomendaSelecionada.quantidade.toString(),
-          quantidade_falta: encomendaSelecionada.quantidade.toString(),
-        }));
-      }
-    }
-  }, [formData.encomenda_id, encomendas]);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addPlanoTrabalho({
       ...formData,
+      quantidade: Number(formData.quantidade),
+      semana: Number(formData.semana),
+      quantidade_falta: Number(formData.quantidade_falta),
+      tempo_conclusao: Number(formData.tempo_conclusao)
     });
     setAddModalOpen(false);
     setFormData({
       maquina_id: '',
       encomenda_id: '',
       id_colaborador: '',
-      semana: '',
+      tempo_conclusao: '',
       quantidade: '',
+      semana: '',
       quantidade_falta: ''
     });
   };
@@ -133,6 +149,43 @@ export const AddPlanoTrabalhoModal: React.FC<{
                   </MenuList>
                 </Menu>
               </FormControl>
+
+              <FormControl isRequired mt={4}>
+                <FormLabel>Tempo de Conclusão (horas)</FormLabel>
+                <Input
+                  type="number"
+                  value={formData.tempo_conclusao}
+                  readOnly
+                />
+              </FormControl>
+
+              <FormControl isRequired mt={4}>
+                <FormLabel>Quantidade</FormLabel>
+                <Input
+                  type="number"
+                  value={formData.quantidade}
+                  readOnly
+                />
+              </FormControl>
+
+              <FormControl isRequired mt={4}>
+                <FormLabel>Semana</FormLabel>
+                <Input
+                  type="number"
+                  value={formData.semana}
+                  readOnly
+                />
+              </FormControl>
+
+              <FormControl isRequired mt={4}>
+                <FormLabel>Quantidade em Falta</FormLabel>
+                <Input
+                  type="number"
+                  value={formData.quantidade_falta}
+                  readOnly
+                />
+              </FormControl>
+
               <Button type="submit" className="SaveButton" mt={4}>Salvar</Button>
               <Button onClick={() => setAddModalOpen(false)} className="CancelButton" mt={4}>Cancelar</Button>
             </form>

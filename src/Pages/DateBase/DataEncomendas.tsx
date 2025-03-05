@@ -9,8 +9,6 @@ import {
   Th,
   Td,
   Button,
-  HStack,
-  Input,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -19,27 +17,26 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text
+  Grid,
+  GridItem,
+  Text,
+  Tooltip
 } from '@chakra-ui/react';
-import { FaTrash, FaPencilAlt, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { format, getWeek, startOfYear, addWeeks } from 'date-fns';
 import axios from 'axios';
-import { Encomenda, Figura, Cliente } from '../../Interfaces/interfaces';
 
 const DataEncomenda: React.FC = () => {
   const [encomendas, setEncomendas] = useState<any[]>([]);
   const [figuras, setFiguras] = useState<any[]>([]);
   const [clientes, setClientes] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [editEncomenda, setEditEncomenda] = useState<any>(null);
-  const [sortColumn, setSortColumn] = useState<string>('id_encomenda');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const itemsPerPage = 8;
+  const [selectedCell, setSelectedCell] = useState<{figura: any, week: number} | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingEncomenda, setEditingEncomenda] = useState<any>(null);
 
   useEffect(() => {
     fetchData();
@@ -52,373 +49,186 @@ const DataEncomenda: React.FC = () => {
         axios.get('http://localhost:3001/api/figura'),
         axios.get('http://localhost:3001/api/cliente')
       ]);
-      setEncomendas((encomendaRes.data as { data: Encomenda[] }).data);
-      setFiguras((figuraRes.data as { data: Figura[] }).data);
-      setClientes((clienteRes.data as { data: Cliente[] }).data);
+      setEncomendas(encomendaRes.data.data);
+      setFiguras(figuraRes.data.data);
+      setClientes(clienteRes.data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const handleSort = (column: string) => {
-    const newDirection = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
-    setSortDirection(newDirection);
-    setSortColumn(column);
+  // Generate weeks array
+  const weeks = Array.from({ length: 52 }, (_, i) => i + 1);
+
+  // Get encomendas for a specific figura and week
+  const getEncomendaForCell = (figuraId: string, week: number) => {
+    return encomendas.find(e => {
+      const encomendaWeek = getWeek(new Date(e.data_inicio));
+      return e.id_figura === figuraId && encomendaWeek === week;
+    });
   };
 
-  const addEncomenda = async (encomenda: any) => {
+  const handleCellClick = (figura: any, week: number) => {
+    const existingEncomenda = getEncomendaForCell(figura.id_figura, week);
+    setSelectedCell({ figura, week });
+    setEditingEncomenda(existingEncomenda);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveEncomenda = async (formData: any) => {
     try {
-      const response = await axios.post('http://localhost:3001/api/encomenda', encomenda);
-      setEncomendas([...encomendas, (response.data as { data: Encomenda[] }).data]);
-    } catch (error) {
-      console.error('Error adding encomenda:', error);
-    }
-  };
-
-  const deleteEncomenda = async (id: number) => {
-    if (window.confirm('Tem certeza que deseja excluir esta encomenda?')) {
-      try {
-        await axios.delete(`http://localhost:3001/api/encomenda/${id}`);
-        setEncomendas(encomendas.filter(encomenda => encomenda.id_encomenda !== id));
-      } catch (error) {
-        console.error('Error deleting encomenda:', error);
+      if (editingEncomenda) {
+        // Update existing encomenda
+        await axios.put(`http://localhost:3001/api/encomenda/${editingEncomenda.id_encomenda}`, formData);
+      } else {
+        // Create new encomenda
+        await axios.post('http://localhost:3001/api/encomenda', formData);
       }
-    }
-  };
-
-  const updateEncomenda = async (encomenda: any) => {
-    try {
-      const response = await axios.put(`http://localhost:3001/api/encomenda/${encomenda.id_encomenda}`, encomenda);
-      setEncomendas(encomendas.map(e => e.id_encomenda === encomenda.id_encomenda ? response.data : e));
-      setEditModalOpen(false);
+      fetchData();
+      setIsModalOpen(false);
     } catch (error) {
-      console.error('Error updating encomenda:', error);
+      console.error('Error saving encomenda:', error);
     }
   };
 
-  const sortedEncomendas = [...encomendas].sort((a, b) => {
-    if (sortColumn === 'id_encomenda') {
-      return sortDirection === 'asc' 
-        ? a.id_encomenda - b.id_encomenda 
-        : b.id_encomenda - a.id_encomenda;
-    }
-    if (sortColumn === 'quantidade') {
-      return sortDirection === 'asc'
-        ? a.quantidade - b.quantidade
-        : b.quantidade - a.quantidade;
-    }
-    return 0;
-  });
-
-  const filteredEncomendas = sortedEncomendas.filter(encomenda =>
-    encomenda.figuras.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    encomenda.clientes.nome.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const pages = Math.ceil(filteredEncomendas.length / itemsPerPage);
-  const currentItems = filteredEncomendas.slice(
-    page * itemsPerPage,
-    (page + 1) * itemsPerPage
-  );
-
   return (
-    <VStack alignItems="center">
-      <Box className="TableBox">
-        <Input
-          placeholder="Pesquisar por figura ou cliente"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="TableSearchInput"
-        />
-        <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
-          <Thead className="LineHead">
-            <Tr>
-              <Th color="white" onClick={() => handleSort('id_encomenda')} style={{ cursor: 'pointer' }}>
-                <HStack spacing={1}>
-                  <Text>ID</Text>
-                  {sortColumn === 'id_encomenda' && (
-                    sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />
-                  )}
-                </HStack>
-              </Th>
-              <Th color="white">Figura</Th>
-              <Th color="white">Cliente</Th>
-              <Th color="white" onClick={() => handleSort('quantidade')} style={{ cursor: 'pointer' }}>
-                <HStack spacing={1}>
-                  <Text>Quantidade</Text>
-                  {sortColumn === 'quantidade' && (
-                    sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />
-                  )}
-                </HStack>
-              </Th>
-              <Th color="white">Data Início</Th>
-              <Th color="white">Data Fim</Th>
-              <Th color="white" width="8%">Ações</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {currentItems.map((encomenda) => (
-              <Tr key={encomenda.id_encomenda} className="Line">
-                <Td>{encomenda.id_encomenda}</Td>
-                <Td>{encomenda.figuras.nome}</Td>
-                <Td>{encomenda.clientes.nome}</Td>
-                <Td>{encomenda.quantidade}</Td>
-                <Td>{new Date(encomenda.data_inicio).toLocaleDateString()}</Td>
-                <Td>{new Date(encomenda.data_fim).toLocaleDateString()}</Td>
-                <Td>
-                  <HStack spacing={2}>
-                    <FaPencilAlt
-                      cursor="pointer"
-                      onClick={() => {
-                        setEditEncomenda(encomenda);
-                        setEditModalOpen(true);
-                      }}
-                    />
-                    <FaTrash
-                      cursor="pointer"
-                      color="darkred"
-                      onClick={() => deleteEncomenda(encomenda.id_encomenda)}
-                    />
-                  </HStack>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+    <Box overflowX="auto" p={4}>
+      <Grid templateColumns={`auto repeat(${weeks.length}, minmax(100px, 1fr))`} gap={1}>
+        {/* Header row with week numbers */}
+        <GridItem bg="gray.700" p={2}>
+          <Text color="white" fontWeight="bold">Figuras</Text>
+        </GridItem>
+        {weeks.map(week => (
+          <GridItem key={week} bg="gray.700" p={2}>
+            <Text color="white" fontWeight="bold" textAlign="center">
+              Semana {week}
+            </Text>
+          </GridItem>
+        ))}
 
-      <HStack marginLeft="50%" spacing={4}>
-        <AddEncomendaModal addEncomenda={addEncomenda} figuras={figuras} clientes={clientes} />
-        <Button
-          onClick={() => setPage(Math.max(0, page - 1))}
-          disabled={page === 0}
-        >
-          <FaAngleLeft />
-        </Button>
-        <Button
-          onClick={() => setPage(Math.min(pages - 1, page + 1))}
-          disabled={page === pages - 1}
-        >
-          <FaAngleRight />
-        </Button>
-      </HStack>
+        {/* Grid rows */}
+        {figuras.map(figura => (
+          <React.Fragment key={figura.id_figura}>
+            <GridItem bg="gray.100" p={2}>
+              <Text fontWeight="bold">{figura.nome}</Text>
+            </GridItem>
+            {weeks.map(week => {
+              const encomenda = getEncomendaForCell(figura.id_figura, week);
+              return (
+                <GridItem
+                  key={week}
+                  bg={encomenda ? "blue.100" : "white"}
+                  border="1px"
+                  borderColor="gray.200"
+                  p={2}
+                  cursor="pointer"
+                  onClick={() => handleCellClick(figura, week)}
+                  _hover={{ bg: "gray.50" }}
+                >
+                  {encomenda && (
+                    <Tooltip label={`Cliente: ${encomenda.clientes?.nome}\nQuantidade: ${encomenda.quantidade}`}>
+                      <Text fontSize="sm" textAlign="center">
+                        {encomenda.quantidade} unidades
+                      </Text>
+                    </Tooltip>
+                  )}
+                </GridItem>
+              );
+            })}
+          </React.Fragment>
+        ))}
+      </Grid>
 
-      <EditEncomendaModal
-        isOpen={isEditModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        encomenda={editEncomenda}
-        updateEncomenda={updateEncomenda}
-        figuras={figuras}
+      {/* Add/Edit Encomenda Modal */}
+      <EncomendaModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedCell={selectedCell}
+        editingEncomenda={editingEncomenda}
         clientes={clientes}
+        onSave={handleSaveEncomenda}
       />
-    </VStack>
+    </Box>
   );
 };
 
-const AddEncomendaModal = ({ 
-  addEncomenda, 
-  figuras, 
-  clientes 
-}: { 
-  addEncomenda: (encomenda: any) => void;
-  figuras: any[];
-  clientes: any[];
-}) => {
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    id_figura: '',
-    id_cliente: '',
-    quantidade: '',
-    data_inicio: new Date().toISOString().split('T')[0],
-    data_fim: new Date().toISOString().split('T')[0],
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    addEncomenda({
-      ...formData,
-      quantidade: Number(formData.quantidade),
-    });
-    setAddModalOpen(false);
-    setFormData({
-      id_figura: '',
-      id_cliente: '',
-      quantidade: '',
-      data_inicio: new Date().toISOString().split('T')[0],
-      data_fim: new Date().toISOString().split('T')[0],
-    });
-  };
-
-  return (
-    <>
-      <Button onClick={() => setAddModalOpen(true)}>Adicionar Encomenda</Button>
-
-      <Modal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)}>
-        <ModalOverlay />
-        <ModalContent className='TableModal'>
-          <ModalHeader>Adicionar Encomenda</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleSubmit}>
-              <FormControl isRequired>
-                <FormLabel>Figura</FormLabel>
-                <Menu>
-                  <MenuButton as={Button} className='TableMenu'>
-                    {formData.id_figura ? figuras.find(f => f.id_figura === formData.id_figura)?.nome : "Selecione uma Figura"}
-                  </MenuButton>
-                  <MenuList className='TableMenuList'>
-                    {figuras.map((figura) => (
-                      <MenuItem
-                        className='TableMenuItem'
-                        key={figura.id_figura}
-                        onClick={() => setFormData({ ...formData, id_figura: figura.id_figura })}
-                      >
-                        {figura.nome}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </Menu>
-              </FormControl>
-
-              <FormControl isRequired mt={4}>
-                <FormLabel>Cliente</FormLabel>
-                <Menu>
-                  <MenuButton as={Button} className='TableMenu'>
-                    {formData.id_cliente ? clientes.find(c => c.id_cliente === formData.id_cliente)?.nome : "Selecione um Cliente"}
-                  </MenuButton>
-                  <MenuList className='TableMenuList'>
-                    {clientes.map((cliente) => (
-                      <MenuItem
-                        className='TableMenuItem'
-                        key={cliente.id_cliente}
-                        onClick={() => setFormData({ ...formData, id_cliente: cliente.id_cliente })}
-                      >
-                        {cliente.nome}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </Menu>
-              </FormControl>
-
-              <FormControl isRequired mt={4}>
-                <FormLabel>Quantidade</FormLabel>
-                <Input
-                  type="number"
-                  placeholder="Quantidade"
-                  value={formData.quantidade}
-                  onChange={(e) => setFormData({ ...formData, quantidade: e.target.value })}
-                />
-              </FormControl>
-
-              <FormControl isRequired mt={4}>
-                <FormLabel>Data Início</FormLabel>
-                <Input
-                  type="date"
-                  value={formData.data_inicio}
-                  onChange={(e) => setFormData({ ...formData, data_inicio: e.target.value })}
-                />
-              </FormControl>
-
-              <FormControl isRequired mt={4}>
-                <FormLabel>Data Fim</FormLabel>
-                <Input
-                  type="date"
-                  value={formData.data_fim}
-                  onChange={(e) => setFormData({ ...formData, data_fim: e.target.value })}
-                />
-              </FormControl>
-              <Button type="submit" className="SaveButton">Salvar</Button>
-              <Button onClick={() => setAddModalOpen(false )} className="CancelButton">Cancelar</Button>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};
-
-const EditEncomendaModal = ({
-  isOpen,
-  onClose,
-  encomenda,
-  updateEncomenda,
-  figuras,
-  clientes,
-}: {
+interface EncomendaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  encomenda: any;
-  updateEncomenda: (encomenda: any) => void;
-  figuras: any[];
+  selectedCell: { figura: any; week: number } | null;
+  editingEncomenda: any;
   clientes: any[];
+  onSave: (formData: any) => void;
+}
+
+const EncomendaModal: React.FC<EncomendaModalProps> = ({
+  isOpen,
+  onClose,
+  selectedCell,
+  editingEncomenda,
+  clientes,
+  onSave
 }) => {
   const [formData, setFormData] = useState({
     id_figura: '',
     id_cliente: '',
     quantidade: '',
     data_inicio: '',
-    data_fim: '',
+    data_fim: ''
   });
 
   useEffect(() => {
-    if (encomenda) {
+    if (selectedCell) {
+      const startDate = addWeeks(startOfYear(new Date()), selectedCell.week - 1);
+      const endDate = addWeeks(startDate, 1);
+      
       setFormData({
-        id_figura: encomenda.id_figura,
-        id_cliente: encomenda.id_cliente,
-        quantidade: encomenda.quantidade.toString(),
-        data_inicio: new Date(encomenda.data_inicio).toISOString().split('T')[0],
-        data_fim: new Date(encomenda.data_fim).toISOString().split('T')[0],
+        id_figura: selectedCell.figura.id_figura,
+        id_cliente: editingEncomenda?.id_cliente || '',
+        quantidade: editingEncomenda?.quantidade?.toString() || '',
+        data_inicio: format(startDate, 'yyyy-MM-dd'),
+        data_fim: format(endDate, 'yyyy-MM-dd')
       });
     }
-  }, [encomenda]);
+  }, [selectedCell, editingEncomenda]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateEncomenda({
+    onSave({
       ...formData,
-      id_encomenda: encomenda.id_encomenda,
-      quantidade: Number(formData.quantidade),
+      quantidade: Number(formData.quantidade)
     });
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent bgColor="rgba(30, 30, 130)" color="white">
-        <ModalHeader>Editar Encomenda</ModalHeader>
+      <ModalContent>
+        <ModalHeader>
+          {editingEncomenda ? 'Editar Encomenda' : 'Nova Encomenda'}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Figura</FormLabel>
-              <Menu>
-                <MenuButton as={Button} className='TableMenu'>
-                  {formData.id_figura ? figuras.find(f => f.id_figura === formData.id_figura)?.nome : "Selecione uma Figura"}
-                </MenuButton>
-                <MenuList className='TableMenuList'>
-                  {figuras.map((figura) => (
-                    <MenuItem
-                      className='TableMenuItem'
-                      key={figura.id_figura}
-                      onClick={() => setFormData({ ...formData, id_figura: figura.id_figura })}
-                    >
-                      {figura.nome}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </Menu>
+              <Input
+                value={selectedCell?.figura.nome || ''}
+                isReadOnly
+              />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Cliente</FormLabel>
               <Menu>
-                <MenuButton as={Button} className='TableMenu'>
-                  {formData.id_cliente ? clientes.find(c => c.id_cliente === formData.id_cliente)?.nome : "Selecione um Cliente"}
+                <MenuButton as={Button}>
+                  {formData.id_cliente
+                    ? clientes.find(c => c.id_cliente === formData.id_cliente)?.nome
+                    : "Selecione um Cliente"}
                 </MenuButton>
-                <MenuList className='TableMenuList'>
-                  {clientes.map((cliente) => (
+                <MenuList>
+                  {clientes.map(cliente => (
                     <MenuItem
-                      className='TableMenuItem'
                       key={cliente.id_cliente}
                       onClick={() => setFormData({ ...formData, id_cliente: cliente.id_cliente })}
                     >
@@ -455,8 +265,10 @@ const EditEncomendaModal = ({
                 onChange={(e) => setFormData({ ...formData, data_fim: e.target.value })}
               />
             </FormControl>
-            <Button type="submit" className="SaveButton">Editar</Button>
-            <Button onClick={onClose} className="CancelButton">Cancelar</Button>
+
+            <Button type="submit" colorScheme="blue" mt={4}>
+              {editingEncomenda ? 'Atualizar' : 'Criar'}
+            </Button>
           </form>
         </ModalBody>
       </ModalContent>
