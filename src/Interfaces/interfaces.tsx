@@ -84,3 +84,48 @@ export interface FiguraCorante {
   id_corante: number;
   quantidade_corante: number;
 }
+
+export interface PlanoTrabalho {
+  id: number;
+  maquina_id: number;
+  encomenda_id: number;
+  id_colaborador: number;
+  tempo_conclusao: string;
+  quantidade: number;
+  semana: number;
+  quantidade_falta: number;
+  maquinas?: {
+    nome: string;
+  };
+  encomendas?: {
+    id_encomenda: number;
+    quantidade: number;
+    figuras?: {
+      nome: string;
+    };
+  };
+  colaboradores?: {
+    nome: string;
+  };
+}
+
+export interface Acompanhamento {
+  id: number;
+  maquina_id: number;
+  encomenda_id: number;
+  id_colaborador: number;
+  quantidade_produzida: number;
+  maquinas?: {
+    nome: string;
+  };
+  encomendas?: {
+    id_encomenda: number;
+    quantidade: number;
+    figuras?: {
+      nome: string;
+    };
+  };
+  colaboradores?: {
+    nome: string;
+  };
+}

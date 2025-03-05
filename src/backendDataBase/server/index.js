@@ -13,6 +13,8 @@ import corantesRoutes from './routes/corantes.js';
 import maquinasRoutes from './routes/maquinas.js';
 import figurasRoutes from './routes/figuras.js';
 import encomendasRoutes from './routes/encomendas.js';
+import planoTrabalhoRoutes from './routes/planotrabalho.js';
+import acompanhamentoRoutes from './routes/acompanhamento.js';
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.use('/api/corante', corantesRoutes);
 app.use('/api/maquina', maquinasRoutes);
 app.use('/api/figura', figurasRoutes);
 app.use('/api/encomenda', encomendasRoutes);
+app.use('/api/planotrabalho', planoTrabalhoRoutes);
+app.use('/api/acompanhamento', acompanhamentoRoutes);
 
 // Inicialização do servidor
 const PORT = process.env.PORT || 3001;

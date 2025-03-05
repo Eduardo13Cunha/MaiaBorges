@@ -17,6 +17,8 @@ import DataMaquina from "./Pages/DateBase/Maquinas/DataMaquina";
 import DataEncomendas from "./Pages/DateBase/DataEncomendas";
 import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
 import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
+import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamento";
+import DataPlanoTrabalho from "./Pages/DateBase/PlanoTrabalho/DataPlanoTrabalho";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -33,6 +35,8 @@ export const App = () => (
             <Route path="/DataFigura" element={<DataFigura/>}/>
             <Route path="/DataCliente" element={<DataCliente/>}/>
             <Route path="/DataMaterial" element={<DataMaterial/>}/>
+            <Route path="/DataAcompanhamento" element={<DataAcompanhamento/>}/>
+            <Route path="/DataPlanoTrabalho" element={<DataPlanoTrabalho/>}/>
             <Route path="/HomePage2" element={<HomePage2/>}/>
           </Routes>
         </BrowserRouter>

@@ -10,8 +10,8 @@ const DataColaborador: React.FC = () => {
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [lowStockMateriasprima, setLowStockMateriasprima] = useState<MateriaPrima[]>([]);
   const [lowStockCorantes, setLowStockCorantes] = useState<Corante[]>([]);
-  const limiteMateriasprima = 15000;
-  const limiteCorantes = 15000;
+  const limiteMateriasprima = 0;
+  const limiteCorantes = 0;
 
   const fetchCorantes = async () => {
     try {

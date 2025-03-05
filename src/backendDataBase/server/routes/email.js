@@ -39,7 +39,6 @@ router.post('/alert-email', (req, res) => {
   if (enviou) {
     return res.status(200).send('O e-mail já foi enviado.');
   }
-  console.log("tou aqui");
   const { lowItemsCorantes, lowItemsMateriasPrimas } = req.body;
 
   // Verifica se existe e não está vazio
