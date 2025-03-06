@@ -6,14 +6,11 @@ export interface Cliente {
   }
   
 export interface Encomenda {
-  figuras?: any;
-  clientes?: any;
+  figuras: Figura;
+  clientes: Cliente;
   id_encomenda: number;
-  id_figura: number;
-  id_cliente: number;
   quantidade: number;
-  data_inicio: string;
-  data_fim: string;
+  semana: number;
 }
 
 export interface Colaborador {
@@ -24,7 +21,7 @@ export interface Colaborador {
   email: string;
   numero: string;
   id_turno: number;
-  password: string;
+  password?: string;
 }
 
 export interface Figura {
@@ -45,6 +42,7 @@ export interface MateriaPrima {
   id_materiaprima: number;
   nome: string;
   quantidade: number;
+  limite: boolean;
 }
 
 export interface Maquina {
@@ -57,16 +55,17 @@ export interface Maquina {
 
 export interface Acompanhamento {
   id: number;
-  maquina_id: number;
-  encomenda_id: number;
-  id_colaborador: number;
+  maquina: Maquina;
+  encomenda: Encomenda;
+  colaborador: Colaborador;
   quantidade_produzida: number;
 }
 
 export interface PlanoTrabalho {
   id: number;
-  maquina_id: number;
-  encomenda_id: number;
+  maquina: Maquina;
+  encomenda: Encomenda;
+  colaborador: Colaborador;
   tempo_conclusao: string;
   quantidade: number;
   semana: number;
@@ -77,6 +76,7 @@ export interface Corante {
   id_corante: number;
   nome: string;
   quantidade: number;
+  limite: boolean;
 }
 
 export interface FiguraCorante {
@@ -85,47 +85,3 @@ export interface FiguraCorante {
   quantidade_corante: number;
 }
 
-export interface PlanoTrabalho {
-  id: number;
-  maquina_id: number;
-  encomenda_id: number;
-  id_colaborador: number;
-  tempo_conclusao: string;
-  quantidade: number;
-  semana: number;
-  quantidade_falta: number;
-  maquinas?: {
-    nome: string;
-  };
-  encomendas?: {
-    id_encomenda: number;
-    quantidade: number;
-    figuras?: {
-      nome: string;
-    };
-  };
-  colaboradores?: {
-    nome: string;
-  };
-}
-
-export interface Acompanhamento {
-  id: number;
-  maquina_id: number;
-  encomenda_id: number;
-  id_colaborador: number;
-  quantidade_produzida: number;
-  maquinas?: {
-    nome: string;
-  };
-  encomendas?: {
-    id_encomenda: number;
-    quantidade: number;
-    figuras?: {
-      nome: string;
-    };
-  };
-  colaboradores?: {
-    nome: string;
-  };
-}

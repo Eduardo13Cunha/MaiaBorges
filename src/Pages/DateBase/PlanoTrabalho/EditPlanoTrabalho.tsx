@@ -26,15 +26,35 @@ export const EditPlanoTrabalhoModal: React.FC<{
     }
   };
 
+ 
   useEffect(() => {
-    if (editPlanoTrabalho) {
-      setFormData({
-        maquina_id: editPlanoTrabalho.maquina_id,
-        encomenda_id: editPlanoTrabalho.encomenda_id,
-        id_colaborador: editPlanoTrabalho.id_colaborador,
-      });
+    if (formData.encomenda_id) {
+      const selectedEncomenda = encomendas.find(e => e.id_encomenda === formData.encomenda_id);
+      if (selectedEncomenda) {
+        const weekNumber = selectedEncomenda.semana;
+        const quantidade = selectedEncomenda.quantidade;
+
+        //Calculo para o tempo Estimado
+        const tempoCiclo = selectedEncomenda.figuras.tempo_ciclo;
+        const tempoEstimado = quantidade / tempoCiclo;
+
+        const horas = Math.floor(tempoEstimado);
+        const minutos = Math.floor((tempoEstimado - horas) * 60);
+        const segundos = Math.round(((tempoEstimado - horas) * 60 - minutos) * 60);
+
+        const tempoFormatado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        
+        console.log(tempoFormatado);
+        setFormData(prev => ({
+          ...prev,
+          quantidade: selectedEncomenda.quantidade.toString(),
+          quantidade_falta: selectedEncomenda.quantidade.toString(),
+          semana: weekNumber.toString(),
+          tempo_conclusao: `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+        }));
+      }
     }
-  }, [editPlanoTrabalho]);
+  }, [formData.encomenda_id, encomendas]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -14,7 +14,7 @@ import Footer from "./Components/Footer/Footer"
 import DataCliente from "./Pages/DateBase/Clientes/DataCliente";
 import DataColaborador from "./Pages/DateBase/Colaboradores/DataColaborador";
 import DataMaquina from "./Pages/DateBase/Maquinas/DataMaquina";
-import DataEncomendas from "./Pages/DateBase/DataEncomendas";
+import DataEncomendas from "./Pages/DateBase/Encomendas/DataEncomendas";
 import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
 import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
 import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamento";

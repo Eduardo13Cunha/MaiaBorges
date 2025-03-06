@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const { data, error } = await supabase.from("encomendas").select(`
     *,
-    figuras (nome),
+    figuras (*),
     clientes (nome)
   `);
 
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 
 // Endpoint para adicionar uma nova encomenda
 router.post("/", async (req, res) => {
-  const { id_figura, id_cliente, quantidade, data_inicio, data_fim } = req.body;
+  const { id_figura, id_cliente, quantidade, semana} = req.body;
   
   // Iniciar uma transação para garantir a consistência dos dados
   try {
@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
     // 5. Criar a encomenda
     const { data: encomendaData, error: encomendaError } = await supabase
       .from("encomendas")
-      .insert([{ id_figura, id_cliente, quantidade, data_inicio, data_fim }])
+      .insert([{ id_figura, id_cliente, quantidade, semana }])
       .select(`
         *,
         figuras (nome),
@@ -199,7 +199,7 @@ router.delete("/:id", async (req, res) => {
 // Endpoint para atualizar uma encomenda
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { id_figura, id_cliente, quantidade, data_inicio, data_fim } = req.body;
+  const { id_figura, id_cliente, quantidade, semana } = req.body;
 
   // Obter a encomenda atual para calcular a diferença de quantidade
   const { data: encomendaAtual, error: encomendaError } = await supabase
@@ -262,7 +262,7 @@ router.put("/:id", async (req, res) => {
   // Atualizar a encomenda
   const { data, error } = await supabase
     .from("encomendas")
-    .update({ id_figura, id_cliente, quantidade, data_inicio, data_fim })
+    .update({ id_figura, id_cliente, quantidade, semana })
     .eq("id_encomenda", id)
     .select(`
       *,

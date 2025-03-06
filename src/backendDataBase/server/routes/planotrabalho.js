@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
 // Endpoint para adicionar um novo plano de trabalho
 router.post("/", async (req, res) => {
-  const { maquina_id, encomenda_id, id_colaborador, semana ,quantidade ,quantidade_falta } = req.body;
+  const { maquina_id, encomenda_id, id_colaborador, semana ,quantidade ,tempo_conclusao,quantidade_falta } = req.body;
   try {
     const { data, error } = await supabase
       .from("plano_trabalho")

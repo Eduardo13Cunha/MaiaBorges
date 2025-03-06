@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
+import { Acompanhamento, Colaborador, PlanoTrabalho } from '../../../Interfaces/interfaces';
 
 const DataAcompanhamento = () => {
   const [turnos, setTurnos] = useState<any[]>([]);
@@ -35,7 +36,8 @@ const DataAcompanhamento = () => {
   const fetchTurnos = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/turno');
-      setTurnos(response.data.data);
+      const data = response.data as { data: Acompanhamento[] };
+      setTurnos(data.data);
     } catch (error) {
       console.error('Error fetching turnos:', error);
     }
@@ -44,14 +46,15 @@ const DataAcompanhamento = () => {
   const fetchColaboradoresByTurno = async (turnoId: string) => {
     try {
       const response = await axios.get('http://localhost:3001/api/colaborador');
-      const colaboradoresTurno = response.data.data.filter(
+      const data = response.data as { data: Colaborador[] };
+      const colaboradoresTurno = data.data.filter(
         (col: any) => col.id_turno === turnoId
       );
       setColaboradores(colaboradoresTurno);
 
       // Fetch planos de trabalho for these colaboradores
       const planosResponse = await axios.get('http://localhost:3001/api/planotrabalho');
-      const planosColaboradores = planosResponse.data.data.filter(
+      const planosColaboradores = (planosResponse.data as { data: PlanoTrabalho[] }).data.filter(
         (plano: any) => colaboradoresTurno.some(
           (col: any) => col.id_colaborador === plano.id_colaborador
         )

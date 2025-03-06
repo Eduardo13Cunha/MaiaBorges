@@ -15,7 +15,7 @@ const DataColaborador: React.FC = () => {
 
   const fetchCorantes = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/corante');
+      const response = await axios.get<{ data: Corante[] }>('http://localhost:3001/api/corante');
       const corantesBaixos = response.data.data.filter((item: Corante) => item.quantidade < limiteCorantes);
       setLowStockCorantes(corantesBaixos); 
     } catch (error) {
@@ -25,7 +25,7 @@ const DataColaborador: React.FC = () => {
 
   const fetchMateriasPrimas = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/materiasprima');
+      const response = await axios.get<{ data: MateriaPrima[] }>('http://localhost:3001/api/materiasprima');
       const materiasPrimasBaixas = response.data.data.filter((item: MateriaPrima) => item.quantidade < limiteMateriasprima);
       setLowStockMateriasprima(materiasPrimasBaixas); 
     } catch (error) {
