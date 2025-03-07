@@ -22,24 +22,18 @@ router.get("/", async (req, res) => {
 
 // Endpoint para adicionar um novo acompanhamento
 router.post("/", async (req, res) => {
-  const { maquina_id, encomenda_id, id_colaborador, quantidade_produzida } = req.body;
+  const { planotrabalho_id, maquina_id, encomenda_id, id_colaborador, quantidade_produzida } = req.body;
   
   try {
     const { data, error } = await supabase
       .from("acompanhamento")
       .insert([{ 
+        planotrabalho_id,
         maquina_id, 
         encomenda_id, 
         id_colaborador, 
         quantidade_produzida 
-      }])
-      .select(`
-        *,
-        maquinas (nome),
-        encomendas (id_encomenda, quantidade, figuras (nome)),
-        colaboradores (nome)
-      `)
-      .single();
+      }]);
 
     if (error) {
       console.error("Erro ao adicionar acompanhamento:", error);
@@ -50,8 +44,7 @@ router.post("/", async (req, res) => {
     const { data: planoTrabalho, error: planoError } = await supabase
       .from("plano_trabalho")
       .select("quantidade, quantidade_falta")
-      .eq("encomenda_id", encomenda_id)
-      .eq("maquina_id", maquina_id)
+      .eq("id", planotrabalho_id)
       .single();
     
     if (planoError) {
@@ -64,8 +57,7 @@ router.post("/", async (req, res) => {
       const { error: updateError } = await supabase
         .from("plano_trabalho")
         .update({ quantidade_falta: novaQuantidadeFalta })
-        .eq("encomenda_id", encomenda_id)
-        .eq("maquina_id", maquina_id);
+        .eq("id", planotrabalho_id);
       
       if (updateError) {
         console.error("Erro ao atualizar plano de trabalho:", updateError);

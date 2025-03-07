@@ -10,11 +10,12 @@ export const EditPlanoTrabalhoModal: React.FC<{
   encomendas: any[];
   colaboradores: any[];
 }> = ({ setUpdateTable, editPlanoTrabalho, maquinas, encomendas, colaboradores }) => {
+
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    maquina_id: '',
-    encomenda_id: '',
-    id_colaborador: '',
+    maquina_id: editPlanoTrabalho.maquina_id,
+    encomenda_id: editPlanoTrabalho.encomenda_id,
+    id_colaborador: editPlanoTrabalho.id_colaborador,
   });
 
   const updatePlanoTrabalho = async (planoTrabalho: any) => {
@@ -41,10 +42,7 @@ export const EditPlanoTrabalhoModal: React.FC<{
         const horas = Math.floor(tempoEstimado);
         const minutos = Math.floor((tempoEstimado - horas) * 60);
         const segundos = Math.round(((tempoEstimado - horas) * 60 - minutos) * 60);
-
-        const tempoFormatado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
         
-        console.log(tempoFormatado);
         setFormData(prev => ({
           ...prev,
           quantidade: selectedEncomenda.quantidade.toString(),

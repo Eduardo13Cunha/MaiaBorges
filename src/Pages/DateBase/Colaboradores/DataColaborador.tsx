@@ -30,6 +30,7 @@ const DataColaborador: React.FC = () => {
     };
 
     fetchColaboradores();
+    setUpdateTable("");
   }, [UpdateTable]);
 
   useEffect(() => {

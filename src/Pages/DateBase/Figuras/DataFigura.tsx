@@ -20,6 +20,7 @@ const DataFigura = () => {
 
   useEffect(() => {
     fetchData();
+    setUpdateTable("");
   }, [UpdateTable]);
 
   const fetchData = async () => {

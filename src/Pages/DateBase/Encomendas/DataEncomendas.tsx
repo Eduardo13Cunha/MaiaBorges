@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { EncomendaModal } from './EncomendaModal';
+import { IoMdAdd } from 'react-icons/io';
 import axios from 'axios';
 import { Cliente, Encomenda, Figura } from '../../../Interfaces/interfaces';
 
@@ -67,7 +68,7 @@ const DataEncomenda: React.FC = () => {
       if (direction === 'prev') {
         return Math.max(0, prev - 13);
       } else {
-        return Math.min(48, prev + 13);
+        return Math.min(39, prev + 13);
       }
     });
   };
@@ -80,30 +81,24 @@ const DataEncomenda: React.FC = () => {
         <Button 
           onClick={() => navigateWeeks('prev')} 
           leftIcon={<ChevronLeftIcon />}
-          isDisabled={currentWeekStart === 0}
-        >
-          Semanas Anteriores
-        </Button>
+          isDisabled={currentWeekStart === 0}/>
         <Text fontSize="xl" fontWeight="bold">
           Semanas {currentWeekStart + 1} - {currentWeekStart + 13}
         </Text>
         <Button 
           onClick={() => navigateWeeks('next')} 
           rightIcon={<ChevronRightIcon />}
-          isDisabled={currentWeekStart >= 48}
-        >
-          Próximas Semanas
-        </Button>
+          isDisabled={currentWeekStart >= 39}/>
       </HStack>
 
-      <Grid templateColumns={`auto repeat(13, 1fr)`} gap={1}>
+      <Grid templateColumns={`auto repeat(13, 1fr)`}>
         {/* Header row with week numbers */}
-        <GridItem bg="gray.700" p={2}>
-          <Text color="white" fontWeight="bold">Figuras</Text>
+        <GridItem className="GridHead" p={2}>
+          <Text color="white">Figuras</Text>
         </GridItem>
         {currentWeeks.map(week => (
-          <GridItem key={week} bg="gray.700" p={2}>
-            <Text color="white" fontWeight="bold" textAlign="center">
+          <GridItem className="GridHead" key={week} p={2} px={4}>
+            <Text color="white" textAlign="center">
               Semana {week}
             </Text>
           </GridItem>
@@ -112,23 +107,20 @@ const DataEncomenda: React.FC = () => {
         {/* Grid rows */}
         {figuras && figuras.map(figura => (
           <React.Fragment key={figura.id_figura}>
-            <GridItem bg="gray.100" p={2}>
-              <Text fontWeight="bold">{figura.nome}</Text>
+            <GridItem className='Line' p={2} py={5}>
+              <Text color="white">{figura.nome}</Text>
             </GridItem>
             {currentWeeks.map(week => {
               const encomenda = getEncomendaForCell(figura.id_figura, week);
               return (
                 <GridItem
                   key={week}
-                  bg={encomenda ? "blue.100" : "white"}
-                  border="1px"
-                  borderColor="gray.200"
+                  className={encomenda ? "GridItemWith" : "GridItem"}
                   p={2}
-                  cursor="pointer"
                   onClick={() => handleCellClick(figura, week)}
-                  _hover={{ bg: "gray.50" }}
+                  _hover={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" }}
                 >
-                  {encomenda && (
+                  {encomenda ? (
                     <Tooltip label={`Cliente: ${encomenda.clientes?.nome}\nQuantidade: ${encomenda.quantidade}`}>
                       <Text fontSize="sm" textAlign="center" >
                         {encomenda.clientes.nome}
@@ -136,6 +128,10 @@ const DataEncomenda: React.FC = () => {
                         {encomenda.quantidade} unidades
                       </Text>
                     </Tooltip>
+                  ) : (
+                    <Box my="10%" mx="35%">
+                      <IoMdAdd fontSize={"150%"}/>
+                    </Box>
                   )}
                 </GridItem>
               );

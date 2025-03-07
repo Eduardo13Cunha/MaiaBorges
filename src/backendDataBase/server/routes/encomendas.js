@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   const { data, error } = await supabase.from("encomendas").select(`
     *,
     figuras (*),
-    clientes (nome)
+    clientes (*)
   `);
 
   if (error) {

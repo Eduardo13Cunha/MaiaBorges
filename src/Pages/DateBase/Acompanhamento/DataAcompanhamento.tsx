@@ -2,25 +2,31 @@ import { useState, useEffect } from 'react';
 import {
   VStack,
   Box,
-  FormControl,
-  FormLabel,
-  Select,
-  Grid,
-  GridItem,
   Input,
   Button,
   Text,
-  Flex
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr
 } from '@chakra-ui/react';
 import axios from 'axios';
-import React from 'react';
-import { Acompanhamento, Colaborador, PlanoTrabalho } from '../../../Interfaces/interfaces';
+import { Acompanhamento, Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
+import { FaTrash } from 'react-icons/fa';
+import { ModifyColaborador } from '../Colaboradores/EditColaborador';
 
 const DataAcompanhamento = () => {
   const [turnos, setTurnos] = useState<any[]>([]);
-  const [selectedTurno, setSelectedTurno] = useState<string>('');
-  const [colaboradores, setColaboradores] = useState<any[]>([]);
-  const [planosTrabalho, setPlanosTrabalho] = useState<any[]>([]);
+  const [selectedTurno, setSelectedTurno] = useState<Turno | null>(null);
+  const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
+  const [planosTrabalho, setPlanosTrabalho] = useState<PlanoTrabalho[]>([]);
   const [producaoValues, setProducaoValues] = useState<{[key: string]: string}>({});
 
   useEffect(() => {
@@ -29,7 +35,7 @@ const DataAcompanhamento = () => {
 
   useEffect(() => {
     if (selectedTurno) {
-      fetchColaboradoresByTurno(selectedTurno);
+      fetchColaboradoresByTurno(selectedTurno.id_turno);
     }
   }, [selectedTurno]);
 
@@ -43,12 +49,12 @@ const DataAcompanhamento = () => {
     }
   };
 
-  const fetchColaboradoresByTurno = async (turnoId: string) => {
+  const fetchColaboradoresByTurno = async (turnoId: number) => {
     try {
       const response = await axios.get('http://localhost:3001/api/colaborador');
       const data = response.data as { data: Colaborador[] };
       const colaboradoresTurno = data.data.filter(
-        (col: any) => col.id_turno === turnoId
+        (col: Colaborador) => col.id_turno === turnoId
       );
       setColaboradores(colaboradoresTurno);
 
@@ -82,22 +88,18 @@ const DataAcompanhamento = () => {
   const handleSave = async () => {
     try {
       // Create acompanhamento records for each plano
-      const promises = Object.entries(producaoValues).map(([planoId, quantidade]) => {
-        if (!quantidade) return null;
+      Object.entries(producaoValues).map(([planoId, quantidade]) => {
 
-        const plano = planosTrabalho.find(p => p.id === planoId);
-        if (!plano) return null;
+        const plano = planosTrabalho.find(p => p.id === Number(planoId));
 
         return axios.post('http://localhost:3001/api/acompanhamento', {
-          maquina_id: plano.maquina_id,
-          encomenda_id: plano.encomenda_id,
-          id_colaborador: plano.id_colaborador,
+          planotrabalho_id: planoId,
+          maquina_id: plano?.maquina.id_maquina,
+          encomenda_id: plano?.encomenda.id_encomenda,
+          id_colaborador: plano?.colaborador.id_colaborador,
           quantidade_produzida: Number(quantidade)
         });
       });
-
-      await Promise.all(promises.filter(Boolean));
-
       // Reset form
       setProducaoValues({});
       alert('Acompanhamentos salvos com sucesso!');
@@ -108,68 +110,52 @@ const DataAcompanhamento = () => {
   };
 
   return (
-    <VStack spacing={6} align="stretch" p={6}>
-      <FormControl>
-        <FormLabel>Selecione o Turno</FormLabel>
-        <Select
-          value={selectedTurno}
-          onChange={(e) => setSelectedTurno(e.target.value)}
-          placeholder="Selecione um turno"
-        >
-          {turnos.map(turno => (
-            <option key={turno.id_turno} value={turno.id_turno}>
-              {turno.descricao}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-
-      {colaboradores.length > 0 && (
-        <Box borderWidth={1} borderRadius="lg" p={4}>
-          <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-            <GridItem colSpan={1}>
-              <Text fontWeight="bold">Colaborador</Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontWeight="bold">Plano de Trabalho</Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontWeight="bold">Quantidade Produzida</Text>
-            </GridItem>
-
-            {planosTrabalho.map(plano => (
-              <React.Fragment key={plano.id}>
-                <GridItem colSpan={1}>
-                  <Text>{plano.colaboradores?.nome}</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text>
-                    {plano.maquinas?.nome} - {plano.encomendas?.figuras?.nome}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={1}>
+    <VStack alignItems="center">
+      <Box className="TableBox">
+        <Menu> 
+          <MenuButton as={Button} mt="2%" ml="15%" mr="41.3%" className="TableSearchMenuButton" >
+                {selectedTurno ? selectedTurno.descricao : "Selecione um Turno"}
+          </MenuButton>
+          <MenuList className="TableSearchMenuList">
+                <MenuItem className="TableSearchMenuItem" onClick={() => setSelectedTurno(null)}>Selecione um Turno</MenuItem>
+            {turnos.map(turno => (
+              <MenuItem className="TableSearchMenuItem" key={turno.id_turno} onClick={() => setSelectedTurno(turno)}>
+                {turno.descricao}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+        <Button className='SaveButton' onClick={handleSave} isDisabled={Object.values(producaoValues).every(v => !v)}>Salvar Acompanhamentos</Button>
+        <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
+          <Thead className="LineHead">
+            <Tr>
+              <Th color="white">Colaborador</Th>
+              <Th color="white">Encomenda</Th>
+              <Th color="white">Máquina</Th>
+              <Th color="white">Quantidade Produzida</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {colaboradores.length > 0 && 
+              planosTrabalho.map((plano: any) => (
+              <Tr className="Line" key={plano.id}>
+                <Td>{plano.colaboradores.nome}</Td>
+                <Td>{plano.encomendas.figuras.nome}</Td>
+                <Td>{plano.maquinas.nome}</Td>
+                <Td>
                   <Input
                     type="number"
                     value={producaoValues[plano.id] || ''}
-                    onChange={(e) => handleProducaoChange(plano.id, e.target.value)}
+                    onChange={(e) => handleProducaoChange(String(plano.id), e.target.value)}
                     placeholder="Quantidade"
                   />
-                </GridItem>
-              </React.Fragment>
-            ))}
-          </Grid>
-
-          <Flex justify="flex-end" mt={4}>
-            <Button
-              colorScheme="blue"
-              onClick={handleSave}
-              isDisabled={Object.values(producaoValues).every(v => !v)}
-            >
-              Salvar Acompanhamentos
-            </Button>
-          </Flex>
-        </Box>
-      )}
+                </Td>
+              </Tr>
+              ))
+            }
+          </Tbody>
+        </Table>
+      </Box>
     </VStack>
   );
 };

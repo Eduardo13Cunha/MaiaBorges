@@ -36,9 +36,7 @@ export const AddPlanoTrabalhoModal: React.FC<{
         const segundos = Math.round(((tempoEstimado - horas) * 60 - minutos) * 60);
 
         const tempoFormatado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        
-        console.log(tempoFormatado);
-        setFormData(prev => ({
+                setFormData(prev => ({
           ...prev,
           quantidade: selectedEncomenda.quantidade.toString(),
           quantidade_falta: selectedEncomenda.quantidade.toString(),
@@ -50,8 +48,6 @@ export const AddPlanoTrabalhoModal: React.FC<{
   }, [formData.encomenda_id, encomendas]);
 
   const addPlanoTrabalho = async (planoTrabalho: any) => {
-    console.log(planoTrabalho);
-
     try {
       await axios.post('http://localhost:3001/api/planotrabalho', planoTrabalho);
       setUpdateTable("addPlanoTrabalho");

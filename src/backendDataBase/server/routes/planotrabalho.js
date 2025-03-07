@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     maquinas (nome),
     encomendas (id_encomenda, quantidade, figuras (nome)),
     colaboradores (nome)
-  `);
+  `).gt('quantidade_falta',0);
 
   if (error) {
     console.error("Erro ao buscar planos de trabalho:", error);

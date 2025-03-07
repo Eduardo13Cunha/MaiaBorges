@@ -26,6 +26,7 @@ const DataCliente: React.FC = () => {
     };
 
     fetchClientes();
+    setUpdateTable("");
   }, [UpdateTable]);
 
   const deleteCliente = async (id: number) => {

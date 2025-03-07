@@ -26,6 +26,7 @@ const DataMaquina = () => {
     };
   
     fetchMaquinas();
+    setUpdateTable("");
   }, [UpdateTable]);
   
   const handleSort = (column: string) => {

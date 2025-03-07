@@ -27,6 +27,7 @@ const DataMateriaPrima: React.FC = () => {
     };
 
     fetchMateriasPrimas();
+    setUpdateTable("");
   }, [UpdateTable]);
 
   const deleteMateriaPrima = async (id: number) => {

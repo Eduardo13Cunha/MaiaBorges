@@ -20,6 +20,7 @@ const DataPlanoTrabalho = () => {
 
   useEffect(() => {
     fetchData();
+    setUpdateTable("");
   }, [updateTable]);
 
   const fetchData = async () => {

@@ -18,16 +18,17 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
 }) => {
   const [formData, setFormData] = useState({
     id_figura: '',
-    id_cliente: '',
+    id_cliente: null as number | null,
     quantidade: '',
     semana: 0
   });
 
   useEffect(() => {
     if (selectedCell) {
+      console.log(editingEncomenda);
       setFormData({
         id_figura: String(selectedCell.figura.id_figura),
-        id_cliente: editingEncomenda?.clientes ? String(editingEncomenda.clientes) : '',
+        id_cliente: editingEncomenda?.clientes ? editingEncomenda.clientes.id_cliente : null,
         quantidade: editingEncomenda?.quantidade?.toString() || '',
         semana: selectedCell.week,
       });
@@ -60,34 +61,31 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   return (
     <Modal onClose={onClose} isOpen={true}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="TableModal">
         <ModalHeader>
           {editingEncomenda ? 'Editar Encomenda' : 'Nova Encomenda'}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit}>
-            <FormControl isRequired>
-              <FormLabel>Figura</FormLabel>
-              <Input
-                value={selectedCell?.figura.nome || ''}
-                isReadOnly
-              />
+            <FormControl>
+              <FormLabel><strong>Figura</strong> - {selectedCell?.figura.nome}</FormLabel>
+              <FormLabel><strong>Semana</strong> - {selectedCell?.week}</FormLabel>
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Cliente</FormLabel>
               <Menu>
-                <MenuButton as={Button}>
+                <MenuButton as={Button} className='TableMenu'>
                   {formData.id_cliente && clientes
-                    ? clientes.find(c => String(c.id_cliente) === formData.id_cliente)?.nome
+                    ? clientes.find(c => c.id_cliente === formData.id_cliente)?.nome
                     : "Selecione um Cliente"}
                 </MenuButton>
-                <MenuList>
+                <MenuList className="TableMenuList">
                   {clientes && clientes.map(cliente => (
-                    <MenuItem
+                    <MenuItem className="TableMenuItem"
                       key={cliente.id_cliente}
-                      onClick={() => setFormData({ ...formData, id_cliente: String(cliente.id_cliente) })}
+                      onClick={() => setFormData({ ...formData, id_cliente: cliente.id_cliente })}
                     >
                       {cliente.nome}
                     </MenuItem>
@@ -105,17 +103,8 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
               />
             </FormControl>
 
-            <FormControl isRequired mt={4}>
-              <FormLabel>Semana</FormLabel>
-              <Input
-                type="number"
-                value={formData.semana}
-                isReadOnly
-              />
-            </FormControl>
-            <Button type="submit" colorScheme="blue" mt={4} w="full">
-              {editingEncomenda ? 'Atualizar' : 'Criar'}
-            </Button>
+            <Button type="submit" className="SaveButton">{editingEncomenda ? 'Salvar' : 'Criar'}</Button>
+            <Button onClick={onClose} className="CancelButton">Cancelar</Button>
           </form>
         </ModalBody>
       </ModalContent>

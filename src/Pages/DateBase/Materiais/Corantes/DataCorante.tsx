@@ -27,6 +27,7 @@ const DataCorante: React.FC = () => {
     };
 
     fetchCorantes();
+    setUpdateTable("");
   }, [UpdateTable]);
 
   const deleteCorante = async (id: number) => {
