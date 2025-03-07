@@ -211,7 +211,7 @@ router.put("/:id", async (req, res) => {
   if (encomendaError) {
     console.error("Erro ao buscar encomenda atual:", encomendaError);
     return res.status(500).send("Erro interno do servidor");
-  }
+  } 
 
   // Se a figura ou quantidade mudou, precisamos ajustar o estoque
   if (encomendaAtual.id_figura !== id_figura || encomendaAtual.quantidade !== quantidade) {
@@ -256,6 +256,43 @@ router.put("/:id", async (req, res) => {
     } catch (error) {
       console.error("Erro ao ajustar estoque:", error);
       return res.status(500).json({ error: "Erro ao ajustar estoque" });
+    }
+  }
+
+  // Se a quantidade mudou, atualizar os planos de trabalho
+  if (encomendaAtual.quantidade !== quantidade) {
+    try {
+      // Buscar todos os planos de trabalho relacionados a esta encomenda
+      const { data: planosTrabalho, error: planosError } = await supabase
+        .from("plano_trabalho")
+        .select("*")
+        .eq("encomenda_id", id);
+
+      if (planosError) {
+        console.error("Erro ao buscar planos de trabalho:", planosError);
+        return res.status(500).json({ error: "Erro ao buscar planos de trabalho" });
+      }
+
+      // Para cada plano de trabalho
+      for (const plano of planosTrabalho) {
+        const quantidade_somar = Number(quantidade) - plano.quantidade;
+        
+        const { error: updatePlanoError } = await supabase
+          .from("plano_trabalho")
+          .update({ 
+            quantidade: Number(quantidade),
+            quantidade_falta: plano.quantidade_falta + quantidade_somar 
+          })
+          .eq("encomenda_id", id);
+
+        if (updatePlanoError) {
+          console.error("Erro ao atualizar plano de trabalho:", updatePlanoError);
+          return res.status(500).json({ error: "Erro ao atualizar plano de trabalho" });
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar planos de trabalho:", error);
+      return res.status(500).json({ error: "Erro ao atualizar planos de trabalho" });
     }
   }
 

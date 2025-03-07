@@ -16,6 +16,7 @@ import axios from 'axios';
 import { Cliente, Encomenda, Figura } from '../../../Interfaces/interfaces';
 
 const DataEncomenda: React.FC = () => {
+  const [UpdateTable, setUpdateTable] = useState<any>("");
   const [showModal, setShowModal] = useState(false);
   const [encomendas, setEncomendas] = useState<Encomenda[]>([]);
   const [figuras, setFiguras] = useState<Figura[]>([]);
@@ -27,7 +28,8 @@ const DataEncomenda: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    setUpdateTable("");
+  }, [UpdateTable]);
 
   const fetchData = async () => {
     try {
@@ -147,6 +149,7 @@ const DataEncomenda: React.FC = () => {
           editingEncomenda={editingEncomenda}
           clientes={clientes}
           onClose={() => setShowModal(false)} // Add an onClose to close the modal
+          setUpdateTable={setUpdateTable}
         />
       )}
     </Box>

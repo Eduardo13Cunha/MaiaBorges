@@ -8,6 +8,7 @@ interface EncomendaModalProps {
   selectedCell: { figura: Figura; week: number } | null;
   editingEncomenda: Encomenda | null;
   clientes: Cliente[];
+  setUpdateTable:React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const EncomendaModal: React.FC<EncomendaModalProps> = ({
@@ -15,6 +16,7 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   selectedCell,
   editingEncomenda,
   clientes,
+  setUpdateTable,
 }) => {
   const [formData, setFormData] = useState({
     id_figura: '',
@@ -43,6 +45,7 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
       } else {
         await axios.post('http://localhost:3001/api/encomenda', formData);
       }
+      setUpdateTable("handleSaveEncomenda");
       onClose();
     } catch (error) {
       console.error('Error saving encomenda:', error);

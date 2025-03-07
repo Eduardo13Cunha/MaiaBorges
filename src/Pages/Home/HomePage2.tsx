@@ -1,39 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { VStack, Heading, HStack, Text } from "@chakra-ui/react";
+import { useState, useEffect } from 'react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Input } from '@chakra-ui/react';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ProfilePage: React.FC = () => {
-  const [userData, setUserData] = useState<any>({});
+const DataPlanoTrabalho = () => {
+  const [planos, setPlano] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const userId = Cookies.get('userId'); // Exemplo de cookie
 
-  useEffect(() => {
-    // Recuperar dados pessoais dos cookies
-    const userName = Cookies.get('userName'); // Exemplo de cookie
-    const userEmail = Cookies.get('userEmail'); // Exemplo de cookie
-    const userNumber = Cookies.get('userNumber'); // Exemplo de cookie
+  useEffect(() => {   
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/planotrabalho');
+        const planoFiltrado=(response.data.data).filter((item: { id_colaborador: number | undefined; }) => item.id_colaborador === Number(userId));
+        setPlano(planoFiltrado);
 
-    // Definir os dados do usuário no estado
-    setUserData({
-      name: userName,
-      email: userEmail,
-      number: userNumber,
-    });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
-    <>
-      <HStack display="flex" minW="90%" mr="10%" ml="10%" alignItems="flex-start">
-        <VStack minW="50%" spacing={4} mr="50%" padding={5} color="white" align="stretch">
-          <Heading>Dados Pessoais</Heading>
-          <Text fontSize="130%"><strong>Nome:</strong></Text>
-          <Text fontSize="110%">{userData.name}</Text>
-          <Text fontSize="130%"><strong>Email:</strong></Text>
-          <Text fontSize="110%">{userData.email}</Text>
-          <Text fontSize="130%"><strong>Number:</strong></Text>
-          <Text fontSize="110%">{userData.number}</Text>
-        </VStack>
-      </HStack>
-    </>
+    <VStack alignItems="center">
+      {planos.length>0 && (
+      <Box className="TableBox">
+        <Input
+          placeholder="Pesquisar por máquina, colaborador, figura ou semana"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='TableSearchInput'
+        />
+        <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
+          <Thead className='LineHead'>
+            <Tr>
+              <Th color="white">Máquina</Th>
+              <Th color="white">Encomenda</Th>
+              <Th color="white">Tempo Conclusão</Th>
+              <Th color="white">Quantidade</Th>
+              <Th color="white">Semana</Th>
+              <Th color="white">Falta</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {planos.map((plano) => (
+              <Tr key={plano.id} className="Line">
+                <Td>{plano.maquinas?.nome || '-'}</Td>
+                <Td>{plano.encomendas?.figuras?.nome || '-'}</Td>
+                <Td>{plano.tempo_conclusao}</Td>
+                <Td>{plano.quantidade}</Td>
+                <Td>{plano.semana}</Td>
+                <Td>{plano.quantidade_falta}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+      )}
+    </VStack>
   );
 };
 
-export default ProfilePage;
+export default DataPlanoTrabalho;
