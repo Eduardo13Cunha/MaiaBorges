@@ -32,7 +32,7 @@ const DataColaborador: React.FC = () => {
     }
   }, []);
 
-  const limitCheck = async () => {
+  const limitCheck = useCallback(async () => {
     try {
       console.log('Dados enviados:', {
         lowItemsCorantes: lowStockCorantes,
@@ -48,7 +48,7 @@ const DataColaborador: React.FC = () => {
     } catch (error) {
       console.error('Erro ao enviar os dados para o backend:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCorantes();
