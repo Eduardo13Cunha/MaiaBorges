@@ -48,7 +48,7 @@ const DataColaborador: React.FC = () => {
     } catch (error) {
       console.error('Erro ao enviar os dados para o backend:', error);
     }
-  }, []);
+  }, [lowStockCorantes, lowStockMateriasprima]);
 
   useEffect(() => {
     fetchCorantes();
