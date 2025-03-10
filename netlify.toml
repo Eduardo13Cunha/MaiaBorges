@@ -1,8 +1,8 @@
 [build]
   command = "npm run build"
-  functions = "backendDataBase/server"
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
-  to = "/.backendDataBase/server/:splat"
+  to = "/.netlify/functions/:splat"
   status = 200
