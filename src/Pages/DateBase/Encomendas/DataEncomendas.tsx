@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {Box,Button,Grid,GridItem,Text,HStack,useToast,Tooltip} from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { EncomendaModal } from './EncomendaModal';
@@ -17,33 +17,35 @@ const DataEncomenda: React.FC = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState(0);
   const toast = useToast();
 
-  const fetchData = async () => {
-    try {
-      const [encomendaRes, figuraRes, clienteRes] = await Promise.all([
-        axios.get('http://localhost:3001/api/encomenda'),
-        axios.get('http://localhost:3001/api/figura'),
-        axios.get('http://localhost:3001/api/cliente')
-      ]);
-      
-      setEncomendas(encomendaRes.data.data || []);
-      setFiguras(figuraRes.data.data || []);
-      setClientes(clienteRes.data.data || []);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      toast({
-        title: "Erro ao carregar dados",
-        description: "Não foi possível carregar os dados necessários.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  const fetchData = useCallback(() => {
+    async () => {
+      try {
+        const [encomendaRes, figuraRes, clienteRes] = await Promise.all([
+          axios.get('http://localhost:3001/api/encomenda'),
+          axios.get('http://localhost:3001/api/figura'),
+          axios.get('http://localhost:3001/api/cliente')
+        ]);
+        
+        setEncomendas(encomendaRes.data.data || []);
+        setFiguras(figuraRes.data.data || []);
+        setClientes(clienteRes.data.data || []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        toast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar os dados necessários.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     fetchData();
     setUpdateTable("");
-  }, [UpdateTable]);
+  }, [UpdateTable,fetchData]);
 
   const getEncomendaForCell = (figuraId: number, week: number) => {
     return encomendas.find(e => e.figuras.id_figura === figuraId && e.semana === week);

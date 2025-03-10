@@ -62,7 +62,7 @@ const DataColaborador: React.FC = () => {
       limitCheck();
       setIsFirstTime(false);
     }
-  }, [word && (lowStockCorantes || lowStockMateriasprima)]);
+  }, [isFirstTime, lowStockCorantes.length, lowStockMateriasprima.length, limitCheck]);  
 
   return (
     <HStack width="95%" height="100%" maxW="100%" maxH="100%">

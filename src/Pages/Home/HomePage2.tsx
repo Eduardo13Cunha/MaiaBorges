@@ -21,7 +21,7 @@ const DataPlanoTrabalho = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <VStack alignItems="center">
