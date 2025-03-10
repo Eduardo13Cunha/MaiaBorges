@@ -23,7 +23,7 @@ export default function Header() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/auth/utilizadores', { email, password });
+            const response = await axios.post('/.backendDataBase/server/api/auth/utilizadores', { email, password });
             if (response.status === 200) {
                 const user = (response.data as { data: Colaborador }).data;
                 setName(user.nome); // Armazena o nome do utilizador
