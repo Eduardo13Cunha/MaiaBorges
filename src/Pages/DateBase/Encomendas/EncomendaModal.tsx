@@ -2,6 +2,7 @@ import { Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton,
 import { useState, useEffect } from "react";
 import { Figura, Encomenda, Cliente } from "../../../Interfaces/interfaces";
 import axios from "axios";
+import { ErrorModal } from "../../../Components/errorModal/errorModal";
 
 interface EncomendaModalProps {
   onClose: () => void;
@@ -18,6 +19,8 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   clientes,
   setUpdateTable,
 }) => {
+  const [error,setError] = useState<any>(null);
+  const [showError, setShowError] = useState(false);
   const [formData, setFormData] = useState({
     id_figura: '',
     id_cliente: null as number | null,
@@ -27,7 +30,6 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
 
   useEffect(() => {
     if (selectedCell) {
-      console.log(editingEncomenda);
       setFormData({
         id_figura: String(selectedCell.figura.id_figura),
         id_cliente: editingEncomenda?.clientes ? editingEncomenda.clientes.id_cliente : null,
@@ -38,7 +40,6 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   }, [selectedCell, editingEncomenda]);
 
   const handleSaveEncomenda = async (formData: any) => {
-    console.log(formData);
     try {
       if (editingEncomenda) {
         await axios.put(`http://localhost:3001/api/encomenda/${editingEncomenda.id_encomenda}`, formData);
@@ -48,7 +49,12 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
       setUpdateTable("handleSaveEncomenda");
       onClose();
     } catch (error) {
-      console.error('Error saving encomenda:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error)
+        setShowError(true);
+      } else {
+        alert('An unexpected error occurred');
+      }
     }
   };
 
@@ -109,6 +115,12 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
             <Button type="submit" className="SaveButton">{editingEncomenda ? 'Salvar' : 'Criar'}</Button>
             <Button onClick={onClose} className="CancelButton">Cancelar</Button>
           </form>
+          {showError && (
+            <ErrorModal  
+              onClose2={() => setShowError(false)}
+              title={error.response.data.error}
+              description={error.response.data.details}/>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>

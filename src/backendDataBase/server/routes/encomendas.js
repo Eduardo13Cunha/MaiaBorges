@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
     // 3. Verificar se há matéria prima suficiente
     const { data: materiaPrimaData, error: materiaPrimaError } = await supabase
       .from("materias_primas")
-      .select("quantidade")
+      .select("nome,quantidade")
       .eq("id_materiasprima", figuraData.id_materiasprima)
       .single();
     
@@ -61,6 +61,7 @@ router.post("/", async (req, res) => {
     if (materiaPrimaData.quantidade < totalMateriaPrima) {
       return res.status(400).json({ 
         error: "Estoque insuficiente de matéria prima",
+        materiaPrima_id: materiaPrimaData.nome,
         required: totalMateriaPrima,
         available: materiaPrimaData.quantidade
       });
@@ -72,7 +73,7 @@ router.post("/", async (req, res) => {
       
       const { data: coranteData, error: coranteError } = await supabase
         .from("corantes")
-        .select("quantidade")
+        .select("nome,quantidade")
         .eq("id_corante", corante.id_corante)
         .single();
       
@@ -84,7 +85,7 @@ router.post("/", async (req, res) => {
       if (coranteData.quantidade < totalCorante) {
         return res.status(400).json({ 
           error: "Estoque insuficiente de corante",
-          corante_id: corante.id_corante,
+          corante_id: coranteData.nome,
           required: totalCorante,
           available: coranteData.quantidade
         });
@@ -332,25 +333,24 @@ async function verificarEstoque(idFigura, quantidade) {
   if (figuraError) {
     throw new Error("Erro ao buscar informações da figura");
   }
-  
+
+  let insuficienteDetalhes = [];
+
   // Verificar matéria prima
   const totalMateriaPrima = figuraData.quantidade_materia_prima * quantidade;
   const { data: materiaPrimaData } = await supabase
     .from("materias_primas")
-    .select("quantidade")
+    .select("nome,quantidade")
     .eq("id_materiasprima", figuraData.id_materiasprima)
     .single();
   
   if (materiaPrimaData.quantidade < totalMateriaPrima) {
-    return { 
-      suficiente: false, 
-      detalhes: {
-        tipo: "materia_prima",
-        id: figuraData.id_materiasprima,
-        necessario: totalMateriaPrima,
-        disponivel: materiaPrimaData.quantidade
-      }
-    };
+    insuficienteDetalhes.push({
+      tipo: "Materia Prima",
+      id: materiaPrimaData.nome,
+      necessario: totalMateriaPrima,
+      disponivel: materiaPrimaData.quantidade
+    });
   }
   
   // Verificar corantes
@@ -359,21 +359,25 @@ async function verificarEstoque(idFigura, quantidade) {
     
     const { data: coranteData } = await supabase
       .from("corantes")
-      .select("quantidade")
+      .select("nome,quantidade")
       .eq("id_corante", corante.id_corante)
       .single();
     
     if (coranteData.quantidade < totalCorante) {
-      return { 
-        suficiente: false, 
-        detalhes: {
-          tipo: "corante",
-          id: corante.id_corante,
-          necessario: totalCorante,
-          disponivel: coranteData.quantidade
-        }
-      };
+      insuficienteDetalhes.push({
+        tipo: "Corante",
+        id: coranteData.nome,
+        necessario: totalCorante,
+        disponivel: coranteData.quantidade
+      });
     }
+  }
+
+  if (insuficienteDetalhes.length > 0) {
+    return { 
+      suficiente: false, 
+      detalhes: insuficienteDetalhes 
+    };
   }
   
   return { suficiente: true };
