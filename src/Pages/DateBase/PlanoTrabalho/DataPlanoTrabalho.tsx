@@ -110,7 +110,7 @@ const DataPlanoTrabalho = () => {
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
-              <Th color="white" onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
+              <Th width="5%" color="white" onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>ID</Text>
                   {sortColumn === 'id' && (
@@ -121,8 +121,8 @@ const DataPlanoTrabalho = () => {
               <Th color="white">Máquina</Th>
               <Th color="white">Encomenda</Th>
               <Th color="white">Colaborador</Th>
-              <Th color="white">Tempo Conclusão</Th>
-              <Th color="white" onClick={() => handleSort('quantidade')} style={{ cursor: 'pointer' }}>
+              <Th color="white" width="12%">Tempo Conclusão</Th>
+              <Th color="white" width="12%" onClick={() => handleSort('quantidade')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>Quantidade</Text>
                   {sortColumn === 'quantidade' && (
@@ -130,7 +130,7 @@ const DataPlanoTrabalho = () => {
                   )}
                 </HStack>
               </Th>
-              <Th color="white" onClick={() => handleSort('semana')} style={{ cursor: 'pointer' }}>
+              <Th color="white" width="7%" onClick={() => handleSort('semana')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>Semana</Text>
                   {sortColumn === 'semana' && (
@@ -138,7 +138,7 @@ const DataPlanoTrabalho = () => {
                   )}
                 </HStack>
               </Th>
-              <Th color="white" onClick={() => handleSort('quantidade_falta')} style={{ cursor: 'pointer' }}>
+              <Th color="white" width="12%" onClick={() => handleSort('quantidade_falta')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>Falta</Text>
                   {sortColumn === 'quantidade_falta' && (
