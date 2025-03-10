@@ -1,4 +1,5 @@
 import express from 'express';
+import serverless from 'serverless-http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
@@ -36,8 +37,11 @@ app.use('/api/encomenda', encomendasRoutes);
 app.use('/api/planotrabalho', planoTrabalhoRoutes);
 app.use('/api/acompanhamento', acompanhamentoRoutes);
 
-// Inicialização do servidor
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// For local development support
+if (process.env.NETLIFY_DEV) {
+  app.listen(3001, () => {
+    console.log('Local dev server running on port 3001');
+  });
+}
+
+export const handler = serverless(app);
