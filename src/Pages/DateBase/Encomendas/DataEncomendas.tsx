@@ -38,7 +38,7 @@ const DataEncomenda: React.FC = () => {
         isClosable: true,
       });
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     fetchData();
