@@ -1,6 +1,5 @@
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import axios from "axios";
-import { interval } from "date-fns";
 import { useState, useEffect } from "react";
 
 export const AddPlanoTrabalhoModal: React.FC<{ 
@@ -35,8 +34,7 @@ export const AddPlanoTrabalhoModal: React.FC<{
         const minutos = Math.floor((tempoEstimado - horas) * 60);
         const segundos = Math.round(((tempoEstimado - horas) * 60 - minutos) * 60);
 
-        const tempoFormatado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-                setFormData(prev => ({
+        setFormData(prev => ({
           ...prev,
           quantidade: selectedEncomenda.quantidade.toString(),
           quantidade_falta: selectedEncomenda.quantidade.toString(),

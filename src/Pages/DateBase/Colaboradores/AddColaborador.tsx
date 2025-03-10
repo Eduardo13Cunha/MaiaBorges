@@ -15,7 +15,7 @@ export const AddColaborador: React.FC<{ setUpdateTable:React.Dispatch<React.SetS
 
     const addColaborador = async (novocolaborador: any) => {
         try {
-          const response = await axios.post('http://localhost:3001/api/colaborador', novocolaborador);
+          await axios.post('http://localhost:3001/api/colaborador', novocolaborador);
           setUpdateTable("addColaborador");
         } catch (error) {
           console.error('Error adding colaborador:', error);

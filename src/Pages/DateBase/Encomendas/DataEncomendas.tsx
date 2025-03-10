@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Grid,
-  GridItem,
-  Text,
-  HStack,
-  useToast,
-  Tooltip
-} from '@chakra-ui/react';
+import {Box,Button,Grid,GridItem,Text,HStack,useToast,Tooltip} from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { EncomendaModal } from './EncomendaModal';
 import { IoMdAdd } from 'react-icons/io';
@@ -25,11 +16,6 @@ const DataEncomenda: React.FC = () => {
   const [editingEncomenda, setEditingEncomenda] = useState<Encomenda | null>(null);
   const [currentWeekStart, setCurrentWeekStart] = useState(0);
   const toast = useToast();
-
-  useEffect(() => {
-    fetchData();
-    setUpdateTable("");
-  }, [UpdateTable]);
 
   const fetchData = async () => {
     try {
@@ -53,6 +39,11 @@ const DataEncomenda: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    setUpdateTable("");
+  }, [UpdateTable]);
 
   const getEncomendaForCell = (figuraId: number, week: number) => {
     return encomendas.find(e => e.figuras.id_figura === figuraId && e.semana === week);

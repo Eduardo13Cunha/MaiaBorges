@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 const DataPlanoTrabalho = () => {
   const [planos, setPlano] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const userId = Cookies.get('userId'); // Exemplo de cookie
+  const userId = Cookies.get('userId');
 
   useEffect(() => {   
     const fetchData = async () => {

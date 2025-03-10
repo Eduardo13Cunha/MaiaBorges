@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Menu, MenuButton, Button, MenuList, MenuItem, Box } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Menu, MenuButton, Button, MenuList, MenuItem, Box } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaPencilAlt } from "react-icons/fa";

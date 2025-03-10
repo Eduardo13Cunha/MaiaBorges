@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
   `);
 
   if (error) {
-    console.error("Erro ao buscar acompanhamentos:", error);
     return res.status(500).json({ error: "Erro ao buscar acompanhamentos" });
   }
   
@@ -36,7 +35,6 @@ router.post("/", async (req, res) => {
       }]);
 
     if (error) {
-      console.error("Erro ao adicionar acompanhamento:", error);
       return res.status(500).json({ error: "Erro ao adicionar acompanhamento" });
     }
     

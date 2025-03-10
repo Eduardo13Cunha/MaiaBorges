@@ -13,7 +13,7 @@ const DataFigura = () => {
   const [corantes, setCorantes] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [UpdateTable, setUpdateTable] = useState<any>("");  const [editFigura, setEditFigura] = useState<any>(null);
+  const [UpdateTable, setUpdateTable] = useState<any>("");
   const [sortColumn, setSortColumn] = useState<string>('id_figura');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const itemsPerPage = 8;

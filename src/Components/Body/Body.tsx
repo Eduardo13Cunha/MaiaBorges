@@ -1,5 +1,4 @@
 import { Box, StackProps, VStack } from "@chakra-ui/react";
-import HackingAzul from "../../Assets/HackingAzul2.jpeg";
 
 export default function Body(props: StackProps) {
     return (

@@ -1,26 +1,7 @@
 import { useState, useEffect } from 'react';
-import {
-  VStack,
-  Box,
-  Input,
-  Button,
-  Text,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
-} from '@chakra-ui/react';
+import {VStack,Box,Input,Button,Menu,MenuButton,MenuItem,MenuList,Table,Tbody,Td,Th,Thead,Tr} from '@chakra-ui/react';
 import axios from 'axios';
 import { Acompanhamento, Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
-import { FaTrash } from 'react-icons/fa';
-import { ModifyColaborador } from '../Colaboradores/EditColaborador';
 
 const DataAcompanhamento = () => {
   const [turnos, setTurnos] = useState<any[]>([]);
