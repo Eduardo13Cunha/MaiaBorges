@@ -17,29 +17,27 @@ const DataEncomenda: React.FC = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState(0);
   const toast = useToast();
 
-  const fetchData = useCallback(() => {
-    async () => {
-      try {
-        const [encomendaRes, figuraRes, clienteRes] = await Promise.all([
-          axios.get('http://localhost:3001/api/encomenda'),
-          axios.get('http://localhost:3001/api/figura'),
-          axios.get('http://localhost:3001/api/cliente')
-        ]);
-        
-        setEncomendas(encomendaRes.data.data || []);
-        setFiguras(figuraRes.data.data || []);
-        setClientes(clienteRes.data.data || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        toast({
-          title: "Erro ao carregar dados",
-          description: "Não foi possível carregar os dados necessários.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    };
+  const fetchData = useCallback( async() => {
+    try {
+      const [encomendaRes, figuraRes, clienteRes] = await Promise.all([
+        axios.get('http://localhost:3001/api/encomenda'),
+        axios.get('http://localhost:3001/api/figura'),
+        axios.get('http://localhost:3001/api/cliente')
+      ]);
+      
+      setEncomendas(encomendaRes.data.data || []);
+      setFiguras(figuraRes.data.data || []);
+      setClientes(clienteRes.data.data || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar os dados necessários.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   }, []);
 
   useEffect(() => {
