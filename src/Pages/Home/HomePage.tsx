@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
   const handleSubmit = async () => {
     if (sugestao !== "") {
       try {
-          await axios.post('http://localhost:3001/api/send-email', { sugestao });
+          await axios.post('/.netlify/functions/email/send-email', { sugestao });
           alert('Sugestão enviada com sucesso!');
           setSugestao('');
       } catch (error) {

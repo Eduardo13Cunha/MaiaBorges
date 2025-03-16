@@ -12,7 +12,7 @@ export const EditCoranteModal: React.FC<{ editCorante: any; setUpdateTable:React
 
   const updateCorante = async (corante: any) => {
     try {
-      await axios.put(`http://localhost:3001/api/corante/${corante.id_corante}`, corante);
+      await axios.put(`/.netlify/functions/corantes/${corante.id_corante}`, corante);
       setUpdateTable("updateCorante");
       window.location.reload();
     } catch (error) {

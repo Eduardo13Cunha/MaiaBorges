@@ -14,7 +14,7 @@ const DataColaborador: React.FC = () => {
 
   const fetchCorantes = useCallback(async () => {
     try {
-      const response = await axios.get<{ data: Corante[] }>('http://localhost:3001/api/corante');
+      const response = await axios.get<{ data: Corante[] }>('/.netlify/functions/corantes');
       const corantesBaixos = response.data.data.filter((item: Corante) => item.quantidade < limiteCorantes);
       setLowStockCorantes(corantesBaixos); 
     } catch (error) {
@@ -24,7 +24,7 @@ const DataColaborador: React.FC = () => {
 
   const fetchMateriasPrimas = useCallback(async () => {
     try {
-      const response = await axios.get<{ data: MateriaPrima[] }>('http://localhost:3001/api/materiasprima');
+      const response = await axios.get<{ data: MateriaPrima[] }>('/.netlify/functions/materiasprimas');
       const materiasPrimasBaixas = response.data.data.filter((item: MateriaPrima) => item.quantidade < limiteMateriasprima);
       setLowStockMateriasprima(materiasPrimasBaixas); 
     } catch (error) {
@@ -39,7 +39,7 @@ const DataColaborador: React.FC = () => {
         lowItemsMateriasPrimas: lowStockMateriasprima
       });
 
-      await axios.post('http://localhost:3001/api/alert-email', {
+      await axios.post('/.netlify/functions/email/alert-email', {
         lowItemsCorantes: lowStockCorantes,
         lowItemsMateriasPrimas: lowStockMateriasprima
       });

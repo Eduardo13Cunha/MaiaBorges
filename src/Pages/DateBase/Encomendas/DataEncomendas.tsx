@@ -20,9 +20,9 @@ const DataEncomenda: React.FC = () => {
   const fetchData = useCallback( async() => {
     try {
       const [encomendaRes, figuraRes, clienteRes] = await Promise.all([
-        axios.get('http://localhost:3001/api/encomenda'),
-        axios.get('http://localhost:3001/api/figura'),
-        axios.get('http://localhost:3001/api/cliente')
+        axios.get('/.netlify/functions/encomendas'),
+        axios.get('/.netlify/functions/figuras'),
+        axios.get('/.netlify/functions/clientes')
       ]);
       
       setEncomendas(encomendaRes.data.data || []);

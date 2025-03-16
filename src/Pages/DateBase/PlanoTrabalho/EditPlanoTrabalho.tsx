@@ -20,7 +20,7 @@ export const EditPlanoTrabalhoModal: React.FC<{
 
   const updatePlanoTrabalho = async (planoTrabalho: any) => {
     try {
-      await axios.put(`http://localhost:3001/api/planotrabalho/${planoTrabalho.id}`, planoTrabalho);
+      await axios.put(`/.netlify/functions/planotrabalhos/${planoTrabalho.id}`, planoTrabalho);
       setUpdateTable("updatePlanoTrabalho");
     } catch (error) {
       console.error('Error updating plano de trabalho:', error);

@@ -13,7 +13,7 @@ export const AddClienteModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
 
     const addCliente = async (cliente: any) => {
         try {
-        await axios.post('http://localhost:3001/api/cliente', cliente);
+        await axios.post('/.netlify/functions/clientes', cliente);
         setUpdateTable("addCliente");
         } catch (error) {
         console.error('Error adding cliente:', error);

@@ -2,7 +2,8 @@
   command = "npm run build"
   functions = "netlify/functions"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+[dev]
+framework = "create-react-app"
+targetPort = 3000
+command = "npm start"
+port = 8888

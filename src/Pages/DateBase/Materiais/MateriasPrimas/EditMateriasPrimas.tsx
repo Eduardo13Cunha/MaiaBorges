@@ -12,7 +12,7 @@ export const EditMateriaPrimaModal: React.FC<{ editMateriaPrima: any; setUpdateT
 
   const updateMateriaPrima = async (materiaPrima: any) => {
     try {
-      await axios.put(`http://localhost:3001/api/materiasprima/${materiaPrima.id_materiasprima}`, materiaPrima);
+      await axios.put(`/.netlify/functions/materiasprimas/${materiaPrima.id_materiasprima}`, materiaPrima);
       setUpdateTable("updateMateriaPrima");
       window.location.reload();
     } catch (error) {

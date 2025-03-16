@@ -22,7 +22,7 @@ const DataAcompanhamento = () => {
 
   const fetchTurnos = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/turno');
+      const response = await axios.get('/.netlify/functions/turnos');
       const data = response.data as { data: Acompanhamento[] };
       setTurnos(data.data);
     } catch (error) {
@@ -32,7 +32,7 @@ const DataAcompanhamento = () => {
 
   const fetchColaboradoresByTurno = async (turnoId: number) => {
     try {
-      const response = await axios.get('http://localhost:3001/api/colaborador');
+      const response = await axios.get('/.netlify/functions/colaboradores');
       const data = response.data as { data: Colaborador[] };
       const colaboradoresTurno = data.data.filter(
         (col: Colaborador) => col.id_turno === turnoId
@@ -40,7 +40,7 @@ const DataAcompanhamento = () => {
       setColaboradores(colaboradoresTurno);
 
       // Fetch planos de trabalho for these colaboradores
-      const planosResponse = await axios.get('http://localhost:3001/api/planotrabalho');
+      const planosResponse = await axios.get('/.netlify/functions/planotrabalhos');
       const planosColaboradores = (planosResponse.data as { data: PlanoTrabalho[] }).data.filter(
         (plano: any) => colaboradoresTurno.some(
           (col: any) => col.id_colaborador === plano.id_colaborador
@@ -73,7 +73,7 @@ const DataAcompanhamento = () => {
 
         const plano = planosTrabalho.find(p => p.id === Number(planoId));
 
-        return axios.post('http://localhost:3001/api/acompanhamento', {
+        return axios.post('/.netlify/functions/acompanhamentos', {
           planotrabalho_id: planoId,
           maquina_id: plano?.maquina.id_maquina,
           encomenda_id: plano?.encomenda.id_encomenda,

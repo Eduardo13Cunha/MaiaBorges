@@ -47,7 +47,7 @@ export const AddPlanoTrabalhoModal: React.FC<{
 
   const addPlanoTrabalho = async (planoTrabalho: any) => {
     try {
-      await axios.post('http://localhost:3001/api/planotrabalho', planoTrabalho);
+      await axios.post('/.netlify/functions/planotrabalhos', planoTrabalho);
       setUpdateTable("addPlanoTrabalho");
     } catch (error) {
       console.error('Error adding plano de trabalho:', error);

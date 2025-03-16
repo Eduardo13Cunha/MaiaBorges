@@ -14,7 +14,7 @@ export const AddMaquinaModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
 
   const addMaquina = async (maquina: any) => {
     try {
-      await axios.post('http://localhost:3001/api/maquina', maquina);
+      await axios.post('/.netlify/functions/maquinas', maquina);
       setUpdateTable("addMaquina");
     } catch (error) {
       console.error('Error adding maquina:', error);

@@ -42,9 +42,9 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   const handleSaveEncomenda = async (formData: any) => {
     try {
       if (editingEncomenda) {
-        await axios.put(`http://localhost:3001/api/encomenda/${editingEncomenda.id_encomenda}`, formData);
+        await axios.put(`/.netlify/functions/encomendas/${editingEncomenda.id_encomenda}`, formData);
       } else {
-        await axios.post('http://localhost:3001/api/encomenda', formData);
+        await axios.post('/.netlify/functions/encomendas', formData);
       }
       setUpdateTable("handleSaveEncomenda");
       onClose();

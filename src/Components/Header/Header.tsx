@@ -23,7 +23,7 @@ export default function Header() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('/.netlify/functions/routes/auth/utilizadores', { email, password });
+            const response = await axios.post('/.netlify/functions/auth', { email, password });
             if (response.status === 200) {
                 const user = (response.data as { data: Colaborador }).data;
                 setName(user.nome); // Armazena o nome do utilizador

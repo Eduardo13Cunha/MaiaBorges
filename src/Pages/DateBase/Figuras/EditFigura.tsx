@@ -18,7 +18,7 @@ export const EditFiguraModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
 
   const updateFigura = async (figura: any) => {
     try {
-      await axios.put(`http://localhost:3001/api/figura/${figura.id_figura}`, figura);
+      await axios.put(`/.netlify/functions/figuras/${figura.id_figura}`, figura);
       setUpdateTable("updateFigura");
     } catch (error) {
       console.error('Error updating figura:', error);

@@ -18,7 +18,7 @@ const DataCliente: React.FC = () => {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/cliente');
+        const response = await axios.get('/.netlify/functions/clientes');
         setClientes((response.data as { data: Cliente[] }).data);
       } catch (error) {
         console.error('Error fetching clientes:', error);
@@ -32,7 +32,7 @@ const DataCliente: React.FC = () => {
   const deleteCliente = async (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/cliente/${id}`);
+        await axios.delete(`/.netlify/functions/clientes/${id}`);
         setClientes(clientes.filter(cliente => cliente.id_cliente !== id));
       } catch (error) {
         console.error('Error deleting cliente:', error);

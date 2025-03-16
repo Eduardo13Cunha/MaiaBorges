@@ -15,7 +15,7 @@ export const ModifyColaborador: React.FC<{ setUpdateTable:React.Dispatch<React.S
 
     const updateColaborador = async (colaborador: any) => {
         try {
-        const response = await axios.put(`http://localhost:3001/api/colaborador/${colaborador.id_colaborador}`, colaborador);
+        const response = await axios.put(`/.netlify/functions/colaboradores/${colaborador.id_colaborador}`, colaborador);
         if (response.data) {
             setUpdateTable("updateColaborador");
         } else {

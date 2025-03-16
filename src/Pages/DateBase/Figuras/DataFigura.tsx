@@ -26,9 +26,9 @@ const DataFigura = () => {
   const fetchData = async () => {
     try {
       const [figuraRes, materiaPrimaRes, coranteRes] = await Promise.all([
-        axios.get('http://localhost:3001/api/figura'),
-        axios.get('http://localhost:3001/api/materiasprima'),
-        axios.get('http://localhost:3001/api/corante')
+        axios.get('/.netlify/functions/figuras'),
+        axios.get('/.netlify/functions/materiasprimas'),
+        axios.get('/.netlify/functions/corantes')
       ]);
       setFiguras((figuraRes.data as { data: Figura[] }).data);
       setMateriasPrimas((materiaPrimaRes.data as { data: MateriaPrima[] }).data);
@@ -47,7 +47,7 @@ const DataFigura = () => {
   const deleteFigura = async (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir esta figura?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/figura/${id}`);
+        await axios.delete(`/.netlify/functions/figuras/${id}`);
         setFiguras(figuras.filter(figura => figura.id_figura !== id));
       } catch (error) {
         console.error('Error deleting figura:', error);

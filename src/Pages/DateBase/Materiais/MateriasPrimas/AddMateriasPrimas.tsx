@@ -11,7 +11,7 @@ export const AddMateriaPrimaModal: React.FC<{ setUpdateTable:React.Dispatch<Reac
 
   const addMateriaPrima = async (novamateriaPrima: any) => {
     try {
-      await axios.post('http://localhost:3001/api/materiasprima', novamateriaPrima);
+      await axios.post('/.netlify/functions/materiasprimas', novamateriaPrima);
       setUpdateTable("addMateriaPrima");
       window.location.reload();
     } catch (error) {

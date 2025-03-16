@@ -19,7 +19,7 @@ const DataMateriaPrima: React.FC = () => {
   useEffect(() => {
     const fetchMateriasPrimas = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/materiasprima');
+        const response = await axios.get('/.netlify/functions/materiasprimas');
         setMateriasPrimas((response.data as { data: MateriaPrima[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -34,7 +34,7 @@ const DataMateriaPrima: React.FC = () => {
     const confirmDelete = window.confirm("Tem certeza que deseja excluir este registro?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3001/api/materiasprima/${id}`);
+        await axios.delete(`/.netlify/functions/materiasprimas/${id}`);
         setMateriasPrimas(MateriasPrimas.filter(materiaPrima => materiaPrima.id_materiasprima !== id));
       } catch (error) {
         console.error('Error deleting materia prima:', error);

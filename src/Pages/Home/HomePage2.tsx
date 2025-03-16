@@ -11,7 +11,7 @@ const DataPlanoTrabalho = () => {
   useEffect(() => {   
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/planotrabalho');
+        const response = await axios.get('/.netlify/functions/planotrabalhos');
         const planoFiltrado=(response.data.data).filter((item: { id_colaborador: number | undefined; }) => item.id_colaborador === Number(userId));
         setPlano(planoFiltrado);
 

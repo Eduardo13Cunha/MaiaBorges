@@ -26,10 +26,10 @@ const DataPlanoTrabalho = () => {
   const fetchData = async () => {
     try {
       const [planoRes, maquinaRes, encomendaRes, colaboradorRes] = await Promise.all([
-        axios.get('http://localhost:3001/api/planotrabalho/'),
-        axios.get('http://localhost:3001/api/maquina'),
-        axios.get('http://localhost:3001/api/encomenda'),
-        axios.get('http://localhost:3001/api/colaborador')
+        axios.get('/.netlify/functions/planotrabalhos'),
+        axios.get('/.netlify/functions/maquinas'),
+        axios.get('/.netlify/functions/encomendas'),
+        axios.get('/.netlify/functions/colaboradores')
       ]);
       setPlanosTrabalho((planoRes.data as { data: PlanoTrabalho[] }).data);
       setMaquinas((maquinaRes.data as { data: Maquina[] }).data);
@@ -49,7 +49,7 @@ const DataPlanoTrabalho = () => {
   const deletePlanoTrabalho = async (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este plano de trabalho?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/planotrabalho/${id}`);
+        await axios.delete(`/.netlify/functions/planotrabalhos/${id}`);
         setPlanosTrabalho(planosTrabalho.filter(plano => plano.id !== id));
       } catch (error) {
         console.error('Error deleting plano de trabalho:', error);

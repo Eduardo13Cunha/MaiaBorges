@@ -14,7 +14,7 @@ export const EditMaquinaModal: React.FC<{ setUpdateTable:React.Dispatch<React.Se
 
   const updateMaquina = async (maquina: any) => {
     try {
-      await axios.put(`http://localhost:3001/api/maquina/${maquina.id_maquina}`, maquina);
+      await axios.put(`/.netlify/functions/maquinas/${maquina.id_maquina}`, maquina);
       setUpdateTable("updateMaquina");
       setEditModalOpen(false);
     } catch (error) {

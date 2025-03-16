@@ -13,7 +13,7 @@ export const EditClienteModal: React.FC<{ setUpdateTable:React.Dispatch<React.Se
 
     const updateCliente = async (cliente: any) => {
         try {
-          await axios.put(`http://localhost:3001/api/cliente/${cliente.id_cliente}`, cliente);
+          await axios.put(`/.netlify/functions/clientes/${cliente.id_cliente}`, cliente);
           setUpdateTable("updateCliente");
           setEditModalOpen(false);
         } catch (error) {

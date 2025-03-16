@@ -18,7 +18,7 @@ const DataMaquina = () => {
   useEffect(() => {
     const fetchMaquinas = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/maquina');
+        const response = await axios.get('/.netlify/functions/maquinas');
         setMaquinas((response.data as { data: Maquina[] }).data);
       } catch (error) {
         console.error('Error fetching maquinas:', error);
@@ -39,7 +39,7 @@ const DataMaquina = () => {
   const deleteMaquina = async (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir esta máquina?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/maquina/${id}`);
+        await axios.delete(`/.netlify/functions/maquinas/${id}`);
         setMaquinas(maquinas.filter(maquina => maquina.id_maquina !== id));
       } catch (error) {
         console.error('Error deleting maquina:', error);

@@ -19,7 +19,7 @@ const DataCorante: React.FC = () => {
   useEffect(() => {
     const fetchCorantes = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/corante');
+        const response = await axios.get('/.netlify/functions/corantes');
         setCorantes((response.data as { data: Corante[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -34,7 +34,7 @@ const DataCorante: React.FC = () => {
     const confirmDelete = window.confirm("Tem certeza que deseja excluir este registro?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3001/api/corante/${id}`);
+        await axios.delete(`/.netlify/functions/corantes/${id}`);
         setCorantes(Corantes.filter(corante => corante.id_corante !== id));
       } catch (error) {
         console.error('Error deleting corante:', error);

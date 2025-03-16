@@ -11,7 +11,7 @@ export const AddCoranteModal: React.FC<{ setUpdateTable:React.Dispatch<React.Set
 
   const addCorante = async (novocorante: any) => {
     try {
-      await axios.post('http://localhost:3001/api/corante', novocorante);
+      await axios.post('/.netlify/functions/corantes', novocorante);
       setUpdateTable("addCorante");  
       window.location.reload();
     } catch (error) {

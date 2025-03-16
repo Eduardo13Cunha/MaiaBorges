@@ -22,7 +22,7 @@ const DataColaborador: React.FC = () => {
   useEffect(() => {
     const fetchColaboradores = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/colaborador');
+        const response = await axios.get('/.netlify/functions/colaboradores');
         setColaboradores((response.data as { data: Colaborador[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -36,7 +36,7 @@ const DataColaborador: React.FC = () => {
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/turno');
+        const response = await axios.get('/.netlify/functions/turnos');
         setTurnos((response.data as { data: Turno[] }).data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -50,7 +50,7 @@ const DataColaborador: React.FC = () => {
     const confirmDelete = window.confirm("Tem certeza que deseja excluir este registro?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3001/api/colaborador/${id}`);
+        await axios.delete(`/.netlify/functions/colaboradores/${id}`);
         setColaboradores(Colaboradores.filter(colaborador => colaborador.id_colaborador !== id));
       } catch (error) {
         console.error('Error deleting colaborador:', error);
