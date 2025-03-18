@@ -58,6 +58,21 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
     }
   };
 
+  const handleDelete = async (id: any) => {
+    try {
+      await axios.delete(`/.netlify/functions/encomendas/${id}`);
+      setUpdateTable("handleDelete");
+      onClose();
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error)
+        setShowError(true);
+      } else {
+        alert('An unexpected error occurred');
+      }
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSaveEncomenda({
@@ -114,6 +129,7 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
 
             <Button type="submit" className="SaveButton">{editingEncomenda ? 'Salvar' : 'Criar'}</Button>
             <Button onClick={onClose} className="CancelButton">Cancelar</Button>
+            {editingEncomenda ? <Button onClick={() => handleDelete(editingEncomenda?.id_encomenda)} ml="55.4%" mt="2%" color="white" bgColor="Red">Eliminar</Button> : <></>}
           </form>
           {showError && (
             <ErrorModal  

@@ -75,7 +75,7 @@ const DataEncomenda: React.FC = () => {
           onClick={() => navigateWeeks('prev')} 
           leftIcon={<ChevronLeftIcon />}
           isDisabled={currentWeekStart === 0}/>
-        <Text fontSize="xl" fontWeight="bold">
+        <Text color="white" fontSize="xl" fontWeight="bold">
           Semanas {currentWeekStart + 1} - {currentWeekStart + 13}
         </Text>
         <Button 
