@@ -43,42 +43,6 @@ const HomePage: React.FC = () => {
             borderRadius="md"
         />
         </Box>
-        <HStack mb="3%" alignItems="flex-start">
-            <VStack
-                width="80%"
-                color="white"
-                alignSelf="flex-start"
-                spacing={4}
-                alignItems="flex-start"
-            >
-            <Text fontSize="300%" fontWeight="bold" textAlign="left">
-                O que Somos?
-            </Text>
-            <Text fontSize="180%" width="90%" textAlign="left">
-                Gerencie seus recursos de TI de maneira eficiente e eficaz com nossa plataforma intuitiva.
-            </Text>
-            <Box width="100%">
-                <Button
-                    bg="mediumBlue"
-                    _hover={{ bg: "blue.600", transform: "scale(1.05)" }}
-                    width="30%"
-                    color="white"
-                    mt={4}
-                    h="60px" // Altura do botão
-                    fontSize="150%" // Tamanho da fonte
-                    borderRadius="md" // Bordas arredondadas
-                    boxShadow="md" // Sombra para profundidade
-                >
-                    Start Managing
-                </Button>
-            </Box>
-        </VStack>
-        <Box justifyContent="right">
-          <Img
-          src={HomeImage1}
-          borderRadius="md"></Img>
-        </Box>
-      </HStack>
       </Box>
       <HStack
         color="white"
