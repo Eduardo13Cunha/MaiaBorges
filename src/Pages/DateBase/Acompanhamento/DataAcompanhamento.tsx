@@ -73,11 +73,13 @@ const DataAcompanhamento = () => {
 
         const plano = planosTrabalho.find(p => p.id === Number(planoId));
 
+        console.log(planosTrabalho.find(p => p.id === Number(planoId)));
+
         return axios.post('/.netlify/functions/acompanhamentos', {
           planotrabalho_id: planoId,
-          maquina_id: plano?.maquina.id_maquina,
-          encomenda_id: plano?.encomenda.id_encomenda,
-          id_colaborador: plano?.colaborador.id_colaborador,
+          maquina_id: plano?.maquina_id,
+          encomenda_id: plano?.encomenda_id,
+          id_colaborador: plano?.id_colaborador,
           quantidade_produzida: Number(quantidade)
         });
       });

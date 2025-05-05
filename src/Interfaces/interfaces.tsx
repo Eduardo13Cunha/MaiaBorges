@@ -63,6 +63,9 @@ export interface Acompanhamento {
 
 export interface PlanoTrabalho {
   id: number;
+  maquina_id?: number;
+  encomenda_id?: Encomenda;
+  id_colaborador?: number;
   maquina: Maquina;
   encomenda: Encomenda;
   colaborador: Colaborador;
