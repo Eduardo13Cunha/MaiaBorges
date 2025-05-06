@@ -26,26 +26,33 @@ export const handler: Handler = async (event) => {
     const { data, error } = await supabase
       .from("colaboradores")
       .select(`*`)
-      .eq(`email`, email)
-      .eq(`password`, password);
+      .eq(`email`, email);
 
     if (error) throw error;
 
     if (data.length > 0) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ status: 'success', data: data[0] })
-      };
+      const user = data[0];
+      if (user.password === password) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ status: 'success', data: data[0] })
+        };
+      } else {
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ status: 'error', message: 'Password inválida' })
+        };
+      }
     } else {
       return {
-        statusCode: 401,
-        body: JSON.stringify({ status: 'error', message: 'Credenciais inválidas' })
+        statusCode: 404,
+        body: JSON.stringify({ status: 'error', message: 'Email inválido' })
       };
     }
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Erro ao buscar Utilizador' })
+      body: JSON.stringify({ error: 'Erro ao buscar Utilizador', details: error instanceof Error ? error.message : String(error) })
     };
   }
 };

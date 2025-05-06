@@ -2,11 +2,10 @@ import {
   Box,
   ChakraProvider,
   Spacer,
-  theme,
 } from "@chakra-ui/react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AnimatePresence } from 'framer-motion';
-import HomePage from "./Pages/Home/HomePage"
+import LoginPage from "./Pages/Home/LoginPage"
 import HomePage2 from "./Pages/Home/HomePage2"
 import Header from "./Components/Header/Header"
 import Body from "./Components/Body/Body"
@@ -19,6 +18,7 @@ import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
 import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
 import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamento";
 import DataPlanoTrabalho from "./Pages/DateBase/PlanoTrabalho/DataPlanoTrabalho";
+import theme from "./Themes/themes";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -28,7 +28,7 @@ export const App = () => (
         <BrowserRouter>
           <AnimatePresence exitBeforeEnter></AnimatePresence>
           <Routes>
-            <Route path="/" element={<HomePage/>}/>
+            <Route path="/" element={<LoginPage/>}/>
             <Route path="/DataColaborador" element={<DataColaborador/>}/>
             <Route path="/DataMaquina" element={<DataMaquina/>}/>
             <Route path="/DataEncomendas" element={<DataEncomendas/>}/>
