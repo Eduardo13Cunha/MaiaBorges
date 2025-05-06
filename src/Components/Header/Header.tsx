@@ -12,7 +12,7 @@ export default function Header() {
         const storedIsLoggedIn = Cookies.get('IsLoggedIn');
         if (storedName) {
             setName(storedName);
-            setIsAuthenticated(storedIsLoggedIn=='true');
+            setIsAuthenticated(storedIsLoggedIn==='true');
         }
     }, []);
 

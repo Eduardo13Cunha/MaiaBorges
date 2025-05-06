@@ -1,18 +1,6 @@
-// LoginPage.jsx
-import {
-  Box,
-  VStack,
-  Img,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Heading,
-  HStack,
-  Spacer,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import MaiaBorgesLogoGrande from "../../Assets/MaiaBorgesLogoGrande.png"; // ajuste o caminho conforme necessário
+import {Box,VStack,Img,FormControl,FormLabel,Input,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
+import { useState } from "react";
+import MaiaBorgesLogoGrande from "../../Assets/MaiaBorgesLogoGrande.png";
 import Cookies from "js-cookie";
 import { Colaborador } from "../../Interfaces/interfaces";
 import axios from "axios";
