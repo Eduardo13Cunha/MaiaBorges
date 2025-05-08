@@ -5,6 +5,7 @@ import { EncomendaModal } from './EncomendaModal';
 import { IoMdAdd } from 'react-icons/io';
 import axios from 'axios';
 import { Cliente, Encomenda, Figura } from '../../../Interfaces/interfaces';
+import { isLoggedIn } from '../../../Routes/validation';
 
 const DataEncomenda: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -15,7 +16,7 @@ const DataEncomenda: React.FC = () => {
   const [selectedCell, setSelectedCell] = useState<{figura: Figura, week: number} | null>(null);
   const [editingEncomenda, setEditingEncomenda] = useState<Encomenda | null>(null);
   const [currentWeekStart, setCurrentWeekStart] = useState(0);
-  const toast = useToast();
+  const showToast = useToast();
 
   const fetchData = useCallback( async() => {
     try {
@@ -30,17 +31,16 @@ const DataEncomenda: React.FC = () => {
       setClientes(clienteRes.data.data || []);
     } catch (error) {
       console.error('Error fetching data:', error);
-      toast({
+      showToast({
         title: "Erro ao carregar dados",
-        description: "Não foi possível carregar os dados necessários.",
+        description: "Não foi possível carregar as Encomendas.",
         status: "error",
-        duration: 5000,
-        isClosable: true,
       });
     }
-  }, [toast]);
+  }, [showToast]);
 
   useEffect(() => {
+    isLoggedIn();
     fetchData();
     setUpdateTable("");
   }, [UpdateTable,fetchData]);
@@ -75,7 +75,7 @@ const DataEncomenda: React.FC = () => {
           onClick={() => navigateWeeks('prev')} 
           leftIcon={<ChevronLeftIcon />}
           isDisabled={currentWeekStart === 0}/>
-        <Text color="white" fontSize="xl" fontWeight="bold">
+        <Text color="text.primary.100" fontSize="xl" fontWeight="bold">
           Semanas {currentWeekStart + 1} - {currentWeekStart + 13}
         </Text>
         <Button 
@@ -84,14 +84,13 @@ const DataEncomenda: React.FC = () => {
           isDisabled={currentWeekStart >= 39}/>
       </HStack>
 
-      <Grid templateColumns={`auto repeat(13, 1fr)`}>
-        {/* Header row with week numbers */}
+      <Grid width="100%" templateColumns={`auto repeat(13, 1fr)`}>
         <GridItem className="GridHead" p={2}>
-          <Text color="white">Figuras</Text>
+          <Text color="text.primary.100">Figuras</Text>
         </GridItem>
         {currentWeeks.map(week => (
           <GridItem className="GridHead" key={week} p={2} px={4}>
-            <Text color="white" textAlign="center">
+            <Text color="text.primary.100" textAlign="center">
               Semana {week}
             </Text>
           </GridItem>
@@ -101,7 +100,7 @@ const DataEncomenda: React.FC = () => {
         {figuras && figuras.map(figura => (
           <React.Fragment key={figura.id_figura}>
             <GridItem className='Line' p={2} py={5}>
-              <Text color="white">{figura.nome}</Text>
+              <Text color="text.primary.100">{figura.nome}</Text>
             </GridItem>
             {currentWeeks.map(week => {
               const encomenda = getEncomendaForCell(figura.id_figura, week);
@@ -114,9 +113,9 @@ const DataEncomenda: React.FC = () => {
                   _hover={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)" }}
                 >
                   {encomenda ? (
-                    <Tooltip label={`Cliente: ${encomenda.clientes?.nome}\nQuantidade: ${encomenda.quantidade}`}>
-                      <Text fontSize="sm" textAlign="center" >
-                        {encomenda.clientes.nome}
+                    <Tooltip label={`ID:${encomenda.id_encomenda}\nCliente: ${encomenda.clientes?.nome}\nQuantidade: ${encomenda.quantidade}`}>
+                      <Text fontSize="sm" textAlign="center" >  
+                        #{encomenda.id_encomenda} - {encomenda.clientes.nome}
                         <br/>
                         {encomenda.quantidade} unidades
                       </Text>

@@ -117,7 +117,23 @@
 }
 
 /*Menu*/
-.MenuItem {
+.MenuHeader {
+    text-decoration: none;
+}
+.MenuHeaderList {
+    background: none !important;
+    border:none !important;
+    text-decoration: none;
+}
+.MenuHeaderItem {
+    background: rgba(84, 99, 172) !important;
+    color: white !important;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.MenuHeaderItem:hover {
+    background: rgb(68, 80, 139) !important;
     text-decoration: none;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);

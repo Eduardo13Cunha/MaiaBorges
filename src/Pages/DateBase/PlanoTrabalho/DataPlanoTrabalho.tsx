@@ -1,26 +1,30 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
 import axios from 'axios';
 import { AddPlanoTrabalhoModal } from './AddPlanoTrabalho';
 import { EditPlanoTrabalhoModal } from './EditPlanoTrabalho';
 import { Colaborador, Encomenda, Maquina, PlanoTrabalho } from '../../../Interfaces/interfaces';
+import { isLoggedIn } from '../../../Routes/validation';
+import { useCustomToast } from '../../../Components/Toaster/toaster';
 
 const DataPlanoTrabalho = () => {
   const [planosTrabalho, setPlanosTrabalho] = useState<any[]>([]);
   const [maquinas, setMaquinas] = useState<any[]>([]);
   const [encomendas, setEncomendas] = useState<any[]>([]);
   const [colaboradores, setColaboradores] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchFilter, setSearchFilter] = useState('Figura');
   const [updateTable, setUpdateTable] = useState<any>("");
   const [sortColumn, setSortColumn] = useState<string>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [page, setPage] = useState(0);
   const itemsPerPage = 8;
+  const showToast = useCustomToast();
 
   useEffect(() => {
+    isLoggedIn();
     fetchData();
-    setUpdateTable("");
   }, [updateTable]);
 
   const fetchData = async () => {
@@ -36,6 +40,11 @@ const DataPlanoTrabalho = () => {
       setEncomendas((encomendaRes.data as { data: Encomenda[] }).data);
       setColaboradores((colaboradorRes.data as { data: Colaborador[] }).data);
     } catch (error) {
+      showToast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar os dados necessários.",
+        status: "error",
+      });
       console.error('Error fetching data:', error);
     }
   };
@@ -51,7 +60,17 @@ const DataPlanoTrabalho = () => {
       try {
         await axios.delete(`/.netlify/functions/planotrabalhos/${id}`);
         setPlanosTrabalho(planosTrabalho.filter(plano => plano.id !== id));
+        showToast({
+          title: 'Plano de Trabalho Eliminado',
+          description: 'Plano de trabalho eliminado com sucesso!',
+          status: 'success',
+        });
       } catch (error) {
+        showToast({
+          title: 'Erro ao eliminar plano de trabalho',
+          description: 'Não foi possível eliminar o plano de trabalho!',
+          status: 'error',
+        });
         console.error('Error deleting plano de trabalho:', error);
       }
     }
@@ -82,15 +101,22 @@ const DataPlanoTrabalho = () => {
   });
 
   const filteredPlanos = sortedPlanos.filter(plano => {
-    const maquinaNome = plano.maquinas?.nome?.toLowerCase() || '';
-    const colaboradorNome = plano.colaboradores?.nome?.toLowerCase() || '';
-    const figuraNome = plano.encomendas?.figuras?.nome?.toLowerCase() || '';
-    
-    return maquinaNome.includes(searchTerm.toLowerCase()) ||
-           colaboradorNome.includes(searchTerm.toLowerCase()) ||
-           figuraNome.includes(searchTerm.toLowerCase()) ||
-           plano.semana.toString().includes(searchTerm);
+    const termo = searchTerm.toLowerCase();
+  
+    switch (searchFilter) {
+      case 'maquina':
+        return plano.maquinas?.nome?.toLowerCase().includes(termo);
+      case 'colaborador':
+        return plano.colaboradores?.nome?.toLowerCase().includes(termo);
+      case 'figura':
+        return plano.encomendas?.figuras?.nome?.toLowerCase().includes(termo);
+      case 'semana':
+        return plano.semana.toString().includes(termo);
+      default:
+        return true;
+    }
   });
+  
 
   const pages = Math.ceil(filteredPlanos.length / itemsPerPage);
   const currentItems = filteredPlanos.slice(
@@ -102,11 +128,20 @@ const DataPlanoTrabalho = () => {
     <VStack alignItems="center">
       <Box className="TableBox">
         <Input
-          placeholder="Pesquisar por máquina, colaborador, figura ou semana"
+          placeholder={`Pesquisar por ${searchFilter || '...'}`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className='TableSearchInput'
         />
+        <Menu> 
+          <MenuButton mt="2%" w="7.3%" h="7.3%" className="TableSearchMenuButton" borderRadius="md">Filtrar por {searchFilter}</MenuButton>
+          <MenuList className="TableSearchMenuList">
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Máquina')}>Máquina</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Colaborador')}>Colaborador</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Figura')}>Figura</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Semana')}>Semana</MenuItem>
+          </MenuList>
+        </Menu>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
@@ -152,9 +187,9 @@ const DataPlanoTrabalho = () => {
           <Tbody>
             {currentItems.map((plano) => (
               <Tr key={plano.id} className="Line">
-                <Td>{plano.id}</Td>
+                <Td>{plano.id_planodetrabalho}</Td>
                 <Td>{plano.maquinas?.nome || '-'}</Td>
-                <Td>#{plano.encomenda_id} - {plano.encomendas?.figuras?.nome || '-'}</Td>
+                <Td>#{plano.id_encomenda} - {plano.encomendas?.figuras?.nome || '-'}</Td>
                 <Td>{plano.colaboradores?.nome || '-'}</Td>
                 <Td>{plano.tempo_conclusao}</Td>
                 <Td>{plano.quantidade}</Td>

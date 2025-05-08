@@ -9,7 +9,6 @@ export default function Body(props: StackProps) {
             flexDirection="column" 
         >
             <VStack
-                className="glass-dark"
                 w="100%" 
                 flex="1"
                 {...props}

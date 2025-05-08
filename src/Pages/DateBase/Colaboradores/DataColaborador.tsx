@@ -120,7 +120,7 @@ const DataColaborador: React.FC = () => {
                 </HStack>
               </Th>
               <Th color="white">Email</Th>
-              <Th color="white" width="12%">Numero</Th>
+              <Th color="white" width="12%">Número</Th>
               <Th color="white" width="10%">Turno</Th>
               <Th color="white" width="8%">Ações</Th>
             </Tr>

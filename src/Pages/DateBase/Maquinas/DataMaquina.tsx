@@ -77,7 +77,7 @@ const DataMaquina = () => {
     <VStack alignItems="center">
       <Box className="TableBox">
         <Input
-          placeholder="Pesquisar por nome"
+          placeholder="Pesquisar por Nome"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="TableSearchInput"

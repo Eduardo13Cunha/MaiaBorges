@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { FaTrash, FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
 import axios from 'axios';
 import { AddFiguraModal } from './AddFigura';
 import { EditFiguraModal } from './EditFigura';
@@ -84,7 +84,7 @@ const DataFigura = () => {
     <VStack alignItems="center">
       <Box className="TableBox">
         <Input
-          placeholder="Pesquisar por nome ou referência"
+          placeholder="Pesquisar por Nome ou Referência"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className='TableSearchInput'
@@ -104,13 +104,17 @@ const DataFigura = () => {
               <Th color="white">Nome</Th>
               <Th color="white" onClick={() => handleSort('tempo_ciclo')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
-                  <Text>Tempo Ciclo-(P/h)</Text>
+                  <Box display="flex" flexDirection="row" alignItems="center">
+                    <Text>Tempo Ciclo</Text>
+                    <FaArrowRight fontSize="80%"/>
+                    <Text>(P/h)</Text>
+                  </Box>
                   {sortColumn === 'tempo_ciclo' && (
                     sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />
                   )}
                 </HStack>
               </Th>
-              <Th color="white">Matérial</Th>
+              <Th color="white">Material</Th>
               <Th color="white" width="8%">Ações</Th>
             </Tr>
           </Thead>

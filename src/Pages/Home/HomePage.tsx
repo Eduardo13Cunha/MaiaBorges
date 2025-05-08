@@ -3,7 +3,7 @@ import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Input } from '@chakra-ui/
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const DataPlanoTrabalho = () => {
+const HomePage = () => {
   const [planos, setPlano] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const userId = Cookies.get('userId');
@@ -63,4 +63,4 @@ const DataPlanoTrabalho = () => {
   );
 };
 
-export default DataPlanoTrabalho;
+export default HomePage;

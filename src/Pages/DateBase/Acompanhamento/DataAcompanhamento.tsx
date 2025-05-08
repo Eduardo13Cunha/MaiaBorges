@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import {VStack,Box,Input,Button,Menu,MenuButton,MenuItem,MenuList,Table,Tbody,Td,Th,Thead,Tr} from '@chakra-ui/react';
 import axios from 'axios';
-import { Acompanhamento, Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
+import { Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
+import { useCustomToast } from '../../../Components/Toaster/toaster';
+import { isLoggedIn } from '../../../Routes/validation';
 
 const DataAcompanhamento = () => {
   const [turnos, setTurnos] = useState<any[]>([]);
@@ -9,8 +11,10 @@ const DataAcompanhamento = () => {
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
   const [planosTrabalho, setPlanosTrabalho] = useState<PlanoTrabalho[]>([]);
   const [producaoValues, setProducaoValues] = useState<{[key: string]: string}>({});
+  const showToast = useCustomToast();
 
   useEffect(() => {
+    isLoggedIn();
     fetchTurnos();
   }, []);
 
@@ -23,9 +27,14 @@ const DataAcompanhamento = () => {
   const fetchTurnos = async () => {
     try {
       const response = await axios.get('/.netlify/functions/turnos');
-      const data = response.data as { data: Acompanhamento[] };
-      setTurnos(data.data);
+      const data = (response.data as { data: Turno[] }).data.filter(turno => turno.id_turno !== 4);
+      setTurnos(data);
     } catch (error) {
+      showToast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar os turnos.",
+        status: "error",
+      });
       console.error('Error fetching turnos:', error);
     }
   };
@@ -39,7 +48,6 @@ const DataAcompanhamento = () => {
       );
       setColaboradores(colaboradoresTurno);
 
-      // Fetch planos de trabalho for these colaboradores
       const planosResponse = await axios.get('/.netlify/functions/planotrabalhos');
       const planosColaboradores = (planosResponse.data as { data: PlanoTrabalho[] }).data.filter(
         (plano: any) => colaboradoresTurno.some(
@@ -48,13 +56,17 @@ const DataAcompanhamento = () => {
       );
       setPlanosTrabalho(planosColaboradores);
 
-      // Initialize producao values
       const initialValues: {[key: string]: string} = {};
       planosColaboradores.forEach((plano: any) => {
-        initialValues[plano.id] = '';
+        initialValues[plano.id_planodetrabalho] = '';
       });
       setProducaoValues(initialValues);
     } catch (error) {
+      showToast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar os Colaboradores.",
+        status: "error",
+      });
       console.error('Error fetching data:', error);
     }
   };
@@ -68,27 +80,32 @@ const DataAcompanhamento = () => {
 
   const handleSave = async () => {
     try {
-      // Create acompanhamento records for each plano
-      Object.entries(producaoValues).map(([planoId, quantidade]) => {
+      Object.entries(producaoValues).map(([id_planodetrabalho, quantidade]) => {
 
-        const plano = planosTrabalho.find(p => p.id === Number(planoId));
-
-        console.log(planosTrabalho.find(p => p.id === Number(planoId)));
+        const plano = planosTrabalho.find(p => p.id_planodetrabalho === Number(id_planodetrabalho));
 
         return axios.post('/.netlify/functions/acompanhamentos', {
-          planotrabalho_id: planoId,
-          maquina_id: plano?.maquina_id,
-          encomenda_id: plano?.encomenda_id,
+          id_planodetrabalho: plano?.id_planodetrabalho,
+          id_maquina: plano?.id_maquina,
+          id_encomenda: plano?.id_encomenda,
           id_colaborador: plano?.id_colaborador,
           quantidade_produzida: Number(quantidade)
         });
       });
-      // Reset form
       setProducaoValues({});
-      alert('Acompanhamentos salvos com sucesso!');
-    } catch (error) {
-      console.error('Error saving acompanhamentos:', error);
-      alert('Erro ao salvar acompanhamentos');
+      showToast({
+        title: 'Acompanhamentos Salvos',
+        description: 'Acompanhamentos salvos com sucesso!',
+        status: 'success',
+      });
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        showToast({
+          title: 'Erro a Salvar',
+          description: 'Erro na Base de Dados.',
+          status: 'error',
+        });
+      }
     }
   };
 
@@ -112,24 +129,24 @@ const DataAcompanhamento = () => {
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">
             <Tr>
-              <Th color="white">Colaborador</Th>
-              <Th color="white">Encomenda</Th>
-              <Th color="white">Máquina</Th>
-              <Th color="white">Quantidade Produzida</Th>
+              <Th color="text.primary.100">Colaborador</Th>
+              <Th color="text.primary.100">Encomenda</Th>
+              <Th color="text.primary.100">Máquina</Th>
+              <Th color="text.primary.100">Quantidade Produzida</Th>
             </Tr>
           </Thead>
           <Tbody>
             {colaboradores.length > 0 && 
               planosTrabalho.map((plano: any) => (
-              <Tr className="Line" key={plano.id}>
+              <Tr className="Line" key={plano.id_planodetrabalho}>
                 <Td>{plano.colaboradores.nome}</Td>
-                <Td>{plano.encomendas.figuras.nome}</Td>
+                <Td>#{plano.encomendas.id_encomenda} - {plano.encomendas.figuras.nome}</Td>
                 <Td>{plano.maquinas.nome}</Td>
                 <Td>
                   <Input
                     type="number"
-                    value={producaoValues[plano.id] || ''}
-                    onChange={(e) => handleProducaoChange(String(plano.id), e.target.value)}
+                    value={producaoValues[plano.id_planodetrabalho]}
+                    onChange={(e) => handleProducaoChange(String(plano.id_planodetrabalho), e.target.value)}
                     placeholder="Quantidade"
                   />
                 </Td>

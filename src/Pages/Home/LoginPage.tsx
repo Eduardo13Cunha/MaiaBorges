@@ -16,16 +16,13 @@ const LoginPage = () => {
       try {
           const response = await axios.post('/.netlify/functions/auth', { email, password });
           
-          if (response.status === 200) {
-              const user = (response.data as { data: Colaborador }).data;
+          const user = (response.data as { data: Colaborador }).data;
 
-              Cookies.set('userName', user.nome);
-              Cookies.set('IsLoggedIn', true.toString());
-              Cookies.set('userId', user.id_colaborador.toString());
-              window.location.href = '/HomePage2';
-          } else if (response.status === 401) {
-              
-          }
+          Cookies.set('userName', user.nome);
+          Cookies.set('IsLoggedIn', true.toString());
+          Cookies.set('roleId', user.id_cargo.toString());
+          Cookies.set('userId', user.id_colaborador.toString());
+          window.location.href = '/HomePage2';
       } catch (error: any) {
           if (email === "" || password === "") {
             showToast({

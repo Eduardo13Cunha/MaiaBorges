@@ -20,7 +20,7 @@ export const handler: Handler = async (event) => {
         const { data, error } = await supabase.from("acompanhamento").select(`
           *,
           maquinas (nome),
-          encomendas (id_encomenda, quantidade, figuras (nome)),
+          encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
           colaboradores (nome)
         `);
 
@@ -31,41 +31,51 @@ export const handler: Handler = async (event) => {
         };
 
       case 'POST':
-        const { planotrabalho_id, maquina_id, encomenda_id, id_colaborador, quantidade_produzida } = JSON.parse(event.body!);
-        
-        // Add new acompanhamento
-        const { data: newAcomp, error: postError } = await supabase
-          .from("acompanhamento")
-          .insert([{ 
-            planotrabalho_id,
-            maquina_id, 
-            encomenda_id, 
-            id_colaborador, 
-            quantidade_produzida 
-          }]);
+        try {
+          const { id_planodetrabalho, id_maquina, id_encomenda, id_colaborador, quantidade_produzida } = JSON.parse(event.body!);
+          const { data: newAcomp, error: postError } = await supabase
+            .from("acompanhamento")
+            .insert([{ 
+              id_planodetrabalho,
+              id_maquina, 
+              id_encomenda, 
+              id_colaborador, 
+              quantidade_produzida 
+            }]);
+            
+          if (postError) {
+            return {
+              statusCode: 400,
+              body: JSON.stringify({ error: 'Error creating acompanhamento' })
+            };
+          }
 
-        if (postError) throw postError;
-
-        // Update plano_trabalho
-        const { data: planoTrabalho, error: planoError } = await supabase
+          const { data: planoTrabalho, error: planoError } = await supabase
           .from("plano_trabalho")
           .select("quantidade, quantidade_falta")
-          .eq("id", planotrabalho_id)
+          .eq("id_planodetrabalho", id_planodetrabalho)
           .single();
+  
+          if (!planoError && planoTrabalho) {
+            const novaQuantidadeFalta = Math.max(0, planoTrabalho.quantidade_falta - quantidade_produzida);
+            
+            await supabase
+              .from("plano_trabalho")
+              .update({ quantidade_falta: novaQuantidadeFalta })
+              .eq("id_planodetrabalho", id_planodetrabalho);
+          }
 
-        if (!planoError && planoTrabalho) {
-          const novaQuantidadeFalta = Math.max(0, planoTrabalho.quantidade_falta - quantidade_produzida);
-          
-          await supabase
-            .from("plano_trabalho")
-            .update({ quantidade_falta: novaQuantidadeFalta })
-            .eq("id", planotrabalho_id);
+          return {
+            statusCode: 201,
+            body: JSON.stringify({ status: "success", data: newAcomp })
+          };
         }
-
-        return {
-          statusCode: 201,
-          body: JSON.stringify({ status: "success", data: newAcomp })
-        };
+        catch (error) {
+          return {
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Invalid request data' })
+          };
+        }
 
       case 'DELETE':
         const id = event.path.split('/').pop();

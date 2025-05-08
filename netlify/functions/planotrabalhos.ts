@@ -22,7 +22,7 @@ export const handler: Handler = async (event) => {
           .select(`
             *,
             maquinas (nome),
-            encomendas (id_encomenda, quantidade, figuras (nome)),
+            encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
             colaboradores (nome)
           `)
           .gt('quantidade_falta', 0);
@@ -38,8 +38,8 @@ export const handler: Handler = async (event) => {
       case 'POST': {
         const body = JSON.parse(event.body || '{}');
         const { 
-          maquina_id, 
-          encomenda_id, 
+          id_maquina, 
+          id_encomenda, 
           id_colaborador, 
           semana,
           quantidade,
@@ -50,8 +50,8 @@ export const handler: Handler = async (event) => {
         const { data, error } = await supabase
           .from("plano_trabalho")
           .insert([{ 
-            maquina_id, 
-            encomenda_id, 
+            id_maquina, 
+            id_encomenda, 
             id_colaborador, 
             tempo_conclusao, 
             quantidade, 
@@ -61,7 +61,7 @@ export const handler: Handler = async (event) => {
           .select(`
             *,
             maquinas (nome),
-            encomendas (id_encomenda, quantidade, figuras (nome)),
+            encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
             colaboradores (nome)
           `)
           .single();
@@ -80,7 +80,7 @@ export const handler: Handler = async (event) => {
         const { error } = await supabase
           .from("plano_trabalho")
           .delete()
-          .eq("id", id);
+          .eq("id_planodetrabalho", id);
 
         if (error) throw error;
 

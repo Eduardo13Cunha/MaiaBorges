@@ -20,6 +20,7 @@ export interface Colaborador {
   data_nascimento: string;
   email: string;
   numero: string;
+  id_cargo: number;
   id_turno: number;
   password?: string;
 }
@@ -54,7 +55,7 @@ export interface Maquina {
 }
 
 export interface Acompanhamento {
-  id: number;
+  id_acompanhamento: number;
   maquina: Maquina;
   encomenda: Encomenda;
   colaborador: Colaborador;
@@ -62,9 +63,9 @@ export interface Acompanhamento {
 }
 
 export interface PlanoTrabalho {
-  id: number;
-  maquina_id?: number;
-  encomenda_id?: Encomenda;
+  id_planodetrabalho: number;
+  id_maquina?: number;
+  id_encomenda?: Encomenda;
   id_colaborador?: number;
   maquina: Maquina;
   encomenda: Encomenda;

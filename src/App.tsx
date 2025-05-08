@@ -6,7 +6,6 @@ import {
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AnimatePresence } from 'framer-motion';
 import LoginPage from "./Pages/Home/LoginPage"
-import HomePage2 from "./Pages/Home/HomePage2"
 import Header from "./Components/Header/Header"
 import Body from "./Components/Body/Body"
 import Footer from "./Components/Footer/Footer"
@@ -18,6 +17,7 @@ import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
 import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
 import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamento";
 import DataPlanoTrabalho from "./Pages/DateBase/PlanoTrabalho/DataPlanoTrabalho";
+import HomePage from "./Pages/Home/HomePage";
 import theme from "./Themes/themes";
 
 export const App = () => (
@@ -37,7 +37,7 @@ export const App = () => (
             <Route path="/DataMaterial" element={<DataMaterial/>}/>
             <Route path="/DataAcompanhamento" element={<DataAcompanhamento/>}/>
             <Route path="/DataPlanoTrabalho" element={<DataPlanoTrabalho/>}/>
-            <Route path="/HomePage2" element={<HomePage2/>}/>
+            <Route path="/HomePage" element={<HomePage/>}/>
           </Routes>
         </BrowserRouter>
         <Spacer h="100%"/>

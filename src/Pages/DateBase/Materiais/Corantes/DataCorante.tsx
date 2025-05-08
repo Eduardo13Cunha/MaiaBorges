@@ -1,7 +1,7 @@
 import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaArrowRight, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { EditCoranteModal } from "./EditCorante";
 import { AddCoranteModal } from "./AddCorante";
@@ -88,8 +88,12 @@ const DataCorante: React.FC = () => {
               <Th color="white">Nome</Th>
               <Th color="white" onClick={() => handleSort('quantidade')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
-                  <Text>Quantidade-G</Text>
-                  {sortColumn === 'quantidade' && (sortDirection === 'asc' ? <FaSortUp color="white" /> : <FaSortDown color="white" />)}
+                <Box display="flex" flexDirection="row" alignItems="center">
+                  <Text>Quantidade</Text>
+                  <FaArrowRight fontSize="80%"/>
+                  <Text>G</Text>
+                </Box>
+                    {sortColumn === 'quantidade' && (sortDirection === 'asc' ? <FaSortUp color="white" /> : <FaSortDown color="white" />)}
                 </HStack>
               </Th>
               <Th color="white" width="15%">Ações</Th>
