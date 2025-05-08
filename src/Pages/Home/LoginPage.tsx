@@ -1,5 +1,5 @@
 import {Box,VStack,Img,FormControl,FormLabel,Input,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MaiaBorgesLogoGrande from "../../Assets/MaiaBorgesLogoGrande.png";
 import Cookies from "js-cookie";
 import { Colaborador } from "../../Interfaces/interfaces";
@@ -11,6 +11,14 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const showToast = useCustomToast();
+
+  useEffect(() => {
+    const isLoggedIn = Cookies.get('IsLoggedIn');
+    if (isLoggedIn) {
+      window.location.href = '/HomePage2';
+    }
+  }
+  , []);
 
   const handleLogin = async () => {
       try {

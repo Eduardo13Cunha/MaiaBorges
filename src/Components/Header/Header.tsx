@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Box, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Link } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
 import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
-import { isLoggedIn } from '../../Routes/validation';
 
 export default function Header() {
     const [userName, setName] = useState<string | null>(null);
