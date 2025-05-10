@@ -30,7 +30,7 @@ const LoginPage = () => {
           Cookies.set('IsLoggedIn', true.toString());
           Cookies.set('roleId', user.id_cargo.toString());
           Cookies.set('userId', user.id_colaborador.toString());
-          window.location.href = '/HomePage2';
+          window.location.href = '/HomePage';
       } catch (error: any) {
           if (email === "" || password === "") {
             showToast({

@@ -1,13 +1,14 @@
 import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { EditMateriaPrimaModal } from "./EditMateriasPrimas";
-import { AddMateriaPrimaModal } from "./AddMateriasPrimas";
 import { MateriaPrima } from "../../../../Interfaces/interfaces";
+import { MateriaPrimaModal } from "./MateriasPrimasModal";
 
 const DataMateriaPrima: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingMateriaPrima, setEditingMateriaPrima] = useState<MateriaPrima | null>(null);
   const [UpdateTable, setUpdateTable] = useState<any>("");
   const [page, setPage] = useState<number>(0);
   const [MateriasPrimas, setMateriasPrimas] = useState<any[]>([]);
@@ -107,7 +108,7 @@ const DataMateriaPrima: React.FC = () => {
                 <Td>{materiaPrima.quantidade}</Td>
                 <Td>
                   <HStack spacing={2} justifyContent="flex-end">
-                    <EditMateriaPrimaModal setUpdateTable={setUpdateTable} editMateriaPrima={materiaPrima} />
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingMateriaPrima(materiaPrima); setShowModal(true); }}/>
                     <FaTrash cursor="pointer" onClick={() => deleteMateriaPrima(materiaPrima.id_materiasprima)} color="darkred" />
                   </HStack>
                 </Td>
@@ -119,7 +120,7 @@ const DataMateriaPrima: React.FC = () => {
 
       <HStack marginLeft="50%" spacing={4}>
         <Box maxWidth="150%">
-          <AddMateriaPrimaModal setUpdateTable={setUpdateTable} />
+          <Button onClick={() => { setEditingMateriaPrima(null); setShowModal(true); }}>Adicionar Matéria Prima</Button>
         </Box>
         <HStack w="100%" justifyContent="flex-end">
           <Button onClick={() => setPage(page === 0 ? 0 : page - 1)} disabled={page === 0}>
@@ -130,6 +131,13 @@ const DataMateriaPrima: React.FC = () => {
           </Button>
         </HStack>
       </HStack>
+      {showModal && (
+        <MateriaPrimaModal
+          onClose={() => setShowModal(false)}
+          editingMateriaPrima={editingMateriaPrima}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

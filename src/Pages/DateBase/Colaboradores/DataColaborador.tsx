@@ -1,14 +1,15 @@
 import { Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight , FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight , FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import '../../../Styles/styles.css';
-import { ModifyColaborador } from "./EditColaborador";
-import { AddColaborador } from "./AddColaborador";
 import { Colaborador, Turno } from "../../../Interfaces/interfaces";
+import { ColaboradorModal } from "./ColaboradorModal";
 
 const DataColaborador: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingColaborador, setEditingColaborador] = useState<Colaborador | null>(null);
   const [UpdateTable, setUpdateTable] = useState<any>("");
   const [page, setPage] = useState<number>(0);
   const [Colaboradores, setColaboradores] = useState<any[]>([]);
@@ -136,7 +137,7 @@ const DataColaborador: React.FC = () => {
                 <Td>{colaborador.turnos.descricao}</Td>
                 <Td>
                   <HStack spacing={2} justifyContent="flex-end">
-                    <ModifyColaborador setUpdateTable={setUpdateTable} editColaborador={colaborador} Turnos={Turnos}/>
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingColaborador(colaborador); setShowModal(true); }}/>
                     <FaTrash cursor="pointer" onClick={() => deleteColaborador(colaborador.id_colaborador)} color="darkred" />
                   </HStack>
                 </Td>
@@ -148,7 +149,7 @@ const DataColaborador: React.FC = () => {
 
       <HStack marginLeft="50%" spacing={4}>
         <Box maxWidth="150%">
-          <AddColaborador setUpdateTable={setUpdateTable} Turnos={Turnos}/>
+          <Button onClick={() => { setEditingColaborador(null); setShowModal(true); }}>Adicionar Colaborador</Button>
         </Box>
         <HStack w="100%" justifyContent="flex-end">
           <Button onClick={() => setPage(page === 0 ? 0 : page - 1)} disabled={page === 0}>
@@ -159,6 +160,14 @@ const DataColaborador: React.FC = () => {
           </Button>
         </HStack>
       </HStack>
+      {showModal && (
+        <ColaboradorModal
+          onClose={() => setShowModal(false)}
+          editingColaborador={editingColaborador}
+          turnos={Turnos}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

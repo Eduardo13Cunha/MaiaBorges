@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import {VStack,Box,Table,Thead,Tbody,Tr,Th,Td,Button,HStack,Input,Text} from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
 import axios from 'axios';
-import { EditMaquinaModal } from './EditMaquina';
-import { AddMaquinaModal } from './AddMaquina';
+import { MaquinaModal } from './MaquinaModa';
 import { Maquina } from '../../../Interfaces/interfaces';
 
 const DataMaquina = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingMaquina, setEditingMaquina] = useState<Maquina | null>(null);
   const [UpdateTable, setUpdateTable] = useState<any>("");
   const [maquinas, setMaquinas] = useState<any[]>([]);
   const [page, setPage] = useState(0);
@@ -125,7 +126,7 @@ const DataMaquina = () => {
                 <Td>{new Date(maquina.proxima_inspecao).toLocaleDateString()}</Td>
                 <Td>
                   <HStack spacing={2}>
-                    <EditMaquinaModal setUpdateTable={setUpdateTable} editMaquina={maquina}/>
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingMaquina(maquina); setShowModal(true); }}/>
                     <FaTrash
                       cursor="pointer"
                       color="darkred"
@@ -140,7 +141,7 @@ const DataMaquina = () => {
       </Box>
 
       <HStack marginLeft="50%" spacing={4}>
-        <AddMaquinaModal setUpdateTable={setUpdateTable} />
+        <Button onClick={() => { setEditingMaquina(null); setShowModal(true); }}>Adicionar Maquina</Button>
         <Button
           onClick={() => setPage(Math.max(0, page - 1))}
           disabled={page === 0}
@@ -154,6 +155,13 @@ const DataMaquina = () => {
           <FaAngleRight />
         </Button>
       </HStack>
+      {showModal && (
+        <MaquinaModal
+          onClose={() => setShowModal(false)}
+          editingMaquina={editingMaquina}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

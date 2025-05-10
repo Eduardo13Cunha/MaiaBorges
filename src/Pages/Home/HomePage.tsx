@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Input } from '@chakra-ui/react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const HomePage = () => {
   const [planos, setPlano] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const userId = Cookies.get('userId');
 
   useEffect(() => {   
@@ -27,12 +26,6 @@ const HomePage = () => {
     <VStack alignItems="center">
       {planos.length>0 && (
       <Box className="TableBox">
-        <Input
-          placeholder="Pesquisar por máquina, colaborador, figura ou semana"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className='TableSearchInput'
-        />
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
@@ -46,9 +39,9 @@ const HomePage = () => {
           </Thead>
           <Tbody>
             {planos.map((plano) => (
-              <Tr key={plano.id} className="Line">
+              <Tr key={plano.id_planodetrabalho} className="Line">
                 <Td>{plano.maquinas?.nome || '-'}</Td>
-                <Td>{plano.encomendas?.figuras?.nome || '-'}</Td>
+                <Td>#{plano.id_encomenda} - {plano.encomendas?.figuras?.nome || '-'}</Td>
                 <Td>{plano.tempo_conclusao}</Td>
                 <Td>{plano.quantidade}</Td>
                 <Td>{plano.semana}</Td>

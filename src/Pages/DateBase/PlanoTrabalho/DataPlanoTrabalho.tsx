@@ -1,53 +1,54 @@
 import { useState, useEffect } from 'react';
 import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
 import axios from 'axios';
-import { AddPlanoTrabalhoModal } from './AddPlanoTrabalho';
-import { EditPlanoTrabalhoModal } from './EditPlanoTrabalho';
 import { Colaborador, Encomenda, Maquina, PlanoTrabalho } from '../../../Interfaces/interfaces';
 import { isLoggedIn } from '../../../Routes/validation';
 import { useCustomToast } from '../../../Components/Toaster/toaster';
+import { PlanoTrabalhoModal } from './PlanoTrabalhoModal';
 
 const DataPlanoTrabalho = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingPlanoTrabalho, setEditingPlanoTrabalho] = useState<PlanoTrabalho | null>(null);
   const [planosTrabalho, setPlanosTrabalho] = useState<any[]>([]);
   const [maquinas, setMaquinas] = useState<any[]>([]);
   const [encomendas, setEncomendas] = useState<any[]>([]);
   const [colaboradores, setColaboradores] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchFilter, setSearchFilter] = useState('Figura');
+  const [searchFilter, setSearchFilter] = useState('figura');
   const [updateTable, setUpdateTable] = useState<any>("");
   const [sortColumn, setSortColumn] = useState<string>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(0);
-  const itemsPerPage = 8;
   const showToast = useCustomToast();
+  const itemsPerPage = 8;
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [planoRes, maquinaRes, encomendaRes, colaboradorRes] = await Promise.all([
+          axios.get('/.netlify/functions/planotrabalhos'),
+          axios.get('/.netlify/functions/maquinas'),
+          axios.get('/.netlify/functions/encomendas'),
+          axios.get('/.netlify/functions/colaboradores')
+        ]);
+        setPlanosTrabalho((planoRes.data as { data: PlanoTrabalho[] }).data);
+        setMaquinas((maquinaRes.data as { data: Maquina[] }).data);
+        setEncomendas((encomendaRes.data as { data: Encomenda[] }).data);
+        setColaboradores((colaboradorRes.data as { data: Colaborador[] }).data);
+      } catch (error) {
+        showToast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar os dados necessários.",
+          status: "error",
+        });
+        console.error('Error fetching data:', error);
+      }
+    };
+
     isLoggedIn();
     fetchData();
   }, [updateTable]);
-
-  const fetchData = async () => {
-    try {
-      const [planoRes, maquinaRes, encomendaRes, colaboradorRes] = await Promise.all([
-        axios.get('/.netlify/functions/planotrabalhos'),
-        axios.get('/.netlify/functions/maquinas'),
-        axios.get('/.netlify/functions/encomendas'),
-        axios.get('/.netlify/functions/colaboradores')
-      ]);
-      setPlanosTrabalho((planoRes.data as { data: PlanoTrabalho[] }).data);
-      setMaquinas((maquinaRes.data as { data: Maquina[] }).data);
-      setEncomendas((encomendaRes.data as { data: Encomenda[] }).data);
-      setColaboradores((colaboradorRes.data as { data: Colaborador[] }).data);
-    } catch (error) {
-      showToast({
-        title: "Erro ao carregar dados",
-        description: "Não foi possível carregar os dados necessários.",
-        status: "error",
-      });
-      console.error('Error fetching data:', error);
-    }
-  };
 
   const handleSort = (column: string) => {
     const newDirection = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
@@ -136,10 +137,10 @@ const DataPlanoTrabalho = () => {
         <Menu> 
           <MenuButton mt="2%" w="7.3%" h="7.3%" className="TableSearchMenuButton" borderRadius="md">Filtrar por {searchFilter}</MenuButton>
           <MenuList className="TableSearchMenuList">
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Máquina')}>Máquina</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Colaborador')}>Colaborador</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Figura')}>Figura</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('Semana')}>Semana</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('maquina')}>Máquina</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('colaborador')}>Colaborador</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('figura')}>Figura</MenuItem>
+              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('semana')}>Semana</MenuItem>
           </MenuList>
         </Menu>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
@@ -197,13 +198,7 @@ const DataPlanoTrabalho = () => {
                 <Td>{plano.quantidade_falta}</Td>
                 <Td>
                   <HStack spacing={2}>
-                    <EditPlanoTrabalhoModal 
-                      editPlanoTrabalho={plano} 
-                      setUpdateTable={setUpdateTable} 
-                      maquinas={maquinas}
-                      encomendas={encomendas}
-                      colaboradores={colaboradores}
-                    />
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingPlanoTrabalho(plano); setShowModal(true); }}/>
                     <FaTrash
                       cursor="pointer"
                       color="darkred"
@@ -218,12 +213,7 @@ const DataPlanoTrabalho = () => {
       </Box>
 
       <HStack marginLeft="50%" spacing={4}>
-        <AddPlanoTrabalhoModal 
-          setUpdateTable={setUpdateTable} 
-          maquinas={maquinas}
-          encomendas={encomendas}
-          colaboradores={colaboradores}
-        />
+        <Button onClick={() => { setEditingPlanoTrabalho(null); setShowModal(true); }}>Adicionar Plano de Trabalho</Button>
         <Button
           onClick={() => setPage(Math.max(0, page - 1))}
           disabled={page === 0}
@@ -237,6 +227,16 @@ const DataPlanoTrabalho = () => {
           <FaAngleRight />
         </Button>
       </HStack>
+      {showModal && (
+        <PlanoTrabalhoModal
+          onClose={() => setShowModal(false)}
+          editingPlanoTrabalho={editingPlanoTrabalho}
+          maquinas={maquinas}
+          encomendas={encomendas}
+          colaboradores={colaboradores}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

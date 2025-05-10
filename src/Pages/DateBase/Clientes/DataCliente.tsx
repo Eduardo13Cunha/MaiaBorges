@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {Text,VStack,Box,Table,Thead,Tbody,Tr,Th,Td, Button,HStack,Input } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
 import axios from 'axios';
-import { EditClienteModal } from './EditarCliente';
-import { AddClienteModal } from './AddCliente';
 import { Cliente } from '../../../Interfaces/interfaces';
+import { ClienteModal } from './ClienteModal';
 
 const DataCliente: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingCliente, setEditingCliente] = useState<Cliente | null>(null);
   const [UpdateTable, setUpdateTable] = useState<any>("");
   const [clientes, setClientes] = useState<any[]>([]);
   const [page, setPage] = useState(0);
@@ -96,7 +97,7 @@ const DataCliente: React.FC = () => {
                 <Td>{cliente.numero}</Td>
                 <Td>
                   <HStack spacing={2}>
-                    <EditClienteModal editCliente={cliente} setUpdateTable={setUpdateTable}/>
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingCliente(cliente); setShowModal(true); }}/>
                     <FaTrash 
                       cursor="pointer"
                       color="darkred"
@@ -111,7 +112,7 @@ const DataCliente: React.FC = () => {
       </Box>
 «
       <HStack marginLeft="50%" spacing={4}>
-        <AddClienteModal  setUpdateTable={setUpdateTable} />
+        <Button onClick={() => { setEditingCliente(null); setShowModal(true); }}>Adicionar Cliente</Button>
         <Button
           onClick={() => setPage(Math.max(0, page - 1))}
           disabled={page === 0}
@@ -125,6 +126,13 @@ const DataCliente: React.FC = () => {
           <FaAngleRight />
         </Button>
       </HStack>
+      {showModal && (
+        <ClienteModal
+          onClose={() => setShowModal(false)}
+          editingCliente={editingCliente}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

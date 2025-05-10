@@ -1,13 +1,14 @@
 import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight, FaArrowRight, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaArrowRight, FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { EditCoranteModal } from "./EditCorante";
-import { AddCoranteModal } from "./AddCorante";
 import { Corante } from "../../../../Interfaces/interfaces";
+import { CoranteModal } from "./CoranteModal";
 
 const DataCorante: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [editingCorante, setEditingCorante] = useState<Corante | null>(null);
   const [UpdateTable, setUpdateTable] = useState<any>("");
   const [page, setPage] = useState<number>(0);
   const [Corantes, setCorantes] = useState<any[]>([]);
@@ -107,7 +108,7 @@ const DataCorante: React.FC = () => {
                 <Td>{corante.quantidade}</Td>
                 <Td>
                   <HStack spacing={2} justifyContent="flex-end">
-                    <EditCoranteModal setUpdateTable={setUpdateTable} editCorante={corante} />
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingCorante(corante); setShowModal(true); }}/>
                     <FaTrash cursor="pointer" onClick={() => deleteCorante(corante.id_corante)} color="darkred" />
                   </HStack>
                 </Td>
@@ -119,7 +120,7 @@ const DataCorante: React.FC = () => {
 
       <HStack marginLeft="50%" spacing={4}>
         <Box maxWidth="150%">
-          <AddCoranteModal setUpdateTable={setUpdateTable} />
+          <Button onClick={() => { setEditingCorante(null); setShowModal(true); }}>Adicionar Corante</Button>
         </Box>
         <HStack w="100%" justifyContent="flex-end">
           <Button onClick={() => setPage(page === 0 ? 0 : page - 1)} disabled={page === 0}>
@@ -130,6 +131,13 @@ const DataCorante: React.FC = () => {
           </Button>
         </HStack>
       </HStack>
+      {showModal && (
+        <CoranteModal
+          onClose={() => setShowModal(false)}
+          editingCorante={editingCorante}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };

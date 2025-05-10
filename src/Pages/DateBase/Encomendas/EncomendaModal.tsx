@@ -1,4 +1,4 @@
-import { Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
+import { Box, Text, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Figura, Encomenda, Cliente } from "../../../Interfaces/interfaces";
 import axios from "axios";
@@ -93,10 +93,17 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
         <ModalBody>
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <FormLabel><strong>Figura</strong> - {selectedCell?.figura.nome}</FormLabel>
-              <FormLabel><strong>Semana</strong> - {selectedCell?.week}</FormLabel>
+              <FormLabel>Figura</FormLabel>
+              <Box cursor="default" as={Button} className='TableMenu'>
+                <Text>{selectedCell?.figura.nome}</Text>
+              </Box>
             </FormControl>
-
+            <FormControl mt={4}>
+              <FormLabel>Semana</FormLabel>
+              <Box cursor="default" as={Button} className='TableMenu'>
+                <Text>{selectedCell?.week}</Text>
+              </Box>
+            </FormControl>
             <FormControl isRequired mt={4}>
               <FormLabel>Cliente</FormLabel>
               <Menu>

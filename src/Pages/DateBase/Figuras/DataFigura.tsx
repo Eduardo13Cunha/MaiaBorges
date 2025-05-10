@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { FaTrash, FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
 import axios from 'axios';
-import { AddFiguraModal } from './AddFigura';
-import { EditFiguraModal } from './EditFigura';
 import { Observações } from './MaterialFigura';
 import { Corante, Figura, MateriaPrima } from '../../../Interfaces/interfaces';
+import { FiguraModal } from './FiguraModal';
 
-const DataFigura = () => {
+const DataFigura = () => { 
+  const [showModal, setShowModal] = useState(false);
+  const [editingFigura, setEditingFigura] = useState<Figura | null>(null);
   const [figuras, setFiguras] = useState<any[]>([]);
   const [materiasPrimas, setMateriasPrimas] = useState<any[]>([]);
   const [corantes, setCorantes] = useState<any[]>([]);
@@ -125,10 +126,10 @@ const DataFigura = () => {
                 <Td>{figura.referencia}</Td>
                 <Td>{figura.nome}</Td>
                 <Td>{figura.tempo_ciclo}</Td>
-                <Td alignItems="center" justifyContent="center"><Observações figura={figura}/></Td>
+                <Td alignItems="center" cursor="pointer" justifyContent="center"><Observações figura={figura}/></Td>
                 <Td>
                   <HStack spacing={2}>
-                    <EditFiguraModal editFigura={figura} setUpdateTable={setUpdateTable} materiasPrimas={materiasPrimas} corantes={corantes}/>
+                    <FaPencilAlt cursor="pointer" onClick={() => { setEditingFigura(figura); setShowModal(true); }}/>
                     <FaTrash
                       cursor="pointer"
                       color="darkred"
@@ -143,11 +144,7 @@ const DataFigura = () => {
       </Box>
 
       <HStack marginLeft="50%" spacing={4}>
-        <AddFiguraModal 
-          setUpdateTable={setUpdateTable} 
-          materiasPrimas={materiasPrimas}
-          corantes={corantes}
-        />
+        <Button onClick={() => { setEditingFigura(null); setShowModal(true); }}>Adicionar Figura</Button>
         <Button
           onClick={() => setPage(Math.max(0, page - 1))}
           disabled={page === 0}
@@ -161,6 +158,15 @@ const DataFigura = () => {
           <FaAngleRight />
         </Button>
       </HStack>
+      {showModal && (
+        <FiguraModal
+          onClose={() => setShowModal(false)}
+          editingFigura={editingFigura}
+          materiasPrimas={materiasPrimas}
+          corantes={corantes}
+          setUpdateTable={setUpdateTable}
+        />
+      )}
     </VStack>
   );
 };
