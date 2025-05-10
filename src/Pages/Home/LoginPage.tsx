@@ -15,7 +15,7 @@ const LoginPage = () => {
   useEffect(() => {
     const isLoggedIn = Cookies.get('IsLoggedIn');
     if (isLoggedIn) {
-      window.location.href = '/HomePage2';
+      window.location.href = '/HomePage';
     }
   }
   , []);
