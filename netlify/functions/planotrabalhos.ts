@@ -17,22 +17,41 @@ export const handler: Handler = async (event) => {
   try {
     switch (event.httpMethod) {
       case 'GET': {
-        const { data, error } = await supabase
-          .from("plano_trabalho")
-          .select(`
-            *,
-            maquinas (nome),
-            encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
-            colaboradores (nome)
-          `)
-          .gt('quantidade_falta', 0);
+        if (event.path.endsWith('/dataplanotrabalho')) {
+          const { data, error } = await supabase
+            .from("plano_trabalho")
+            .select(`
+              *,
+              maquinas (nome),
+              encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
+              colaboradores (nome)
+            `)
+            .gt('quantidade_falta', 0);
 
-        if (error) throw error;
+          if (error) throw error;
 
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ status: "success", data })
-        };
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ status: "success", data })
+          };
+        } else if (event.path.endsWith('/historicoplanotrabalho')) {
+          const { data, error } = await supabase
+            .from("plano_trabalho")
+            .select(`
+              *,
+              maquinas (nome),
+              encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
+              colaboradores (nome)
+            `)
+            .eq('quantidade_falta', 0);
+
+          if (error) throw error;
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ status: "success", data })
+          };
+        }
       }
 
       case 'POST': {

@@ -17,6 +17,9 @@ const theme = extendTheme({
       primary: {
         100: "rgb(75, 75, 181)",
       },
+      secondary: {
+        100: "rgba(4, 175, 84)",
+      },
       header: {
         100: "white",
       },

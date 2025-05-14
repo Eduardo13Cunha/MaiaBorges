@@ -17,6 +17,7 @@ import DataFigura from "./Pages/DateBase/Figuras/DataFigura";
 import DataMaterial from "./Pages/DateBase/Materiais/DataMaterial";
 import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamento";
 import DataPlanoTrabalho from "./Pages/DateBase/PlanoTrabalho/DataPlanoTrabalho";
+import HistoricoPage from "./Pages/DateBase/Historico/HistoricoData";
 import HomePage from "./Pages/Home/HomePage";
 import theme from "./Themes/themes";
 
@@ -38,6 +39,7 @@ export const App = () => (
             <Route path="/DataAcompanhamento" element={<DataAcompanhamento/>}/>
             <Route path="/DataPlanoTrabalho" element={<DataPlanoTrabalho/>}/>
             <Route path="/HomePage" element={<HomePage/>}/>
+            <Route path="/Historico" element={<HistoricoPage/>}/>
           </Routes>
         </BrowserRouter>
         <Spacer h="100%"/>

@@ -27,7 +27,7 @@ const DataPlanoTrabalho = () => {
     const fetchData = async () => {
       try {
         const [planoRes, maquinaRes, encomendaRes, colaboradorRes] = await Promise.all([
-          axios.get('/.netlify/functions/planotrabalhos'),
+          axios.get('/.netlify/functions/planotrabalhos/dataplanotrabalho'),
           axios.get('/.netlify/functions/maquinas'),
           axios.get('/.netlify/functions/encomendas'),
           axios.get('/.netlify/functions/colaboradores')

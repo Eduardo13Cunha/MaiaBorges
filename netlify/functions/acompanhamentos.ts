@@ -17,13 +17,14 @@ export const handler: Handler = async (event) => {
   try {
     switch (event.httpMethod) {
       case 'GET':
-        const { data, error } = await supabase.from("acompanhamento").select(`
+        const { data, error } = await supabase
+        .from("acompanhamento").select(`
           *,
           maquinas (nome),
           encomendas (id_encomenda, quantidade, figuras (id_figura, nome)),
           colaboradores (nome)
         `);
-
+        
         if (error) throw error;
         return {
           statusCode: 200,

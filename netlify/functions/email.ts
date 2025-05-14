@@ -23,15 +23,16 @@ export const handler: Handler = async (event) => {
     const body = JSON.parse(event.body!);
     
     if (event.path.endsWith('/send-email')) {
-      const { sugestao } = body;
+      const { userName, userId, sugestao } = body;
       const mailOptions = {
         from: 'itparkmanager.pap@gmail.com',
-        to: 'eduardocunha302988@rauldoria.pt',
-        subject: 'Nova Opinião Recebida',
-        text: sugestao
+        to: 'eduardocunha.302988@rauldoria.pt',
+        subject: 'Contacto Recebido - Maia Borges',
+        text: `O ${userName} com o Id - ${userId} enviou a seguinte mensagem:\n   ${sugestao}`
       };
 
       await transporter.sendMail(mailOptions);
+      
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'E-mail enviado com sucesso' })

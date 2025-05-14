@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Box, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Link } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
 import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
+import { ContactosModal } from '../../Pages/Home/ContactosModal';
 
 export default function Header() {
+    const [showModal, setShowModal] = useState(false);
     const [userName, setName] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -65,13 +67,18 @@ export default function Header() {
                             </MenuButton>
                             <MenuList bg="transparent" borderColor="transparent">
                                 <MenuItem className="MenuHeader" as={Link} href="/Perfil" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Perfil</MenuItem>
-                                <MenuItem className="MenuHeader" as={Link} href="/Contacts" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Contactos</MenuItem>
+                                <MenuItem className="MenuHeader" onClick={() => { setShowModal(true); }} _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Contacte-nos</MenuItem>
                                 <MenuItem className="MenuHeader" color="red" onClick={handleLogout} _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Log Out</MenuItem>
                             </MenuList>
                         </Menu>
                     </HStack>
                 </Box>
             </HStack>
+            {showModal && (
+                <ContactosModal
+                    onClose={() => setShowModal(false)}
+                />
+            )}
         </Box>
     ) : (
         <Box bg="bg.primary.100" h="8vh"></Box>
