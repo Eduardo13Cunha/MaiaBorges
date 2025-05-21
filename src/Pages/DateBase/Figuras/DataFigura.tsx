@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
+import { useToast, VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text } from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { Observações } from './MaterialFigura';
 import { Corante, Figura, MateriaPrima } from '../../../Interfaces/interfaces';
 import { FiguraModal } from './FiguraModal';
+import { isLoggedIn } from '../../../Routes/validation';
+import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataFigura = () => { 
   const [showModal, setShowModal] = useState(false);
@@ -18,8 +20,10 @@ const DataFigura = () => {
   const [sortColumn, setSortColumn] = useState<string>('id_figura');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const itemsPerPage = 8;
+  const showToast = useToast();  
 
   useEffect(() => {
+    isLoggedIn();
     fetchData();
     setUpdateTable("");
   }, [UpdateTable]);
@@ -35,6 +39,11 @@ const DataFigura = () => {
       setMateriasPrimas((materiaPrimaRes.data as { data: MateriaPrima[] }).data);
       setCorantes((coranteRes.data as { data: Corante[] }).data);
     } catch (error) {
+      showToast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar as figuras.",
+        status: "error",
+      });
       console.error('Error fetching data:', error);
     }
   };
@@ -49,8 +58,18 @@ const DataFigura = () => {
     if (window.confirm('Tem certeza que deseja excluir esta figura?')) {
       try {
         await axios.delete(`/.netlify/functions/figuras/${id}`);
+        showToast({
+          title: "Figura excluída com sucesso",
+          description: "A figura foi excluída com sucesso.",
+          status: "success",
+        });
         setFiguras(figuras.filter(figura => figura.id_figura !== id));
       } catch (error) {
+        showToast({
+          title: "Erro ao excluir figura",
+          description: "Não foi possível excluir a figura.",
+          status: "error",
+        });
         console.error('Error deleting figura:', error);
       }
     }
@@ -84,12 +103,9 @@ const DataFigura = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox">
-        <Input
-          placeholder="Pesquisar por Nome ou Referência"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className='TableSearchInput'
-        />
+        <Box className="TableSearchInput">
+          <IconInput placeholder="Pesquisar por Nome ou Referência" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+        </Box>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>

@@ -1,7 +1,8 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import { useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../../Components/errorModal/errorModal";
+import { FaBalanceScale, FaUser } from "react-icons/fa";
+import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
 
 interface MateriaPrimaModalProps {
   onClose: () => void;
@@ -14,8 +15,7 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
   editingMateriaPrima,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast = useToast();
   const [formData, setFormData] = useState({
     nome: '',
     quantidade: 0,
@@ -34,17 +34,34 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
     try {
       if (editingMateriaPrima) {
         await axios.put(`/.netlify/functions/materiasprimas/${editingMateriaPrima.id_materiasprima}`, formData);
+        showToast({
+          title: "Matéria Prima atualizada com sucesso",
+          description: "A matéria prima foi atualizada com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/materiasprimas', formData);
+        showToast({
+          title: "Matéria Prima criada com sucesso",
+          description: "A matéria prima foi criada com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveMateriaPrima");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingMateriaPrima) {
+        showToast({
+          title: "Erro ao atualizar matéria prima",
+          description: "Não foi possível atualizar a matéria prima.",
+          status: "error",
+        });
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar matéria prima",
+          description: "Não foi possível criar a matéria prima.",
+          status: "error",
+        });
       }
     }
   };
@@ -52,15 +69,19 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/materiasprimas/${id}`);
+      showToast({
+        title: "Matéria Prima excluída com sucesso",
+        description: "A matéria prima foi excluída com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao excluir matéria prima",
+        description: "Não foi possível excluir a matéria prima.",
+        status: "error",
+      });
     }
   };
 
@@ -84,19 +105,12 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Quantidade - KiloGramas</FormLabel>
-              <Input
-                type="number"
-                value={formData.quantidade}
-                onChange={(e) => setFormData({ ...formData, quantidade: Number(e.target.value) })}
-              />
+              <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: Number(x) ?? 0 })}/>
             </FormControl>
 
             <Button type="submit" className="SaveButton">
@@ -117,13 +131,6 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

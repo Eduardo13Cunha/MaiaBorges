@@ -16,25 +16,48 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 export const handler: Handler = async (event) => {
   try {
     switch (event.httpMethod) {
-      case 'GET':
+      case 'GET': {
+        const pathParts = event.path.split('/').filter(Boolean);
+        const isPerfilRoute = pathParts.includes('perfil');
+        const id = pathParts.at(-1);
+
+        const selectQuery = `
+          id_colaborador,
+          nome,
+          email,
+          numero,
+          idade,
+          data_nascimento,
+          id_turno,
+          turnos (descricao)
+        `;
+
+        if (isPerfilRoute && id) {
+          const { data, error } = await supabase
+            .from("colaboradores")
+            .select(selectQuery)
+            .eq("id_colaborador", id)
+            .single();
+
+          if (error) throw error;
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ status: "success", data })
+          };
+        }
+
         const { data, error } = await supabase
           .from("colaboradores")
-          .select(`
-            id_colaborador,
-            nome,
-            email,
-            numero,
-            idade,
-            data_nascimento,
-            id_turno,
-            turnos (descricao)
-          `);
-        
+          .select(selectQuery);
+
         if (error) throw error;
+
         return {
           statusCode: 200,
           body: JSON.stringify({ status: "success", data })
         };
+      }
 
       case 'POST':
         const newData = JSON.parse(event.body!);

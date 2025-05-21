@@ -1,7 +1,9 @@
-import { Box, Text, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
+import { useToast, Box, Text, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Figura, Encomenda, Cliente } from "../../../Interfaces/interfaces";
 import axios from "axios";
+import { FaCubes } from "react-icons/fa";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 import { ErrorModal } from "../../../Components/errorModal/errorModal";
 
 interface EncomendaModalProps {
@@ -19,8 +21,9 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   clientes,
   setUpdateTable,
 }) => {
+  const showToast = useToast(); 
   const [error,setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const [showError, setShowError] = useState(false); 
   const [formData, setFormData] = useState({
     id_figura: '',
     id_cliente: null as number | null,
@@ -43,17 +46,55 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
     try {
       if (editingEncomenda) {
         await axios.put(`/.netlify/functions/encomendas/${editingEncomenda.id_encomenda}`, formData);
+        showToast({
+          title: "Encomenda editada com sucesso",
+          description: "A encomenda foi editada com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/encomendas', formData);
+        showToast({
+          title: "Encomenda criada com sucesso",
+          description: "A encomenda foi criada com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveEncomenda");
       onClose();
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
+    } catch (error: any) {
+      if(editingEncomenda){
+        if (error?.response?.status === 400) {
+          showToast({
+            title: "Erro ao editar encomenda",
+            description: "Não foi possível editar a encomenda Verifique o Estoque.",
+            status: "error",
+          });
+        } else {
+          showToast({
+            title: "Erro ao editar encomenda",
+            description: "Não foi possível editar a encomenda.",
+            status: "error",
+          });
+        }
         setError(error)
         setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
+      }
+      else{
+        if (error?.response?.status === 400) {
+          showToast({
+            title: "Erro ao criar encomenda",
+            description: "Não foi possível criar a encomenda. Verifique o Estoque.",
+            status: "error",
+          });
+        } else {
+          showToast({
+            title: "Erro ao criar encomenda",
+            description: "Não foi possível criar a encomenda.",
+            status: "error",
+          });
+        }
+        setError(error)
+        setShowError(true);
       }
     }
   };
@@ -61,15 +102,20 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/encomendas/${id}`);
+      showToast({
+        title: "Encomenda eliminada com sucesso",
+        description: "A encomenda foi eliminada com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error)
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar encomenda",
+        description: "Não foi possível eliminar a encomenda.",
+        status: "error",
+      });
+      console.error('Error deleting encomenda:', error);
     }
   };
 
@@ -127,25 +173,21 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
 
             <FormControl isRequired mt={4}>
               <FormLabel>Quantidade</FormLabel>
-              <Input
-                type="number"
-                value={formData.quantidade}
-                onChange={(e) => setFormData({ ...formData, quantidade: e.target.value })}
-              />
+              <IconInput min={0} icon={<FaCubes/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: x ?? ""})}/>
             </FormControl>
 
             <Button type="submit" className="SaveButton">{editingEncomenda ? 'Salvar' : 'Criar'}</Button>
             <Button onClick={onClose} className="CancelButton">Cancelar</Button>
             {editingEncomenda ? <Button onClick={() => handleDelete(editingEncomenda?.id_encomenda)} ml="55.4%" mt="2%" color="white" bgColor="Red">Eliminar</Button> : <></>}
           </form>
-          {showError && (
-            <ErrorModal  
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}/>
-          )}
         </ModalBody>
       </ModalContent>
+      {showError && (
+        <ErrorModal  
+          onClose2={() => setShowError(false)}
+          title={error.response.data.error}
+          description={error.response.data.details}/>
+      )}
     </Modal>
   );
 };

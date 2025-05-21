@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import {VStack,Box,Input,Button,Menu,MenuButton,MenuItem,MenuList,Table,Tbody,Td,Th,Thead,Tr} from '@chakra-ui/react';
+import { useToast, VStack,Box,Input,Button,Menu,MenuButton,MenuItem,MenuList,Table,Tbody,Td,Th,Thead,Tr} from '@chakra-ui/react';
 import axios from 'axios';
 import { Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
-import { useCustomToast } from '../../../Components/Toaster/toaster';
 import { isLoggedIn } from '../../../Routes/validation';
+import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
+import { FaCubes } from 'react-icons/fa';
 
 const DataAcompanhamento = () => {
   const [turnos, setTurnos] = useState<any[]>([]);
@@ -11,7 +12,7 @@ const DataAcompanhamento = () => {
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
   const [planosTrabalho, setPlanosTrabalho] = useState<PlanoTrabalho[]>([]);
   const [producaoValues, setProducaoValues] = useState<{[key: string]: string}>({});
-  const showToast = useCustomToast();
+  const showToast = useToast();
 
   useEffect(() => {
     isLoggedIn();
@@ -48,7 +49,7 @@ const DataAcompanhamento = () => {
       );
       setColaboradores(colaboradoresTurno);
 
-      const planosResponse = await axios.get('/.netlify/functions/planotrabalhos');
+      const planosResponse = await axios.get('/.netlify/functions/planotrabalhos/dataplanotrabalho');
       const planosColaboradores = (planosResponse.data as { data: PlanoTrabalho[] }).data.filter(
         (plano: any) => colaboradoresTurno.some(
           (col: any) => col.id_colaborador === plano.id_colaborador
@@ -64,7 +65,7 @@ const DataAcompanhamento = () => {
     } catch (error) {
       showToast({
         title: "Erro ao carregar dados",
-        description: "Não foi possível carregar os Colaboradores.",
+        description: "Não foi possível carregar os Dados dos Acompanhamentos.",
         status: "error",
       });
       console.error('Error fetching data:', error);
@@ -89,7 +90,8 @@ const DataAcompanhamento = () => {
           id_maquina: plano?.id_maquina,
           id_encomenda: plano?.id_encomenda,
           id_colaborador: plano?.id_colaborador,
-          quantidade_produzida: Number(quantidade)
+          quantidade_produzida: Number(quantidade),
+          dia_hora: new Date().toISOString(),
         });
       });
       setProducaoValues({});
@@ -143,12 +145,7 @@ const DataAcompanhamento = () => {
                 <Td>#{plano.encomendas.id_encomenda} - {plano.encomendas.figuras.nome}</Td>
                 <Td>{plano.maquinas.nome}</Td>
                 <Td>
-                  <Input
-                    type="number"
-                    value={producaoValues[plano.id_planodetrabalho]}
-                    onChange={(e) => handleProducaoChange(String(plano.id_planodetrabalho), e.target.value)}
-                    placeholder="Quantidade"
-                  />
+                  <IconInput min={0} icon={<FaCubes/>} type="number" value={producaoValues[plano.id_planodetrabalho]} onChange={(x) => handleProducaoChange(String(plano.id_planodetrabalho), x ?? "")}/>
                 </Td>
               </Tr>
               ))

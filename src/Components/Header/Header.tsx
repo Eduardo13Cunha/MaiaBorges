@@ -66,7 +66,7 @@ export default function Header() {
                                 <strong>{userName}</strong>
                             </MenuButton>
                             <MenuList bg="transparent" borderColor="transparent">
-                                <MenuItem className="MenuHeader" as={Link} href="/Perfil" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Perfil</MenuItem>
+                                <MenuItem className="MenuHeader" as={Link} href="/PerfilPage" _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Perfil</MenuItem>
                                 <MenuItem className="MenuHeader" onClick={() => { setShowModal(true); }} _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Contacte-nos</MenuItem>
                                 <MenuItem className="MenuHeader" color="red" onClick={handleLogout} _focus={{ boxShadow: '0 8px 32px 0 rgba( 0, 0, 0, 0.37 )' }}>Log Out</MenuItem>
                             </MenuList>

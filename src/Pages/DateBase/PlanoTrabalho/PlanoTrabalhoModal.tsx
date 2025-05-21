@@ -1,7 +1,6 @@
-import { Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
+import { useToast, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../Components/errorModal/errorModal";
 
 interface PlanoTrabalhoModalProps {
   onClose: () => void;
@@ -20,8 +19,7 @@ export const PlanoTrabalhoModal: React.FC<PlanoTrabalhoModalProps> = ({
   colaboradores,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast = useToast();
   const [formData, setFormData] = useState({
     id_maquina: editingPlanoTrabalho?.id_maquina || '',
     id_encomenda: editingPlanoTrabalho?.id_encomenda || '',
@@ -61,17 +59,36 @@ export const PlanoTrabalhoModal: React.FC<PlanoTrabalhoModalProps> = ({
     try {
       if (editingPlanoTrabalho) {
         await axios.put(`/.netlify/functions/planotrabalhos/${editingPlanoTrabalho.id}`, formData);
+        showToast({
+          title: "Plano de Trabalho editado com sucesso",
+          description: "O plano de trabalho foi editado com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/planotrabalhos', formData);
+        showToast({
+          title: "Plano de Trabalho criado com sucesso",
+          description: "O plano de trabalho foi criado com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSavePlanoTrabalho");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingPlanoTrabalho) {
+        showToast({
+          title: "Erro ao editar plano de trabalho",
+          description: "Não foi possível editar o plano de trabalho.",
+          status: "error",
+        });
+        console.error('Error editing plano de trabalho:', error);
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar plano de trabalho",
+          description: "Não foi possível criar o plano de trabalho.",
+          status: "error",
+        });
+        console.error('Error creating plano de trabalho:', error);
       }
     }
   };
@@ -79,15 +96,20 @@ export const PlanoTrabalhoModal: React.FC<PlanoTrabalhoModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/planotrabalhos/${id}`);
+      showToast({
+        title: "Plano de Trabalho eliminado com sucesso",
+        description: "O plano de trabalho foi eliminado com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar plano de trabalho",
+        description: "Não foi possível eliminar o plano de trabalho.",
+        status: "error",  
+      });
+      console.error('Error deleting plano de trabalho:', error);
     }
   };
 
@@ -195,13 +217,6 @@ export const PlanoTrabalhoModal: React.FC<PlanoTrabalhoModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

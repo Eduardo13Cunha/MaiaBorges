@@ -1,16 +1,17 @@
-import {Box,VStack,Img,FormControl,FormLabel,Input,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
+import { useToast,Box,VStack,Img,FormControl,FormLabel,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import MaiaBorgesLogoGrande from "../../Assets/MaiaBorgesLogoGrande.png";
 import Cookies from "js-cookie";
 import { Colaborador } from "../../Interfaces/interfaces";
 import axios from "axios";
+import { MdEmail } from "react-icons/md";
 import PasswordInput from "../../Components/ReUsable/Inputs/PasswordInput";
-import { useCustomToast } from "../../Components/Toaster/toaster";
+import { IconInput } from "../../Components/ReUsable/Inputs/IconInput";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const showToast = useCustomToast();
+  const showToast = useToast();
 
   useEffect(() => {
     const isLoggedIn = Cookies.get('IsLoggedIn');
@@ -76,11 +77,7 @@ const LoginPage = () => {
             <FormLabel>
               <strong>Email</strong>
             </FormLabel>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <IconInput type="email" value={email} icon={<MdEmail />} onChange={x => setEmail(x ?? "")} />
           </FormControl>
 
           <FormControl>

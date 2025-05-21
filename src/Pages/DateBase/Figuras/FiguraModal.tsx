@@ -1,8 +1,8 @@
-import { Box, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem, HStack } from "@chakra-ui/react";
+import { useToast, Box, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem, HStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../Components/errorModal/errorModal";
-import { FaTrash } from "react-icons/fa";
+import { FaFingerprint, FaTrash, FaPencilAlt, FaClock, FaBalanceScale } from "react-icons/fa";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 
 interface FiguraModalProps {
   onClose: () => void;
@@ -19,8 +19,7 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
   corantes,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast = useToast();
   const [MeasureMateriaPrima, setMeasureMateriaPrima] = useState("KG");
   const [formData, setFormData] = useState({
     referencia: '',
@@ -52,17 +51,34 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
     try {
       if (editingFigura) {
         await axios.put(`/.netlify/functions/figuras/${editingFigura.id_figura}`, formData);
+        showToast({
+          title: "Figura editada com sucesso",
+          description: "A figura foi editada com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/figuras', formData);
+        showToast({
+          title: "Figura criada com sucesso",
+          description: "A figura foi criada com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveFigura");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingFigura) {
+        showToast({
+          title: "Erro ao editar figura",
+          description: "Não foi possível editar a figura.",
+          status: "error",
+        });
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar figura",
+          description: "Não foi possível criar a figura.",
+          status: "error",
+        });
       }
     }
   };
@@ -70,15 +86,20 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/figuras/${id}`);
+      showToast({
+        title: "Figura eliminada com sucesso",
+        description: "A figura foi eliminada com sucesso.", 
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar figura",
+        description: "Não foi possível eliminar a figura.",
+        status: "error",
+      });
+      console.error('Error deleting figura:', error);
     }
   };
 
@@ -134,27 +155,17 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Referência</FormLabel>
-              <Input
-                value={formData.referencia}
-                onChange={(e) => setFormData({ ...formData, referencia: e.target.value })}
-              />
+              <IconInput icon={<FaFingerprint/>} value={formData.referencia} onChange={(x) => setFormData({ ...formData, referencia:x ?? ""})}/>
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput icon={<FaPencilAlt/>} value={formData.nome} onChange={(x) => setFormData({ ...formData, nome:x ?? ""})}/>
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Tempo de Ciclo</FormLabel>
-              <Input
-                type="number"
-                value={formData.tempo_ciclo}
-                onChange={(e) => setFormData({ ...formData, tempo_ciclo: e.target.value })}
-              />
+              <IconInput icon={<FaClock />} type="number" value={formData.tempo_ciclo} onChange={(x) => setFormData({ ...formData, tempo_ciclo:x ?? ""})}/>
             </FormControl>
 
             <FormControl isRequired mt={4}>
@@ -182,11 +193,7 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
             <FormControl isRequired mt={4}>
               <FormLabel>Quantidade de Matéria Prima</FormLabel>
               <HStack>
-                <Input
-                  type="number"
-                  value={formData.quantidade_materia_prima}
-                  onChange={(e) => setFormData({ ...formData, quantidade_materia_prima: e.target.value })}
-                />
+                <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={formData.quantidade_materia_prima} onChange={(x) => setFormData({ ...formData, quantidade_materia_prima: x ?? ""})}/>
                 <Menu>
                   <MenuButton as={Button} className='TableMenuCorante' minW="8%" display="flex" justifyContent="center" alignItems="center">
                     {MeasureMateriaPrima}
@@ -248,12 +255,7 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
                         ))}
                       </MenuList>
                     </Menu>
-                    <Input
-                      min={0}
-                      placeholder="Quantidade"
-                      value={corante.quantidade_corante}
-                      onChange={(e) => handleCoranteChange(index, 'quantidade_corante', e.target.value, corante.measure)}
-                    />
+                    <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={corante.quantidade_corante} onChange={(x) => handleCoranteChange(index, 'quantidade_corante', x ?? "", corante.measure)}/>
                     <Menu>
                       <MenuButton as={Button} className='TableMenuCorante' minW="8%" display="flex" justifyContent="center" alignItems="center">
                         {corante.measure || "G"}
@@ -320,13 +322,6 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

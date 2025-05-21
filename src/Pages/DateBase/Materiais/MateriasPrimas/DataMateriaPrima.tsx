@@ -1,10 +1,11 @@
-import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
+import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from "react-icons/fa";
+import { FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { MateriaPrima } from "../../../../Interfaces/interfaces";
 import { MateriaPrimaModal } from "./MateriasPrimasModal";
+import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
 
 const DataMateriaPrima: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,7 @@ const DataMateriaPrima: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortColumn, setSortColumn] = useState<string>('id');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const showToast = useToast();
 
   useEffect(() => {
     const fetchMateriasPrimas = async () => {
@@ -23,6 +25,11 @@ const DataMateriaPrima: React.FC = () => {
         const response = await axios.get('/.netlify/functions/materiasprimas');
         setMateriasPrimas((response.data as { data: MateriaPrima[] }).data);
       } catch (error) {
+        showToast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar as matérias-primas.",
+          status: "error",
+        });
         console.error('Error fetching data:', error);
       }
     };
@@ -36,8 +43,18 @@ const DataMateriaPrima: React.FC = () => {
     if (confirmDelete) {
       try {
         await axios.delete(`/.netlify/functions/materiasprimas/${id}`);
+        showToast({
+          title: "Matéria Prima excluída com sucesso",
+          description: "A matéria prima foi excluída com sucesso.",
+          status: "success",
+        });
         setMateriasPrimas(MateriasPrimas.filter(materiaPrima => materiaPrima.id_materiasprima !== id));
       } catch (error) {
+        showToast({
+          title: "Erro ao excluir matéria prima",
+          description: "Não foi possível excluir a matéria prima.",
+          status: "error",
+        });
         console.error('Error deleting materia prima:', error);
       }
     }
@@ -74,7 +91,9 @@ const DataMateriaPrima: React.FC = () => {
     <VStack alignItems="center">
       <Box className="TableBox" width="130%">
         <HStack>
-          <Input placeholder="Pesquisar por Nome" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="TableSearchInput"/>
+          <Box className="TableSearchInput">
+            <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+          </Box>          
           <Text color="white" fontSize="200%" mt="2%" ml="1%">Materias Primas</Text>
         </HStack>
         <Table color="white" marginLeft="15%" marginRight="15%" marginTop="2%" maxH="80%" maxW="70%" sx={{ tableLayout: 'fixed' }}>

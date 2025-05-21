@@ -1,7 +1,8 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import { useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../Components/errorModal/errorModal";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { FaUser, FaCalendarAlt } from "react-icons/fa";
 
 interface MaquinaModalProps {
   onClose: () => void;
@@ -14,8 +15,7 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
   editingMaquina,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast = useToast();
   const [formData, setFormData] = useState({
     nome: '',
     data_inicio: new Date().toISOString().split('T')[0],
@@ -38,17 +38,34 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
     try {
       if (editingMaquina) {
         await axios.put(`/.netlify/functions/maquinas/${editingMaquina.id_maquina}`, formData);
+        showToast({
+          title: "Máquina atualizada com sucesso",
+          description: "A máquina foi atualizada com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/maquinas', formData);
+        showToast({
+          title: "Máquina criada com sucesso",
+          description: "A máquina foi criada com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveMaquina");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingMaquina) {
+        showToast({
+          title: "Erro ao atualizar máquina",
+          description: "Não foi possível atualizar a máquina.",
+          status: "error",
+        });
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar máquina",
+          description: "Não foi possível criar a máquina.",
+          status: "error",
+        });
       }
     }
   };
@@ -56,15 +73,19 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/maquinas/${id}`);
+      showToast({
+        title: "Máquina excluída com sucesso",
+        description: "A máquina foi excluída com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao excluir máquina",
+        description: "Não foi possível excluir a máquina.",
+        status: "error",
+      });
     }
   };
 
@@ -85,37 +106,22 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Data de Início</FormLabel>
-              <Input
-                type="date"
-                value={formData.data_inicio}
-                onChange={(e) => setFormData({ ...formData, data_inicio: e.target.value })}
-              />
+              <IconInput type="date" value={formData.data_inicio} icon={<FaCalendarAlt />} onChange={(x) => setFormData({ ...formData, data_inicio: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Última Inspeção</FormLabel>
-              <Input
-                type="date"
-                value={formData.ultima_inspecao}
-                onChange={(e) => setFormData({ ...formData, ultima_inspecao: e.target.value })}
-              />
+              <IconInput type="date" value={formData.ultima_inspecao} icon={<FaCalendarAlt />} onChange={(x) => setFormData({ ...formData, ultima_inspecao: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Próxima Inspeção</FormLabel>
-              <Input
-                type="date"
-                value={formData.proxima_inspecao}
-                onChange={(e) => setFormData({ ...formData, proxima_inspecao: e.target.value })}
-              />
+              <IconInput type="date" value={formData.proxima_inspecao} icon={<FaCalendarAlt />} onChange={(x) => setFormData({ ...formData, proxima_inspecao: x ?? "" })} />
             </FormControl>
 
             <Button type="submit" className="SaveButton">
@@ -136,13 +142,6 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

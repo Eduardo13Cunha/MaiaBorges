@@ -16,8 +16,6 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
   description
 }) => {
 
-  console.log(description[0]);
-
   return (
     <Modal isOpen={true} onClose={onClose2} isCentered>
       <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(10px)"/>
@@ -42,16 +40,16 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
                 <Tr className='Line'>
                   <Td>{materiaprima.tipo}</Td>
                   <Td>{materiaprima.id}</Td>
-                  <Td>{materiaprima.disponivel}KG</Td>
-                  <Td>{materiaprima.necessario}KG</Td>
+                  <Td>{materiaprima.disponivel} KG</Td>
+                  <Td>{materiaprima.necessario} KG</Td>
                 </Tr>
               ))}
               {description.filter((corante: any) => corante.tipo === "Corante").map((corante: any) => (
                 <Tr className='Line'>
                   <Td>{corante.tipo}</Td>
                   <Td>{corante.id}</Td>
-                  <Td>{corante.disponivel}G</Td>
-                  <Td>{corante.necessario}G</Td>
+                  <Td>{corante.disponivel} G</Td>
+                  <Td>{corante.necessario} G</Td>
                 </Tr>
               ))}
             </Tbody>

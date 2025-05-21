@@ -1,7 +1,8 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import { useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../../Components/errorModal/errorModal";
+import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
+import { FaBalanceScale, FaUser } from "react-icons/fa";
 
 interface CoranteModalProps {
   onClose: () => void;
@@ -14,8 +15,7 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
   editingCorante,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast= useToast();
   const [formData, setFormData] = useState({
     nome: '',
     quantidade: 0,
@@ -34,17 +34,34 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
     try {
       if (editingCorante) {
         await axios.put(`/.netlify/functions/corantes/${editingCorante.id_corante}`, formData);
+        showToast({
+          title: "Corante editado com sucesso",
+          description: "O corante foi editado com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/corantes', formData);
+        showToast({
+          title: "Corante criado com sucesso",
+          description: "O corante foi criado com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveCorante");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if(editingCorante) {
+        showToast({
+          title: "Erro ao editar corante",
+          description: "Não foi possível editar o corante.",
+          status: "error",
+        });
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar corante",
+          description: "Não foi possível criar o corante.",
+          status: "error",
+        });
       }
     }
   };
@@ -52,15 +69,20 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/corantes/${id}`);
+      showToast({
+        title: "Corante eliminado com sucesso",
+        description: "O corante foi eliminado com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar corante",
+        description: "Não foi possível eliminar o corante.",
+        status: "error",
+      });
+      console.error('Error deleting corante:', error);
     }
   };
 
@@ -84,19 +106,12 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Quantidade - Gramas</FormLabel>
-              <Input
-                type="number"
-                value={formData.quantidade}
-                onChange={(e) => setFormData({ ...formData, quantidade: Number(e.target.value) })}
-              />
+              <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: Number(x) ?? 0 })}/>
             </FormControl>
 
             <Button type="submit" className="SaveButton">
@@ -117,13 +132,6 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

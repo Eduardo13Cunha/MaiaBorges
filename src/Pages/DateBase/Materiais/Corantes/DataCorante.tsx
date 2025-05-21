@@ -1,10 +1,11 @@
-import { Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
+import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight, FaArrowRight, FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaArrowRight, FaPencilAlt, FaSearch, FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { Corante } from "../../../../Interfaces/interfaces";
 import { CoranteModal } from "./CoranteModal";
+import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
 
 const DataCorante: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,7 @@ const DataCorante: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortColumn, setSortColumn] = useState<string>('id_corante');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const showToast = useToast();
 
   useEffect(() => {
     const fetchCorantes = async () => {
@@ -23,6 +25,11 @@ const DataCorante: React.FC = () => {
         const response = await axios.get('/.netlify/functions/corantes');
         setCorantes((response.data as { data: Corante[] }).data);
       } catch (error) {
+        showToast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar os corantes.",
+          status: "error",
+        });
         console.error('Error fetching data:', error);
       }
     };
@@ -36,8 +43,18 @@ const DataCorante: React.FC = () => {
     if (confirmDelete) {
       try {
         await axios.delete(`/.netlify/functions/corantes/${id}`);
+        showToast({
+          title: "Corante excluído com sucesso",
+          description: "O corante foi excluído com sucesso.",
+          status: "success",
+        });
         setCorantes(Corantes.filter(corante => corante.id_corante !== id));
       } catch (error) {
+        showToast({
+          title: "Erro ao excluir corante",
+          description: "Não foi possível excluir o corante.",
+          status: "error",
+        });
         console.error('Error deleting corante:', error);
       }
     }
@@ -74,7 +91,9 @@ const DataCorante: React.FC = () => {
     <VStack alignItems="center">
       <Box className="TableBox" width="130%">
         <HStack>
-          <Input placeholder="Pesquisar por Nome" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="TableSearchInput"/>
+          <Box className="TableSearchInput">
+            <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+          </Box>
           <Text color="white" fontSize="200%" mt="2%" ml="4%">Corantes</Text>
         </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {Box,Button,Grid,GridItem,Text,HStack,useToast,Tooltip} from '@chakra-ui/react';
+import { Box,Button,Grid,GridItem,Text,HStack,useToast,Tooltip} from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { EncomendaModal } from './EncomendaModal';
 import { IoMdAdd } from 'react-icons/io';
@@ -131,14 +131,12 @@ const DataEncomenda: React.FC = () => {
           </React.Fragment>
         ))}
       </Grid>
-
-      {/* Add/Edit Encomenda Modal */}
       {showModal && (
         <EncomendaModal
           selectedCell={selectedCell}
           editingEncomenda={editingEncomenda}
           clientes={clientes}
-          onClose={() => setShowModal(false)} // Add an onClose to close the modal
+          onClose={() => setShowModal(false)}
           setUpdateTable={setUpdateTable}
         />
       )}

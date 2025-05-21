@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Show, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const HomePage = () => {
+  const showToast = useToast();
   const [planos, setPlano] = useState<any[]>([]);
   const userId = Cookies.get('userId');
 
   useEffect(() => {   
     const fetchData = async () => {
       try {
-        const response = await axios.get('/.netlify/functions/planotrabalhos');
+        const response = await axios.get('/.netlify/functions/planotrabalhos/dataplanotrabalho');
+        console.log(response);
         const planoFiltrado=(response.data.data).filter((item: { id_colaborador: number | undefined; }) => item.id_colaborador === Number(userId));
         setPlano(planoFiltrado);
 
       } catch (error) {
+        showToast({
+          title: "Erro ao buscar dados",
+          description: "Não foi possível buscar os dados.",
+          status: "error",
+        });
         console.error('Error fetching data:', error);
       }
     };

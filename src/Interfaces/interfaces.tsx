@@ -60,6 +60,7 @@ export interface Acompanhamento {
   encomenda: Encomenda;
   colaborador: Colaborador;
   quantidade_produzida: number;
+  dia_hora: Date;
 }
 
 export interface PlanoTrabalho {

@@ -1,7 +1,9 @@
-import { Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
+import { useToast, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../Components/errorModal/errorModal";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { FaUser, FaCalendarAlt, FaPhone, FaBabyCarriage } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 interface ColaboradorModalProps {
   onClose: () => void;
@@ -15,9 +17,8 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
   editingColaborador,
   turnos,
   setUpdateTable,
-}) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+}) => {    
+  const showToast = useToast();  
   const [formData, setFormData] = useState({
     nome: '',
     idade: '',
@@ -44,17 +45,36 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
     try {
       if (editingColaborador) {
         await axios.put(`/.netlify/functions/colaboradores/${editingColaborador.id_colaborador}`, formData);
+        showToast({
+          title: "Colaborador editado com sucesso",
+          description: "O colaborador foi editado com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/colaboradores', formData);
+        showToast({
+          title: "Colaborador criado com sucesso",
+          description: "O colaborador foi criado com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveColaborador");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingColaborador) {
+        showToast({
+          title: "Erro ao editar colaborador",
+          description: "Não foi possível editar o colaborador.",
+          status: "error",
+        });
+        console.error('Error editing colaborador:', error);
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar colaborador",
+          description: "Não foi possível criar o colaborador.",
+          status: "error",
+        });
+        console.error('Error creating colaborador:', error);
       }
     }
   };
@@ -62,15 +82,20 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/colaboradores/${id}`);
+      showToast({
+        title: "Colaborador eliminado com sucesso",
+        description: "O colaborador foi eliminado com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar colaborador",
+        description: "Não foi possível eliminar o colaborador.",
+        status: "error",
+      });
+      console.error('Error deleting colaborador:', error);
     }
   };
 
@@ -95,46 +120,27 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Idade</FormLabel>
-              <Input
-                type="number"
-                value={formData.idade}
-                onChange={(e) => setFormData({ ...formData, idade: e.target.value })}
-              />
+              <IconInput type="number" value={formData.idade.toString()} icon={<FaBabyCarriage />} onChange={(x) => setFormData({ ...formData, idade: x ?? "" })} />  
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Data de Nascimento</FormLabel>
-              <Input
-                type="date"
-                value={formData.data_nascimento}
-                onChange={(e) => setFormData({ ...formData, data_nascimento: e.target.value })}
-              />
+              <IconInput type="date" value={formData.data_nascimento} icon={<FaCalendarAlt />} onChange={(x) => setFormData({ ...formData, data_nascimento: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
+              <IconInput value={formData.email} icon={<MdEmail />} onChange={(x) => setFormData({ ...formData, email: x ?? "" })} />
             </FormControl>
 
             <FormControl isRequired mt={4}>
               <FormLabel>Número</FormLabel>
-              <Input
-                type="number"
-                value={formData.numero}
-                onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
-              />
+              <IconInput type="number" value={formData.numero.toString()} icon={<FaPhone />} onChange={(x) => setFormData({ ...formData, numero: x ?? "" })} />  
             </FormControl>
 
             <FormControl isRequired mt={4}>
@@ -177,13 +183,6 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

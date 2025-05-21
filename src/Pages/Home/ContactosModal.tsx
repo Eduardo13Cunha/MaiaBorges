@@ -1,8 +1,7 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Button,  Textarea } from "@chakra-ui/react";
+import { useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Button,  Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
-import { useCustomToast } from "../../Components/Toaster/toaster";
 
 interface ClienteModalProps {
   onClose: () => void;
@@ -12,7 +11,7 @@ export const ContactosModal: React.FC<ClienteModalProps> = ({
   onClose
 }) => {
     const [sugestao, setSugestao] = useState('');
-    const showToast = useCustomToast();
+    const showToast = useToast();
 
     const handleSubmit = async () => {
         const userName= Cookies.get('userName');

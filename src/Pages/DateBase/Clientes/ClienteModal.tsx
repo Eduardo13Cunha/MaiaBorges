@@ -1,7 +1,9 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import { useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
-import { ErrorModal } from "../../../Components/errorModal/errorModal";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { FaUser, FaPhone } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 interface ClienteModalProps {
   onClose: () => void;
@@ -14,8 +16,7 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
   editingCliente,
   setUpdateTable,
 }) => {
-  const [error, setError] = useState<any>(null);
-  const [showError, setShowError] = useState(false);
+  const showToast = useToast();  
   const [formData, setFormData] = useState({
     nome: editingCliente?.nome || '',
     email: editingCliente?.email || '',
@@ -26,17 +27,36 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
     try {
       if (editingCliente) {
         await axios.put(`/.netlify/functions/clientes/${editingCliente.id_cliente}`, formData);
+        showToast({
+          title: "Cliente editado com sucesso",
+          description: "O cliente foi editado com sucesso.",
+          status: "success",
+        });
       } else {
         await axios.post('/.netlify/functions/clientes', formData);
+        showToast({
+          title: "Cliente criado com sucesso",
+          description: "O cliente foi criado com sucesso.",
+          status: "success",
+        });
       }
       setUpdateTable("handleSaveCliente");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
+      if (editingCliente) {
+        showToast({
+          title: "Erro ao editar cliente",
+          description: "Não foi possível editar o cliente.",
+          status: "error",
+        });
+        console.error('Error editing cliente:', error);
       } else {
-        alert('An unexpected error occurred');
+        showToast({
+          title: "Erro ao criar cliente",
+          description: "Não foi possível criar o cliente.",
+          status: "error",
+        });
+        console.error('Error creating cliente:', error);
       }
     }
   };
@@ -44,15 +64,20 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
   const handleDelete = async (id: any) => {
     try {
       await axios.delete(`/.netlify/functions/clientes/${id}`);
+      showToast({
+        title: "Cliente eliminado com sucesso",
+        description: "O cliente foi eliminado com sucesso.",
+        status: "success",
+      });
       setUpdateTable("handleDelete");
       onClose();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error);
-        setShowError(true);
-      } else {
-        alert('An unexpected error occurred');
-      }
+      showToast({
+        title: "Erro ao eliminar cliente",
+        description: "Não foi possível eliminar o cliente.",
+        status: "error",
+      });
+      console.error('Error deleting cliente:', error);
     }
   };
 
@@ -73,25 +98,15 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
           <form onSubmit={handleSubmit}>
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
-              <Input
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              />
+              <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
             </FormControl>
             <FormControl isRequired mt={4}>
               <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
+              <IconInput value={formData.email} icon={<MdEmail />} onChange={(x) => setFormData({ ...formData, email: x ?? "" })} />
             </FormControl>
             <FormControl isRequired mt={4}>
               <FormLabel>Número</FormLabel>
-              <Input
-                value={formData.numero}
-                onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
-              />
+              <IconInput type="number" value={formData.numero.toString()} icon={<FaPhone />} onChange={(x) => setFormData({ ...formData, numero: x ?? "" })} />  
             </FormControl>
             <Button type="submit" className="SaveButton">
               {editingCliente ? 'Salvar' : 'Criar'}
@@ -111,13 +126,6 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
               </Button>
             )}
           </form>
-          {showError && (
-            <ErrorModal
-              onClose2={() => setShowError(false)}
-              title={error.response.data.error}
-              description={error.response.data.details}
-            />
-          )}
         </ModalBody>
       </ModalContent>
     </Modal>

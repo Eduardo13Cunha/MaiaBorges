@@ -33,7 +33,7 @@ export const handler: Handler = async (event) => {
 
       case 'POST':
         try {
-          const { id_planodetrabalho, id_maquina, id_encomenda, id_colaborador, quantidade_produzida } = JSON.parse(event.body!);
+          const { id_planodetrabalho, id_maquina, id_encomenda, id_colaborador, quantidade_produzida, dia_hora } = JSON.parse(event.body!);
           const { data: newAcomp, error: postError } = await supabase
             .from("acompanhamento")
             .insert([{ 
@@ -41,7 +41,8 @@ export const handler: Handler = async (event) => {
               id_maquina, 
               id_encomenda, 
               id_colaborador, 
-              quantidade_produzida 
+              quantidade_produzida,
+              dia_hora 
             }]);
             
           if (postError) {

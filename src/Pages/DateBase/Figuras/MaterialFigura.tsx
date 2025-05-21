@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Table, Thead, Tr, Th, Tbody, Td, Button } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Table, Thead, Tr, Th, Tbody, Td, Button, Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
@@ -32,6 +32,7 @@ export const Observações: React.FC<{ figura: any ;}> = ({ figura}) => {
                 <Td>{figura.quantidade_materia_prima}</Td>
               </Tr>
             </Tbody>
+            <Box h="5vh"/>
             <Thead className='LineHead'>
               <Tr>
                 <Th color="white" fontSize="60%">Corante</Th>

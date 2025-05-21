@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {Text,VStack,Box,Table,Thead,Tbody,Tr,Th,Td, Button,HStack,Input } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
+import { useToast, Text,VStack,Box,Table,Thead,Tbody,Tr,Th,Td, Button,HStack,Input } from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { Cliente } from '../../../Interfaces/interfaces';
 import { ClienteModal } from './ClienteModal';
+import { isLoggedIn } from '../../../Routes/validation';
+import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataCliente: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +17,7 @@ const DataCliente: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortColumn, setSortColumn] = useState<string>('id');
   const itemsPerPage = 8;
+  const showToast = useToast();  
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -22,10 +25,16 @@ const DataCliente: React.FC = () => {
         const response = await axios.get('/.netlify/functions/clientes');
         setClientes((response.data as { data: Cliente[] }).data);
       } catch (error) {
+        showToast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar os clientes.",
+          status: "error",
+        });
         console.error('Error fetching clientes:', error);
       }
     };
 
+    isLoggedIn();
     fetchClientes();
     setUpdateTable("");
   }, [UpdateTable]);
@@ -35,7 +44,17 @@ const DataCliente: React.FC = () => {
       try {
         await axios.delete(`/.netlify/functions/clientes/${id}`);
         setClientes(clientes.filter(cliente => cliente.id_cliente !== id));
+        showToast({
+          title: "Cliente eliminado com sucesso",
+          description: "O cliente foi eliminado com sucesso.",
+          status: "success",
+        });
       } catch (error) {
+        showToast({
+          title: "Erro ao eliminar o cliente",
+          description: "Não foi possível eliminar o cliente.",
+          status: "error",
+        });
         console.error('Error deleting cliente:', error);
       }
     }
@@ -67,12 +86,9 @@ const DataCliente: React.FC = () => {
   return (
     <VStack alignItems="center">
       <Box className='TableBox'>
-        <Input
-          placeholder="Pesquisar por Nome"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className='TableSearchInput'
-        />
+        <Box className="TableSearchInput" w="28%">
+          <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+        </Box> 
         <Table className='TableTable' sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">
             <Tr>

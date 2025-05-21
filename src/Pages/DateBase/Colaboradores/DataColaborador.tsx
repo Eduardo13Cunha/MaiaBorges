@@ -1,11 +1,11 @@
-import { Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { useToast, Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight , FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
-import '../../../Styles/styles.css';
+import { FaSearch, FaTrash, FaAngleLeft, FaAngleRight , FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
 import { Colaborador, Turno } from "../../../Interfaces/interfaces";
 import { ColaboradorModal } from "./ColaboradorModal";
+import { isLoggedIn } from "../../../Routes/validation";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 
 const DataColaborador: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -19,6 +19,7 @@ const DataColaborador: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<string>('id');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedTurno, setSelectedTurno] = useState<any>(null);
+  const showToast = useToast();  
 
   useEffect(() => {
     const fetchColaboradores = async () => {
@@ -30,6 +31,7 @@ const DataColaborador: React.FC = () => {
       }
     };
 
+    isLoggedIn();
     fetchColaboradores();
     setUpdateTable("");
   }, [UpdateTable]);
@@ -40,6 +42,11 @@ const DataColaborador: React.FC = () => {
         const response = await axios.get('/.netlify/functions/turnos');
         setTurnos((response.data as { data: Turno[] }).data);
       } catch (error) {
+        showToast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar os turnos.",
+          status: "error",
+        });
         console.error('Error fetching data:', error);
       }
     };
@@ -53,7 +60,17 @@ const DataColaborador: React.FC = () => {
       try {
         await axios.delete(`/.netlify/functions/colaboradores/${id}`);
         setColaboradores(Colaboradores.filter(colaborador => colaborador.id_colaborador !== id));
+        showToast({
+          title: "Colaborador eliminado com sucesso",
+          description: "O colaborador foi eliminado com sucesso.",
+          status: "success",
+        });
       } catch (error) {
+        showToast({
+          title: "Erro ao eliminar o colaborador",
+          description: "Não foi possível eliminar o colaborador.",
+          status: "error",
+        });
         console.error('Error deleting colaborador:', error);
       }
     }
@@ -90,9 +107,12 @@ const DataColaborador: React.FC = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox">
-        <Input className="TableSearchInput" placeholder="Pesquisar por Nome" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
-        <Menu> 
-          <MenuButton as={Button} className="TableSearchMenuButton" >
+        <HStack>
+          <Box className="TableSearchInput" w="28%">
+            <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+          </Box>        
+          <Menu> 
+          <MenuButton as={Button} className="TableSearchMenuButton" mt="2%" >
             {selectedTurno ? selectedTurno.descricao : "Selecione um Turno"}
           </MenuButton>
           <MenuList className="TableSearchMenuList">
@@ -104,6 +124,7 @@ const DataColaborador: React.FC = () => {
             ))}
           </MenuList>
         </Menu>
+        </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">
             <Tr>

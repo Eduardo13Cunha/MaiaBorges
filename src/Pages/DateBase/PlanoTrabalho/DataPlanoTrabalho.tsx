@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem, useToast } from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { Colaborador, Encomenda, Maquina, PlanoTrabalho } from '../../../Interfaces/interfaces';
 import { isLoggedIn } from '../../../Routes/validation';
-import { useCustomToast } from '../../../Components/Toaster/toaster';
 import { PlanoTrabalhoModal } from './PlanoTrabalhoModal';
+import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataPlanoTrabalho = () => {
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +20,7 @@ const DataPlanoTrabalho = () => {
   const [sortColumn, setSortColumn] = useState<string>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(0);
-  const showToast = useCustomToast();
+  const showToast = useToast();
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -128,21 +128,20 @@ const DataPlanoTrabalho = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox">
-        <Input
-          placeholder={`Pesquisar por ${searchFilter || '...'}`}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className='TableSearchInput'
-        />
-        <Menu> 
-          <MenuButton mt="2%" w="7.3%" h="7.3%" className="TableSearchMenuButton" borderRadius="md">Filtrar por {searchFilter}</MenuButton>
-          <MenuList className="TableSearchMenuList">
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('maquina')}>Máquina</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('colaborador')}>Colaborador</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('figura')}>Figura</MenuItem>
-              <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('semana')}>Semana</MenuItem>
-          </MenuList>
-        </Menu>
+        <HStack>
+          <Box className="TableSearchInput" w="28%">
+            <IconInput placeholder={"Pesquisar por "+searchFilter} icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+          </Box> 
+          <Menu> 
+            <MenuButton mt="2%" as={Button} className="TableSearchMenuButton" borderRadius="md">Filtrar por {searchFilter}</MenuButton>
+            <MenuList className="TableSearchMenuList">
+                <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('maquina')}>Máquina</MenuItem>
+                <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('colaborador')}>Colaborador</MenuItem>
+                <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('figura')}>Figura</MenuItem>
+                <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('semana')}>Semana</MenuItem>
+            </MenuList>
+          </Menu>
+        </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>

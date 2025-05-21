@@ -4,6 +4,7 @@ import { Corante, MateriaPrima } from '../../../Interfaces/interfaces';
 import { HStack } from '@chakra-ui/react';
 import DataCorante from './Corantes/DataCorante';
 import DataMateriaPrima from './MateriasPrimas/DataMateriaPrima';
+import { isLoggedIn } from '../../../Routes/validation';
 
 const DataColaborador: React.FC = () => {
   const [isFirstTime, setIsFirstTime] = useState(true);
@@ -51,6 +52,7 @@ const DataColaborador: React.FC = () => {
   }, [lowStockCorantes, lowStockMateriasprima]);
 
   useEffect(() => {
+    isLoggedIn();
     fetchCorantes();
     fetchMateriasPrimas();
   }, [fetchCorantes,fetchMateriasPrimas]); 

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import {VStack,Box,Table,Thead,Tbody,Tr,Th,Td,Button,HStack,Input,Text} from '@chakra-ui/react';
-import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt } from 'react-icons/fa';
+import { useToast, VStack,Box,Table,Thead,Tbody,Tr,Th,Td,Button,HStack,Input,Text} from '@chakra-ui/react';
+import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
-import { MaquinaModal } from './MaquinaModa';
+import { MaquinaModal } from './MaquinaModal';
 import { Maquina } from '../../../Interfaces/interfaces';
+import { isLoggedIn } from '../../../Routes/validation';
+import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataMaquina = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +17,7 @@ const DataMaquina = () => {
   const [sortColumn, setSortColumn] = useState<string>('id_maquina');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const itemsPerPage = 8;
+  const showToast = useToast();
 
   useEffect(() => {
     const fetchMaquinas = async () => {
@@ -22,10 +25,16 @@ const DataMaquina = () => {
         const response = await axios.get('/.netlify/functions/maquinas');
         setMaquinas((response.data as { data: Maquina[] }).data);
       } catch (error) {
+        showToast({
+          title: "Erro ao buscar máquinas",
+          description: "Não foi possível buscar as máquinas.",
+          status: "error",
+        });
         console.error('Error fetching maquinas:', error);
       }
     };
-  
+    
+    isLoggedIn();
     fetchMaquinas();
     setUpdateTable("");
   }, [UpdateTable]);
@@ -41,8 +50,18 @@ const DataMaquina = () => {
     if (window.confirm('Tem certeza que deseja excluir esta máquina?')) {
       try {
         await axios.delete(`/.netlify/functions/maquinas/${id}`);
+        showToast({
+          title: "Máquina excluída com sucesso",
+          description: "A máquina foi excluída com sucesso.",
+          status: "success",
+        });
         setMaquinas(maquinas.filter(maquina => maquina.id_maquina !== id));
       } catch (error) {
+        showToast({
+          title: "Erro ao excluir máquina",
+          description: "Não foi possível excluir a máquina.",
+          status: "error",
+        });
         console.error('Error deleting maquina:', error);
       }
     }
@@ -77,12 +96,9 @@ const DataMaquina = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox">
-        <Input
-          placeholder="Pesquisar por Nome"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="TableSearchInput"
-        />
+        <Box className="TableSearchInput">
+          <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+        </Box>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
