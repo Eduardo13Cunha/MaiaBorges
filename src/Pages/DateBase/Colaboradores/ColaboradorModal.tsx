@@ -4,6 +4,9 @@ import axios from "axios";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 import { FaUser, FaCalendarAlt, FaPhone, FaBabyCarriage } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 
 interface ColaboradorModalProps {
   onClose: () => void;
@@ -21,7 +24,6 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
   const showToast = useToast();  
   const [formData, setFormData] = useState({
     nome: '',
-    idade: '',
     data_nascimento: new Date().toISOString().split('T')[0],
     email: '',
     numero: '',
@@ -32,7 +34,6 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
     if (editingColaborador) {
       setFormData({
         nome: editingColaborador.nome,
-        idade: editingColaborador.idade.toString(),
         data_nascimento: editingColaborador.data_nascimento,
         email: editingColaborador.email,
         numero: editingColaborador.numero.toString(),
@@ -103,7 +104,6 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
     e.preventDefault();
     handleSaveColaborador({
       ...formData,
-      idade: Number(formData.idade),
       numero: Number(formData.numero),
     });
   };
@@ -121,11 +121,6 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
             <FormControl isRequired>
               <FormLabel>Nome</FormLabel>
               <IconInput value={formData.nome} icon={<FaUser />} onChange={(x) => setFormData({ ...formData, nome: x ?? "" })} />
-            </FormControl>
-
-            <FormControl isRequired mt={4}>
-              <FormLabel>Idade</FormLabel>
-              <IconInput type="number" value={formData.idade.toString()} icon={<FaBabyCarriage />} onChange={(x) => setFormData({ ...formData, idade: x ?? "" })} />  
             </FormControl>
 
             <FormControl isRequired mt={4}>
@@ -164,23 +159,10 @@ export const ColaboradorModal: React.FC<ColaboradorModalProps> = ({
                 </MenuList>
               </Menu>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingColaborador ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingColaborador ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingColaborador && (
-              <Button
-                onClick={() => handleDelete(editingColaborador.id_colaborador)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingColaborador.id_colaborador)}/>
             )}
           </form>
         </ModalBody>

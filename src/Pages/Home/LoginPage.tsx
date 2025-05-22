@@ -88,7 +88,6 @@ const LoginPage = () => {
           </FormControl>
 
           <Button
-            colorScheme="teal"
             width="full"
             className="SaveButton"
             onClick={handleLogin}

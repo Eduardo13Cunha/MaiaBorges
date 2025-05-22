@@ -26,7 +26,6 @@ export const handler: Handler = async (event) => {
           nome,
           email,
           numero,
-          idade,
           data_nascimento,
           id_turno,
           turnos (descricao)
@@ -69,7 +68,6 @@ export const handler: Handler = async (event) => {
             nome,
             email,
             numero,
-            idade,
             data_nascimento,
             id_turno,
             turnos (descricao)
@@ -94,7 +92,14 @@ export const handler: Handler = async (event) => {
 
       case 'PUT':
         const colabId = event.path.split('/').pop();
-        const updates = JSON.parse(event.body!);
+        const body = JSON.parse(event.body!);
+        const updates = {
+          nome: body.nome,
+          email: body.email,
+          numero: body.numero,
+          data_nascimento: body.data_nascimento,
+          id_turno: body.id_turno
+        };
         const { data: updatedColab, error: putError } = await supabase
           .from("colaboradores")
           .update(updates)
@@ -104,12 +109,11 @@ export const handler: Handler = async (event) => {
             nome,
             email,
             numero,
-            idade,
             data_nascimento,
             id_turno,
             turnos (descricao)
           `);
-        
+
         if (putError) throw putError;
         return {
           statusCode: 200,

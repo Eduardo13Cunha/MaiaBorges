@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaBalanceScale, FaUser } from "react-icons/fa";
 import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
+import { CancelButton } from "../../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../../Components/ReUsable/Buttons/SaveButton";
 
 interface MateriaPrimaModalProps {
   onClose: () => void;
@@ -112,23 +115,10 @@ export const MateriaPrimaModal: React.FC<MateriaPrimaModalProps> = ({
               <FormLabel>Quantidade - KiloGramas</FormLabel>
               <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: Number(x) ?? 0 })}/>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingMateriaPrima ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingMateriaPrima ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingMateriaPrima && (
-              <Button
-                onClick={() => handleDelete(editingMateriaPrima.id_materiasprima)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingMateriaPrima.id_materiasprima)}/>
             )}
           </form>
         </ModalBody>

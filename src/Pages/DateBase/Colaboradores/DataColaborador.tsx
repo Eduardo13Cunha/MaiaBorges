@@ -84,7 +84,7 @@ const DataColaborador: React.FC = () => {
 
   const sortedColaboradores = [...Colaboradores].sort((a, b) => {
     if (sortColumn === 'idade') {
-      return sortDirection === 'asc' ? a.idade - b.idade : b.idade - a.idade;
+      return sortDirection === 'asc' ? calcularIdade(a.data_nascimento) - calcularIdade(b.data_nascimento) : calcularIdade(b.data_nascimento) - calcularIdade(a.data_nascimento);
     } else if (sortColumn === 'id_colaborador') {
       return sortDirection === 'asc' ? a.id_colaborador - b.id_colaborador : b.id_colaborador - a.id_colaborador;
     }
@@ -103,6 +103,20 @@ const DataColaborador: React.FC = () => {
     const start = page * itemsPerPage;
     return items.slice(start, start + itemsPerPage);
   };
+
+  function calcularIdade(dataNascimento: string | Date): number {
+    const nascimento = new Date(dataNascimento);
+    const hoje = new Date();
+
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+
+    return idade;
+  }
 
   return (
     <VStack alignItems="center">
@@ -152,7 +166,7 @@ const DataColaborador: React.FC = () => {
               <Tr className="Line" key={colaborador.id_colaborador}>
                 <Td>{colaborador.id_colaborador}</Td>
                 <Td>{colaborador.nome}</Td>
-                <Td>{colaborador.idade}</Td>
+                <Td>{calcularIdade(colaborador.data_nascimento)}</Td>
                 <Td>{colaborador.email}</Td>
                 <Td>{colaborador.numero}</Td>
                 <Td>{colaborador.turnos.descricao}</Td>

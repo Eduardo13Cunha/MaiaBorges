@@ -1,6 +1,9 @@
 import { useToast, Menu, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, MenuButton, Button, MenuList, MenuItem } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 
 interface PlanoTrabalhoModalProps {
   onClose: () => void;
@@ -198,23 +201,10 @@ export const PlanoTrabalhoModal: React.FC<PlanoTrabalhoModalProps> = ({
                 </MenuList>
               </Menu>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingPlanoTrabalho ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingPlanoTrabalho ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingPlanoTrabalho && (
-              <Button
-                onClick={() => handleDelete(editingPlanoTrabalho.id)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingPlanoTrabalho.id_planotrabalho)}/>
             )}
           </form>
         </ModalBody>

@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { IconInput } from "../../../../Components/ReUsable/Inputs/IconInput";
 import { FaBalanceScale, FaUser } from "react-icons/fa";
+import { CancelButton } from "../../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../../Components/ReUsable/Buttons/SaveButton";
 
 interface CoranteModalProps {
   onClose: () => void;
@@ -113,23 +116,10 @@ export const CoranteModal: React.FC<CoranteModalProps> = ({
               <FormLabel>Quantidade - Gramas</FormLabel>
               <IconInput min={0} icon={<FaBalanceScale/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: Number(x) ?? 0 })}/>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingCorante ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingCorante ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingCorante && (
-              <Button
-                onClick={() => handleDelete(editingCorante.id_corante)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingCorante.id_corante)}/>
             )}
           </form>
         </ModalBody>

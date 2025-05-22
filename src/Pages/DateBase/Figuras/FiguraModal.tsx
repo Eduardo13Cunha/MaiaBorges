@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFingerprint, FaTrash, FaPencilAlt, FaClock, FaBalanceScale } from "react-icons/fa";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 
 interface FiguraModalProps {
   onClose: () => void;
@@ -303,23 +306,10 @@ export const FiguraModal: React.FC<FiguraModalProps> = ({
                 Adicionar Corante
               </Button>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingFigura ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingFigura ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingFigura && (
-              <Button
-                onClick={() => handleDelete(editingFigura.id_figura)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingFigura.id_figura)}/>
             )}
           </form>
         </ModalBody>

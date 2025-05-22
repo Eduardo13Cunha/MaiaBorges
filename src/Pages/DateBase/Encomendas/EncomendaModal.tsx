@@ -5,6 +5,9 @@ import axios from "axios";
 import { FaCubes } from "react-icons/fa";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 import { ErrorModal } from "../../../Components/errorModal/errorModal";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 
 interface EncomendaModalProps {
   onClose: () => void;
@@ -175,10 +178,11 @@ export const EncomendaModal: React.FC<EncomendaModalProps> = ({
               <FormLabel>Quantidade</FormLabel>
               <IconInput min={0} icon={<FaCubes/>} type="number" value={formData.quantidade} onChange={(x) => setFormData({ ...formData, quantidade: x ?? ""})}/>
             </FormControl>
-
-            <Button type="submit" className="SaveButton">{editingEncomenda ? 'Salvar' : 'Criar'}</Button>
-            <Button onClick={onClose} className="CancelButton">Cancelar</Button>
-            {editingEncomenda ? <Button onClick={() => handleDelete(editingEncomenda?.id_encomenda)} ml="55.4%" mt="2%" color="white" bgColor="Red">Eliminar</Button> : <></>}
+            {editingEncomenda ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
+            {editingEncomenda && (
+              <DeleteButton onClick={() => handleDelete(editingEncomenda.id_encomenda)}/>
+            )}
           </form>
         </ModalBody>
       </ModalContent>

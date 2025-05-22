@@ -4,6 +4,9 @@ import axios from "axios";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 import { FaUser, FaPhone } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { CreateButton, SaveButton } from "../../../Components/ReUsable/Buttons/SaveButton";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
 
 interface ClienteModalProps {
   onClose: () => void;
@@ -108,22 +111,10 @@ export const ClienteModal: React.FC<ClienteModalProps> = ({
               <FormLabel>Número</FormLabel>
               <IconInput type="number" value={formData.numero.toString()} icon={<FaPhone />} onChange={(x) => setFormData({ ...formData, numero: x ?? "" })} />  
             </FormControl>
-            <Button type="submit" className="SaveButton">
-              {editingCliente ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingCliente ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingCliente && (
-              <Button
-                onClick={() => handleDelete(editingCliente.id_cliente)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingCliente.id_cliente)}/>
             )}
           </form>
         </ModalBody>

@@ -19,7 +19,7 @@ import DataAcompanhamento from "./Pages/DateBase/Acompanhamento/DataAcompanhamen
 import DataPlanoTrabalho from "./Pages/DateBase/PlanoTrabalho/DataPlanoTrabalho";
 import HistoricoPage from "./Pages/DateBase/Historico/HistoricoData";
 import HomePage from "./Pages/Home/HomePage";
-import PerfilPage from "./Pages/Home/PerfilPage";
+import PerfilPage from "./Pages/Home/Perfil/PerfilPage";
 import theme from "./Themes/themes";
 
 export const App = () => (

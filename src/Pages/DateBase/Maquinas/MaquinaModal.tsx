@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 import { FaUser, FaCalendarAlt } from "react-icons/fa";
+import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
+import { DeleteButton } from "../../../Components/ReUsable/Buttons/DeleteButton";
+import { SaveButton, CreateButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 
 interface MaquinaModalProps {
   onClose: () => void;
@@ -123,23 +126,10 @@ export const MaquinaModal: React.FC<MaquinaModalProps> = ({
               <FormLabel>Próxima Inspeção</FormLabel>
               <IconInput type="date" value={formData.proxima_inspecao} icon={<FaCalendarAlt />} onChange={(x) => setFormData({ ...formData, proxima_inspecao: x ?? "" })} />
             </FormControl>
-
-            <Button type="submit" className="SaveButton">
-              {editingMaquina ? 'Salvar' : 'Criar'}
-            </Button>
-            <Button onClick={onClose} className="CancelButton">
-              Cancelar
-            </Button>
+            {editingMaquina ? <SaveButton type="submit"/> : <CreateButton type="submit"/>}
+            <CancelButton onClick={onClose}/>
             {editingMaquina && (
-              <Button
-                onClick={() => handleDelete(editingMaquina.id_maquina)}
-                ml="55.4%"
-                mt="2%"
-                color="white"
-                bgColor="Red"
-              >
-                Eliminar
-              </Button>
+              <DeleteButton onClick={() => handleDelete(editingMaquina.id_maquina)}/>
             )}
           </form>
         </ModalBody>
