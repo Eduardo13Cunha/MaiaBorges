@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Table, Thead, Tbody, Tr, Th, Td, HStack, Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { PlanoTrabalho, Encomenda, Colaborador, Maquina } from '../../../Interfaces/interfaces';
+import { Encomenda, Colaborador, Maquina } from '../../../Interfaces/interfaces';
 
 interface PlanoTrabalhoTableProps {
   planoTrabalhos: any[];
@@ -25,13 +25,13 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
 
   const filteredData = planoTrabalhos.filter(item => {
     return (
-      (!selectedColaborador || item.colaboradores.id_colaborador === selectedColaborador.id_colaborador) &&
-      (!selectedMaquina || item.maquinas.id_maquina === selectedMaquina.id_maquina) &&
-      (!selectedEncomenda || item.encomendas.id_encomenda === selectedEncomenda.id_encomenda)
+      (!selectedColaborador || item.id_colaborador === selectedColaborador.id_colaborador) &&
+      (!selectedMaquina || item.id_maquina === selectedMaquina.id_maquina) &&
+      (!selectedEncomenda || item.id_encomenda === selectedEncomenda.id_encomenda)
     );
   });
 
-  const getPageItems = (items: PlanoTrabalho[], page: number, itemsPerPage: number) => {
+  const getPageItems = (items: any[], page: number, itemsPerPage: number) => {
     const start = page * itemsPerPage;
     return items.slice(start, start + itemsPerPage);
   };
@@ -105,7 +105,7 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
           <Thead className="LineHead">
             <Tr>
               <Th color="white">ID</Th>
-              <Th color="white">Figura</Th>
+              <Th color="white" w="18%">Figura</Th>
               <Th color="white">Colaborador</Th>
               <Th color="white">Máquina</Th>
               <Th color="white">Quantidade</Th>
@@ -117,9 +117,9 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
             {getPageItems(filteredData, page, itemsPerPage).map((plano) => (
               <Tr className="Line" key={plano.id_planodetrabalho}>
                 <Td>{plano.id_planodetrabalho}</Td>
-                <Td>{plano.encomenda?.figuras?.nome}</Td>
-                <Td>{plano.colaborador?.nome}</Td>
-                <Td>{plano.maquina?.nome}</Td>
+                <Td>#{plano.id_encomenda} - {plano.encomendas.figuras?.nome}</Td>
+                <Td>{plano.colaboradores?.nome}</Td>
+                <Td>{plano.maquinas?.nome}</Td>
                 <Td>{plano.quantidade}</Td>
                 <Td>{plano.tempo_conclusao}</Td>
                 <Td>{plano.semana}</Td>

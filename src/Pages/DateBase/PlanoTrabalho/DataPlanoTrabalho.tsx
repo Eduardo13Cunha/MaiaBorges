@@ -145,7 +145,7 @@ const DataPlanoTrabalho = () => {
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
-              <Th width="5%" color="white" onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
+              <Th width="7%" color="white" onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
                 <HStack spacing={1}>
                   <Text>ID</Text>
                   {sortColumn === 'id' && (

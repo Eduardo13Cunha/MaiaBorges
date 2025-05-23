@@ -56,7 +56,7 @@ const DataAcompanhamento = () => {
         )
       );
       setPlanosTrabalho(planosColaboradores);
-
+      
       const initialValues: {[key: string]: string} = {};
       planosColaboradores.forEach((plano: any) => {
         initialValues[plano.id_planodetrabalho] = '';
