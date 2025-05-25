@@ -33,6 +33,9 @@ const HomePage = () => {
     <VStack alignItems="center">
       {planos.length>0 ? (
       <Box className="TableBox" mt="5%">
+        <Text fontSize="2xl" fontWeight="bold" color="text.primary.100" mb="2%">
+          PLANOS DE TRABALHO ATRIBUIDOS
+        </Text>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>

@@ -27,6 +27,9 @@ const LoginPage = () => {
   , []);
 
   useEffect(() =>{
+    if (!showCaptcha || !captchaValue) {
+      return;
+    }  
     handleLogin();
   }, [captchaValue])
 
