@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useToast, VStack,Box,Table,Thead,Tbody,Tr,Th,Td,Button,HStack,Input,Text} from '@chakra-ui/react';
+import { useToast, VStack,Box,Table,Thead,Tbody,Tr,Th,Td,Button,HStack,Text, Spacer} from '@chakra-ui/react';
 import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { MaquinaModal } from './MaquinaModal';
@@ -96,9 +96,13 @@ const DataMaquina = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox">
-        <Box className="TableSearchInput">
-          <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
-        </Box>
+        <HStack>
+          <Box className="TableSearchInput" w="28%">
+            <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
+          </Box>
+          <Spacer/>
+          <Text color="text.primary.100" fontSize="larger" mt="2%" ml="2%"><strong>{currentItems.length}</strong> Itens de <strong>{maquinas.length}</strong></Text>
+        </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>

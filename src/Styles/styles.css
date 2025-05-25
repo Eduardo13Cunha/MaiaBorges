@@ -21,12 +21,13 @@
 .TableBox {
     overflow-x: auto;
     height: 75vh;
-    width: 100%;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
     overflow-y: auto;
 }
 
 .TableSearchInput {
-    margin-left: 15%;
     margin-right: 2%;
     margin-top: 2%;
     max-height: 80%;
@@ -59,12 +60,10 @@
 }
 
 .TableTable {
+
     color: white;
-    margin-left: 15%;
-    margin-right: 15%;
     margin-top: 2%;
     max-height: 80%;
-    max-width: 70%;
 }
 
 .TableModal {

@@ -1,4 +1,4 @@
-import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
+import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Spacer } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight, FaArrowRight, FaPencilAlt, FaSearch, FaSortDown, FaSortUp } from "react-icons/fa";
@@ -90,13 +90,15 @@ const DataCorante: React.FC = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox" width="130%">
-        <HStack>
+        <HStack ml="15%" w="70%">
           <Box className="TableSearchInput">
             <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
           </Box>
           <Text color="white" fontSize="200%" mt="2%" ml="4%">Corantes</Text>
+          <Spacer/>
+          <Text color="text.primary.100" fontSize="larger" mt="2%" ml="2%"><strong>{filteredCorantes.length}</strong> Itens de <strong>{Corantes.length}</strong></Text>
         </HStack>
-        <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
+        <Table color="white" marginLeft="15%" marginRight="15%" marginTop="2%" maxH="80%" maxW="70%" sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">
             <Tr>
               <Th color="white" width="10%" onClick={() => handleSort('id_corante')} style={{ cursor: 'pointer' }}>

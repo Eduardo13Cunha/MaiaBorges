@@ -45,7 +45,7 @@ const HistoricoPage: React.FC = () => {
   }, []);
 
   return (
-    <VStack w="80%" spacing={4} align="stretch">
+    <VStack w="100%" spacing={4} align="stretch">
       <Box className="TableBox">
         <Tabs isFitted variant="line" color="white">
           <TabList my="2em">

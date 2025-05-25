@@ -1,4 +1,4 @@
-import { useToast, Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { useToast, Text,VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Menu, MenuButton, MenuItem, MenuList, Spacer } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaSearch, FaTrash, FaAngleLeft, FaAngleRight , FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
@@ -138,6 +138,8 @@ const DataColaborador: React.FC = () => {
             ))}
           </MenuList>
         </Menu>
+        <Spacer/>
+        <Text color="text.primary.100" fontSize="larger" mt="2%" ml="2%"><strong>{filteredColaboradores.length}</strong> Itens de <strong>{Colaboradores.length}</strong></Text>
         </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">

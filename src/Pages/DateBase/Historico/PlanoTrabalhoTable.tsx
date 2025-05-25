@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Table, Thead, Tbody, Tr, Th, Td, HStack, Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Text, Box, Table, Thead, Tbody, Tr, Th, Td, HStack, Button, Menu, MenuButton, MenuItem, MenuList, Spacer } from "@chakra-ui/react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { Encomenda, Colaborador, Maquina } from '../../../Interfaces/interfaces';
 
@@ -40,10 +40,10 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
 
   return (
     <>
-      <Box className="TableBox" h="50vh">
+      <Box h="50vh">
         <HStack spacing={4} mb={4}>
           <Menu>
-            <MenuButton as={Button} className="TableSearchMenuButton" ml="15%">
+            <MenuButton as={Button} className="TableSearchMenuButton">
               {selectedColaborador ? selectedColaborador.nome : "Filtrar por Colaborador"}
             </MenuButton>
             <MenuList className="TableSearchMenuList">
@@ -99,6 +99,8 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
               ))}
             </MenuList>
           </Menu>
+          <Spacer/>
+          <Text color="text.primary.100" fontSize="larger" ml="2%"><strong>{filteredData.length}</strong> Itens de <strong>{planoTrabalhos.length}</strong></Text>
         </HStack>
 
         <Table className="TableTable">
@@ -128,7 +130,7 @@ const PlanoTrabalhoTable: React.FC<PlanoTrabalhoTableProps> = ({
           </Tbody>
         </Table>
       </Box>
-      <HStack justifyContent="flex-end" mt={4} mr="15%">
+      <HStack justifyContent="flex-end" mt={4}>
         <Button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}>
           <FaAngleLeft />
         </Button>

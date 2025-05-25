@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AnimatePresence } from 'framer-motion';
-import LoginPage from "./Pages/Home/LoginPage"
+import LoginPage from "./Pages/Home/Login/LoginPage"
 import Header from "./Components/Header/Header"
 import Body from "./Components/Body/Body"
 import Footer from "./Components/Footer/Footer"

@@ -1,5 +1,5 @@
-import { Box, Button, FormControl, FormLabel, HStack, Text, VStack} from "@chakra-ui/react";
-import { FaCalendar, FaEdit, FaEnvelope, FaUser } from "react-icons/fa";
+import { Box, Button, FormControl, FormLabel, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
+import { FaCalendar, FaEdit, FaEnvelope, FaKey, FaUser } from "react-icons/fa";
 import { Dispatch, SetStateAction } from "react";
 import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
 import { SaveButton } from "../../../Components/ReUsable/Buttons/SaveButton";
@@ -27,9 +27,15 @@ export function PerfilForms({
 
   return (
     <>
-      <Text fontSize="2xl" fontWeight="bold" color="text.primary.100" mb="2%">
-        PERFIL
-      </Text>
+      <HStack>
+        <Text fontSize="2xl" fontWeight="bold" color="text.primary.100" mb="2%">
+          PERFIL
+        </Text>
+        <Spacer/>
+        <Button size="sm" mb="2%" left="2%" leftIcon={<FaKey />} className="SaveButton">
+          Mudar Palavra-Passe
+        </Button>
+      </HStack>
       <VStack spacing={6} align="stretch" color="text.primary.100">
         <FormControl isRequired>
           <FormLabel>Nome</FormLabel>

@@ -1,16 +1,21 @@
-import { useToast,Box,VStack,Img,FormControl,FormLabel,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
+import { Text,useToast,Box,VStack,Img,FormControl,FormLabel,Button,Heading,HStack,Spacer} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import MaiaBorgesLogoGrande from "../../Assets/MaiaBorgesLogoGrande.png";
+import MaiaBorgesLogoGrande from "../../../Assets/MaiaBorgesLogoGrande.png";
 import Cookies from "js-cookie";
-import { Colaborador } from "../../Interfaces/interfaces";
+import { Colaborador } from "../../../Interfaces/interfaces";
 import axios from "axios";
 import { MdEmail } from "react-icons/md";
-import PasswordInput from "../../Components/ReUsable/Inputs/PasswordInput";
-import { IconInput } from "../../Components/ReUsable/Inputs/IconInput";
+import PasswordInput from "../../../Components/ReUsable/Inputs/PasswordInput";
+import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { ReCaptchaModal } from "./ReCaptchaModal";
+import { RecuperarModal } from "./RecuperarModal";
 
 const LoginPage = () => {
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [showRecuperarModal, setShowRecuperarModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const showToast = useToast();
 
   useEffect(() => {
@@ -20,6 +25,23 @@ const LoginPage = () => {
     }
   }
   , []);
+
+  useEffect(() =>{
+    handleLogin();
+  }, [captchaValue])
+
+  const handleSubmit = async () =>{
+    if (email === "" || password === "") {
+      showToast({
+        title: 'Preencha todos os campos',
+        description: 'Por favor, preencha todos os campos obrigatórios.',
+        status: 'error',
+      });
+      return;
+    }
+    setShowCaptcha(true);
+
+  }
 
   const handleLogin = async () => {
       try {
@@ -33,13 +55,7 @@ const LoginPage = () => {
           Cookies.set('userId', user.id_colaborador.toString());
           window.location.href = '/HomePage';
       } catch (error: any) {
-          if (email === "" || password === "") {
-            showToast({
-              title: 'Preencha todos os campos',
-              description: 'Por favor, preencha todos os campos obrigatórios.',
-              status: 'error',
-            });
-          } else if (error?.response?.status === 404) {
+          if (error?.response?.status === 404) {
             showToast({
               title: 'Email inválido',
               description: 'Verifique se o email está correto.',
@@ -85,16 +101,29 @@ const LoginPage = () => {
               <strong>Palavra-Passe</strong>
             </FormLabel>
             <PasswordInput password={password} setPassword={setPassword}/>
+            <Text cursor="pointer" _hover={{textDecoration:"underline"}} onClick={() => setShowRecuperarModal(true)}>
+              Esqueci a minha palavra-passe
+            </Text>
           </FormControl>
-
           <Button
             width="full"
             className="SaveButton"
-            onClick={handleLogin}
+            onClick={handleSubmit}
           >
             Entrar
           </Button>
         </VStack>
+        {showCaptcha && (
+          <ReCaptchaModal
+            onClose={() => setShowCaptcha(false)}
+            setCaptchaValue={setCaptchaValue}
+          />
+        )}
+        {showRecuperarModal && (
+          <RecuperarModal
+            onClose={() => setShowRecuperarModal(false)}
+          />
+        )}
       </Box>
   );
 };

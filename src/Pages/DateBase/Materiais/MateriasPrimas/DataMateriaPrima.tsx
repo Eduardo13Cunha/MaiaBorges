@@ -1,4 +1,4 @@
-import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input } from "@chakra-ui/react";
+import { useToast, Text, VStack, Box, Table, Thead, Tr, Th, Tbody, Td, HStack, Button, Input, Spacer } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaAngleLeft, FaArrowRight, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from "react-icons/fa";
@@ -90,11 +90,13 @@ const DataMateriaPrima: React.FC = () => {
   return (
     <VStack alignItems="center">
       <Box className="TableBox" width="130%">
-        <HStack>
+        <HStack ml="15%" w="70%">
           <Box className="TableSearchInput">
             <IconInput placeholder="Pesquisar por Nome" icon={<FaSearch/>} value={searchTerm} onChange={(x) => setSearchTerm(x ?? "")}/>
           </Box>          
           <Text color="white" fontSize="200%" mt="2%" ml="1%">Materias Primas</Text>
+          <Spacer />
+          <Text color="text.primary.100" fontSize="larger"  mt="2%" ><strong>{filteredMateriasPrimas.length}</strong> Itens de <strong>{MateriasPrimas.length}</strong></Text>
         </HStack>
         <Table color="white" marginLeft="15%" marginRight="15%" marginTop="2%" maxH="80%" maxW="70%" sx={{ tableLayout: 'fixed' }}>
           <Thead className="LineHead">

@@ -23,7 +23,7 @@ export const ContactosForm: React.FC = () => {
     try {
       const userName = Cookies.get('userName');
       const userId = Cookies.get('userId');
-      await axios.post('/.netlify/functions/email/send-email', { userName, userId, sugestao: message });
+      await axios.post('/.netlify/functions/email/recuperar-email', { userName, userId, sugestao: message });
       setMessage('');
       toast({
         title: "Mensagem enviada",
@@ -50,6 +50,7 @@ export const ContactosForm: React.FC = () => {
       </Text>
       <VStack spacing={4} align="stretch">
         <Textarea
+          color="text.primary.100"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Escreva sua mensagem aqui..."

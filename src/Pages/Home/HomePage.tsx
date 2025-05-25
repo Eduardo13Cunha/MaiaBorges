@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Show, useToast } from '@chakra-ui/react';
+import { Text, VStack, Box, Table, Thead, Tbody, Tr, Th, Td, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -31,8 +31,8 @@ const HomePage = () => {
 
   return (
     <VStack alignItems="center">
-      {planos.length>0 && (
-      <Box className="TableBox">
+      {planos.length>0 ? (
+      <Box className="TableBox" mt="5%">
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
             <Tr>
@@ -58,6 +58,10 @@ const HomePage = () => {
           </Tbody>
         </Table>
       </Box>
+      ) : (
+        <Box mt="15%" color="text.primary.100">
+          <Text fontWeight="bold" fontSize="4xl">Nenhum Plano de Trabalho Atribuído</Text>
+        </Box>
       )}
     </VStack>
   );

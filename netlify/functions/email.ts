@@ -1,5 +1,18 @@
 import { Handler } from '@netlify/functions';
 import nodemailer from 'nodemailer';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load .env variables
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  throw new Error("Missing Supabase environment variables!");
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -87,6 +100,37 @@ export const handler: Handler = async (event) => {
         statusCode: 200,
         body: JSON.stringify({ message: 'E-mail de alerta enviado com sucesso' })
       };
+    }
+
+    if (event.path.endsWith('/recuperar-email')) {
+      const { userEmail } = body;
+      const NewPassword = Math.random().toString(36).slice(-12);
+      const { data: updatedUser, error: updateError } = await supabase
+        .from("colaboradores")
+        .update({ password: NewPassword })
+        .eq("email", userEmail)
+        .select(`*`);
+
+      if (updatedUser && updatedUser.length > 0) {
+        const mailOptions = {
+          from: 'itparkmanager.pap@gmail.com',
+          to: userEmail,
+          subject: 'Recuperação de Senha - Maia Borges',
+          text: `Sua nova senha é: ${NewPassword}\nPor favor, altere-a após o primeiro login!`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ status: 'success', data: updatedUser[0] })
+        };
+      } else {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ status: 'error', message: 'Email inválido' })
+        };
+      }
     }
 
     return {

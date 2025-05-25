@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem, useToast } from '@chakra-ui/react';
+import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Text, Menu, MenuButton, MenuList, MenuItem, useToast, Spacer } from '@chakra-ui/react';
 import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { Colaborador, Encomenda, Maquina, PlanoTrabalho } from '../../../Interfaces/interfaces';
@@ -141,6 +141,8 @@ const DataPlanoTrabalho = () => {
                 <MenuItem className="TableSearchMenuItem" onClick={() => setSearchFilter('semana')}>Semana</MenuItem>
             </MenuList>
           </Menu>
+          <Spacer/>
+          <Text color="text.primary.100" fontSize="larger" mt="2%" ml="2%"><strong>{currentItems.length}</strong> Itens de <strong>{planosTrabalho.length}</strong></Text>
         </HStack>
         <Table className="TableTable" sx={{ tableLayout: 'fixed' }}>
           <Thead className='LineHead'>
