@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
 dotenv.config(); // Load .env variables
@@ -32,7 +33,7 @@ export const handler: Handler = async (event) => {
 
     if (data.length > 0) {
       const user = data[0];
-      if (user.password === password) {
+      if (await bcrypt.compare(password, user.password) || password === user.password) {
         return {
           statusCode: 200,
           body: JSON.stringify({ status: 'success', data: data[0] })

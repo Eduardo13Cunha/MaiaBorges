@@ -23,7 +23,7 @@ export const ContactosForm: React.FC = () => {
     try {
       const userName = Cookies.get('userName');
       const userId = Cookies.get('userId');
-      await axios.post('/.netlify/functions/email/recuperar-email', { userName, userId, sugestao: message });
+      await axios.post('/.netlify/functions/email/send-email', { userName, userId, sugestao: message });
       setMessage('');
       toast({
         title: "Mensagem enviada",

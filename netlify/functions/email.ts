@@ -2,6 +2,7 @@ import { Handler } from '@netlify/functions';
 import nodemailer from 'nodemailer';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config(); // Load .env variables
 
@@ -22,6 +23,17 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const mailHeader = `
+  <div style="font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #004aad;">Notificação - Maia Borges</h2>
+`;
+
+const mailFooter = `
+    <hr />
+    <p style="font-size: 12px; color: #888;">Este é um email automático, por favor não responda.</p>
+  </div>
+`;
+
 let enviou = false;
 
 export const handler: Handler = async (event) => {
@@ -41,8 +53,13 @@ export const handler: Handler = async (event) => {
         from: 'itparkmanager.pap@gmail.com',
         to: 'eduardocunha.302988@rauldoria.pt',
         subject: 'Contacto Recebido - Maia Borges',
-        text: `O ${userName} com o Id - ${userId} enviou a seguinte mensagem:\n   ${sugestao}`
-      };
+        html: `
+          ${mailHeader}
+          <p><strong>${userName}</strong> (ID: ${userId}) enviou a seguinte mensagem:</p>
+          <blockquote style="border-left: 4px solid #ccc; padding-left: 10px;">${sugestao}</blockquote>
+          ${mailFooter}
+        `
+      };   
 
       await transporter.sendMail(mailOptions);
       
@@ -85,11 +102,12 @@ export const handler: Handler = async (event) => {
         to: 'eduardocunha.302988@rauldoria.pt',
         subject: 'ALERTA: Níveis baixos de inventário',
         html: `
-          <h2>Alerta de Inventário</h2>
+          ${mailHeader}
           <p>Os seguintes itens estão com níveis baixos:</p>
           ${mailCorantes}
           ${mailMateriaprima}
           <p>Por favor, reabasteça esses itens o mais rápido possível.</p>
+          ${mailFooter}
         `
       };
 
@@ -105,9 +123,10 @@ export const handler: Handler = async (event) => {
     if (event.path.endsWith('/recuperar-email')) {
       const { userEmail } = body;
       const NewPassword = Math.random().toString(36).slice(-12);
+      const hashedPassword = await bcrypt.hash(NewPassword, 10);
       const { data: updatedUser, error: updateError } = await supabase
         .from("colaboradores")
-        .update({ password: NewPassword })
+        .update({ password: hashedPassword })
         .eq("email", userEmail)
         .select(`*`);
 
@@ -116,8 +135,18 @@ export const handler: Handler = async (event) => {
           from: 'itparkmanager.pap@gmail.com',
           to: userEmail,
           subject: 'Recuperação de Senha - Maia Borges',
-          text: `Sua nova senha é: ${NewPassword}\nPor favor, altere-a após o primeiro login!`
+          html: `
+            ${mailHeader}
+            <p>Recebemos um pedido de recuperação de senha para sua conta no sistema <strong>Maia Borges</strong>.</p>
+            <p><strong>Sua nova senha:</strong></p>
+            <div style="background-color: #f2f2f2; padding: 10px; font-size: 18px; border-radius: 5px; width: fit-content;">
+              <code>${NewPassword}</code>
+            </div>
+            <p style="margin-top: 20px;">Por favor, altere sua senha após o próximo login por motivos de segurança.</p>
+            ${mailFooter}
+          `
         };
+
 
         await transporter.sendMail(mailOptions);
 

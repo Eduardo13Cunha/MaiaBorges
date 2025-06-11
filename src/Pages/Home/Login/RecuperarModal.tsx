@@ -25,27 +25,38 @@ export const RecuperarModal: React.FC<RecuperarModalProps> = ({
             duration: 5000,
             isClosable: true,
         });
-    } catch (error) {
+    } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          Toast({
+              title: "Email não encontrado",
+              description: "O email fornecido não está registrado. Por favor, verifique e tente novamente.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+          });
+        }
+        else {
+          Toast({
+              title: "Erro no servidor",
+              description: "Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+          });
+        }
         console.error("Erro ao enviar email:", error);
-        Toast({
-            title: "Erro ao enviar email",
-            description: "Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-        });
     }
   }
 
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay/>
-      <ModalContent className="TableModal">
+      <ModalContent className="TableModal" pb="1.5%">
         <ModalBody>
           <VStack spacing={6}>
             <HStack>
                 <Heading as="h1" textAlign="center">
-                    Iniciar Sessão
+                    Recuperar Palavra-Passe
                 </Heading>
                 <Spacer />
                 <Img src={MaiaBorgesLogoGrande} maxH="20%" maxW="20%" />

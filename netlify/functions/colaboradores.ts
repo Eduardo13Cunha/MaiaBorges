@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
 dotenv.config(); // Load .env variables
@@ -91,6 +92,29 @@ export const handler: Handler = async (event) => {
         return { statusCode: 204 };
 
       case 'PUT':
+        if (event.path.endsWith('/changePassword')) {
+          const colabId = event.path.split('/')[event.path.split('/').length - 2];
+          const body = JSON.parse(event.body!);
+          const { nova_senha } = body;
+          const hashedPassword = await bcrypt.hash(nova_senha, 10);
+
+          const { error: passwordError } = await supabase
+            .from("colaboradores")
+            .update({ password: hashedPassword}) // hash this in real apps!
+            .eq("id_colaborador", colabId);
+
+          if (passwordError) {
+            return {
+              statusCode: 500,
+              body: JSON.stringify({ error: passwordError.message })
+            };
+          }
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ message: "Senha atualizada com sucesso." })
+          };
+        }
         const colabId = event.path.split('/').pop();
         const body = JSON.parse(event.body!);
         const updates = {

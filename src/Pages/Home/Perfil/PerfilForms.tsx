@@ -1,9 +1,10 @@
 import { Box, Button, FormControl, FormLabel, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
 import { FaCalendar, FaEdit, FaEnvelope, FaKey, FaUser } from "react-icons/fa";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
 import { SaveButton } from "../../../Components/ReUsable/Buttons/SaveButton";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
+import { MudarPalavraPasseModal } from "./MudarPalavraPasseModal";
 
 interface PerfilProps {
   profile: any;
@@ -24,6 +25,7 @@ export function PerfilForms({
   handleChange,
   handleSaveProfile,
 }: PerfilProps) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -32,7 +34,7 @@ export function PerfilForms({
           PERFIL
         </Text>
         <Spacer/>
-        <Button size="sm" mb="2%" left="2%" leftIcon={<FaKey />} className="SaveButton">
+        <Button onClick={() => setOpen(true)} size="sm" mb="2%" left="2%" leftIcon={<FaKey />} className="SaveButton">
           Mudar Palavra-Passe
         </Button>
       </HStack>
@@ -105,6 +107,13 @@ export function PerfilForms({
               Editar Perfil
             </Button>
           </HStack>
+        )}
+
+        {open && (
+          <MudarPalavraPasseModal
+            onClose={() => setOpen(false)}
+            colaboradorId={profile.id_colaborador}
+          />
         )}
       </VStack>
     </>

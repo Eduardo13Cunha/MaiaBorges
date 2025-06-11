@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Link } from '@chakra-ui/react';
+import { Box, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Link, Spacer } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
 import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
 
@@ -29,7 +29,7 @@ export default function Header() {
         <>
         {isAuthenticated ? (
         <Box bg="bg.header.100" color="text.header.100" fontSize="120%" p={4} h="8vh">
-            <HStack maxW="100%" justifyContent="space-between" alignItems="center">
+            <HStack maxW="100%" alignItems="center">
                 <HStack as={Link} href={"/HomePage"} cursor="pointer" width="15%" textDecor="none">
                     <Img src={MaiaBorgesLogo} maxH="15%" maxW="15%" ></Img>
                     <Box display={{ md: 'flex' }} textDecor="none">
@@ -57,10 +57,11 @@ export default function Header() {
                     <a className="MenuItem" href="/DataCliente">Clientes</a>
                     <a className="MenuItem" href="/Historico">Históricos</a>
                 </HStack>
-                <Box fontSize="120%" width="13%">
+                <Spacer/>
+                <Box fontSize="120%" mr="2%">
                     <HStack cursor="pointer">
                         <Menu>
-                            <MenuButton width="80%" as={Box} cursor="pointer">
+                            <MenuButton as={Box} cursor="pointer">
                                 <strong>{userName}</strong>
                             </MenuButton>
                             <MenuList bg="transparent" borderColor="transparent">
