@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormLabel, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
-import { FaCalendar, FaEdit, FaEnvelope, FaKey, FaUser } from "react-icons/fa";
+import { FaCalendar, FaEdit, FaEnvelope, FaKey, FaPhone, FaUser } from "react-icons/fa";
 import { Dispatch, SetStateAction, useState } from "react";
 import { CancelButton } from "../../../Components/ReUsable/Buttons/CancelButton";
 import { SaveButton } from "../../../Components/ReUsable/Buttons/SaveButton";
@@ -76,7 +76,7 @@ export function PerfilForms({
           <IconInput
             value={editingProfile.numero || ""}
             type="number"
-            icon={<FaEnvelope />}
+            icon={<FaPhone />}
             isDisabled={!isEditing}
             onChange={(x) => handleChange("numero", x ?? "")}
           />
