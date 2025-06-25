@@ -5,14 +5,17 @@ import MaiaBorgesLogo from '../../Assets/MaiaBorgesLogoPequena.png';
 
 export default function Header() {
     const [userName, setName] = useState<string | null>(null);
+    const [roleId, setRoleId] = useState<number | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const storedName = Cookies.get('userName');
         const storedIsLoggedIn = Cookies.get('IsLoggedIn');
+        const storedRoleId = Cookies.get('roleId');
         if (storedName) {
             setName(storedName);
-            setIsAuthenticated(storedIsLoggedIn==='true');
+            setIsAuthenticated(storedIsLoggedIn === 'true');
+            setRoleId(storedRoleId !== undefined ? Number(storedRoleId) : null);
         }
     }, []);
 
@@ -36,26 +39,32 @@ export default function Header() {
                         <strong>Maia Borges Manager</strong>
                     </Box>
                 </HStack>
-                <HStack display={{ base: 'none', md: 'flex' }} spacing="3%" width="70%" alignItems="center">
+                <HStack ml="5%" display={{ base: 'none', md: 'flex' }} spacing="3%" width="65%" alignItems="center">
+                    {(roleId !== 6 && roleId !== 3) && (<>
                     <Menu> 
-                        <MenuButton ml="5%" className="MenuHeader" borderRadius="md">Recursos</MenuButton>
+                        <MenuButton className="MenuHeader" borderRadius="md">Recursos</MenuButton>
                         <MenuList className="MenuHeaderList">
-                            <MenuItem as={Link} className="MenuHeaderItem" href="/DataColaborador">Colaboradores</MenuItem>
+                            {(roleId !== 3 && roleId !== 4 && roleId !== 6) && (<MenuItem as={Link} className="MenuHeaderItem" href="/DataColaborador">Colaboradores</MenuItem>)}
+                            {(roleId !== 3 && roleId !== 5 && roleId !== 6) && (<>
                             <MenuItem as={Link} className="MenuHeaderItem" href="/DataMaterial">Material</MenuItem>
                             <MenuItem as={Link} className="MenuHeaderItem" href="/DataMaquina">Maquinas</MenuItem>
                             <MenuItem as={Link} className="MenuHeaderItem" href="/DataFigura">Figuras</MenuItem>
+                            </>)}
                         </MenuList>
                     </Menu>
+                    </>)}
+                    {(roleId !== 4 && roleId !== 5) && (<>
                     <Menu> 
                         <MenuButton className="MenuHeader" borderRadius="md">Operações</MenuButton>
                         <MenuList className="MenuHeaderList">
-                            <MenuItem as={Link} className="MenuHeaderItem" href="/DataEncomendas">Encomendas</MenuItem>
-                            <MenuItem as={Link} className="MenuHeaderItem" href="/DataPlanoTrabalho">Plano de Trabalho</MenuItem>
-                            <MenuItem as={Link} className="MenuHeaderItem" href="/DataAcompanhamento">Acompanhamento</MenuItem>
+                            {(roleId === 1 || roleId === 2 || roleId === 3) && (<MenuItem as={Link} className="MenuHeaderItem" href="/DataEncomendas">Encomendas</MenuItem>)}
+                            {(roleId === 1 || roleId === 2) && ( <MenuItem as={Link} className="MenuHeaderItem" href="/DataPlanoTrabalho">Plano de Trabalho</MenuItem>)}
+                            {(roleId === 1 || roleId === 2 || roleId === 6) && ( <MenuItem as={Link} className="MenuHeaderItem" href="/DataAcompanhamento">Acompanhamento</MenuItem>)}
                         </MenuList>
                     </Menu>
-                    <a className="MenuItem" href="/DataCliente">Clientes</a>
-                    <a className="MenuItem" href="/Historico">Históricos</a>
+                    </>)}
+                    {(roleId !== 4 && roleId !== 5 && roleId !== 6) && (<a className="MenuItem" href="/DataCliente">Clientes</a>)}
+                    {(roleId === 1 || roleId === 2) && (<a className="MenuItem" href="/Historico">Históricos</a>)}
                 </HStack>
                 <Spacer/>
                 <Box fontSize="120%" mr="2%">

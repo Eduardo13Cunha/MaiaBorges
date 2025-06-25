@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useToast, VStack,Box,Input,Button,Menu,MenuButton,MenuItem,MenuList,Table,Tbody,Td,Th,Thead,Tr} from '@chakra-ui/react';
 import axios from 'axios';
 import { Colaborador, PlanoTrabalho, Turno } from '../../../Interfaces/interfaces';
-import { isLoggedIn } from '../../../Routes/validation';
+import { ChefeEquipaAcess, isLoggedIn } from '../../../Routes/validation';
 import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 import { FaCubes } from 'react-icons/fa';
 
@@ -16,6 +16,7 @@ const DataAcompanhamento = () => {
 
   useEffect(() => {
     isLoggedIn();
+    ChefeEquipaAcess();
     fetchTurnos();
   }, []);
 

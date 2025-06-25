@@ -3,7 +3,7 @@ import { useToast, VStack, Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "
 import axios from "axios";
 import PlanoTrabalhoTable from "./PlanoTrabalhoTable";
 import AcompanhamentosTable from "./AcompanhamentosTable";
-import { isLoggedIn } from "../../../Routes/validation";
+import { DiretorProducaoAcess, isLoggedIn } from "../../../Routes/validation";
 
 const HistoricoPage: React.FC = () => {
   const [planoTrabalhos, setPlanoTrabalhos] = useState<any[]>([]);
@@ -16,6 +16,7 @@ const HistoricoPage: React.FC = () => {
 
   useEffect(() => {
     isLoggedIn();
+    DiretorProducaoAcess();
     const fetchData = async () => {
       try {
         const [planoTrabalhosRes, acompanhamentosRes, colaboradoresRes, maquinasRes, encomendasRes] = await Promise.all([

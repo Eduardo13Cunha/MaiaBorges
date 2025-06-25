@@ -3,7 +3,7 @@ import { VStack, Box, Table, Thead, Tbody, Tr, Th, Td, Button, HStack, Input, Te
 import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { Colaborador, Encomenda, Maquina, PlanoTrabalho } from '../../../Interfaces/interfaces';
-import { isLoggedIn } from '../../../Routes/validation';
+import { DiretorProducaoAcess, isLoggedIn } from '../../../Routes/validation';
 import { PlanoTrabalhoModal } from './PlanoTrabalhoModal';
 import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
@@ -46,6 +46,7 @@ const DataPlanoTrabalho = () => {
       }
     };
 
+    DiretorProducaoAcess();
     isLoggedIn();
     fetchData();
   }, [updateTable]);

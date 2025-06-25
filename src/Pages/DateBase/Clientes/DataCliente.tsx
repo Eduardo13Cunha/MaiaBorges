@@ -4,7 +4,7 @@ import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, 
 import axios from 'axios';
 import { Cliente } from '../../../Interfaces/interfaces';
 import { ClienteModal } from './ClienteModal';
-import { isLoggedIn } from '../../../Routes/validation';
+import { ComercialAcess, isLoggedIn } from '../../../Routes/validation';
 import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataCliente: React.FC = () => {
@@ -34,6 +34,7 @@ const DataCliente: React.FC = () => {
       }
     };
 
+    ComercialAcess();
     isLoggedIn();
     fetchClientes();
     setUpdateTable("");

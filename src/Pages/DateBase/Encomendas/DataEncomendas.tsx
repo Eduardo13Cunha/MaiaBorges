@@ -5,7 +5,7 @@ import { EncomendaModal } from './EncomendaModal';
 import { IoMdAdd } from 'react-icons/io';
 import axios from 'axios';
 import { Cliente, Encomenda, Figura } from '../../../Interfaces/interfaces';
-import { isLoggedIn } from '../../../Routes/validation';
+import { ComercialAcess, isLoggedIn } from '../../../Routes/validation';
 
 const DataEncomenda: React.FC = () => {
   const [UpdateTable, setUpdateTable] = useState<any>("");
@@ -40,6 +40,7 @@ const DataEncomenda: React.FC = () => {
   }, [showToast]);
 
   useEffect(() => {
+    ComercialAcess();
     isLoggedIn();
     fetchData();
     setUpdateTable("");

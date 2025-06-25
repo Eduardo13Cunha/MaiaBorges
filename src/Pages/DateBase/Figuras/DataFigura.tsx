@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Observações } from './MaterialFigura';
 import { Corante, Figura, MateriaPrima } from '../../../Interfaces/interfaces';
 import { FiguraModal } from './FiguraModal';
-import { isLoggedIn } from '../../../Routes/validation';
+import { isLoggedIn, LogisticaAcess } from '../../../Routes/validation';
 import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataFigura = () => { 
@@ -23,6 +23,7 @@ const DataFigura = () => {
   const showToast = useToast();  
 
   useEffect(() => {
+    LogisticaAcess();
     isLoggedIn();
     fetchData();
     setUpdateTable("");

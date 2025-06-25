@@ -4,7 +4,7 @@ import { FaTrash, FaAngleLeft, FaAngleRight, FaSortDown, FaSortUp, FaPencilAlt, 
 import axios from 'axios';
 import { MaquinaModal } from './MaquinaModal';
 import { Maquina } from '../../../Interfaces/interfaces';
-import { isLoggedIn } from '../../../Routes/validation';
+import { isLoggedIn, LogisticaAcess } from '../../../Routes/validation';
 import { IconInput } from '../../../Components/ReUsable/Inputs/IconInput';
 
 const DataMaquina = () => {
@@ -34,6 +34,7 @@ const DataMaquina = () => {
       }
     };
     
+    LogisticaAcess();
     isLoggedIn();
     fetchMaquinas();
     setUpdateTable("");

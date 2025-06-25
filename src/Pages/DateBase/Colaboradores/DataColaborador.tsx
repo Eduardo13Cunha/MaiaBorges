@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaTrash, FaAngleLeft, FaAngleRight , FaPencilAlt, FaSortDown, FaSortUp } from "react-icons/fa";
 import { Colaborador, Turno } from "../../../Interfaces/interfaces";
 import { ColaboradorModal } from "./ColaboradorModal";
-import { isLoggedIn } from "../../../Routes/validation";
+import { isLoggedIn, RecursosHumanosAcess } from "../../../Routes/validation";
 import { IconInput } from "../../../Components/ReUsable/Inputs/IconInput";
 
 const DataColaborador: React.FC = () => {
@@ -31,6 +31,7 @@ const DataColaborador: React.FC = () => {
       }
     };
 
+    RecursosHumanosAcess();
     isLoggedIn();
     fetchColaboradores();
     setUpdateTable("");
