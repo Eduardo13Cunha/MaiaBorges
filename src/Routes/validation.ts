@@ -8,14 +8,14 @@ export const isLoggedIn = async () => {
 }
 
 export const AdminOnly = async () => {
-    const AdminOnly = Cookies.get("RoleId")
+    const AdminOnly = Cookies.get("roleId")
     if (AdminOnly !== "1") {
         window.location.href = "/"
     }
 }
 
 export const DiretorProducaoAcess = async () => {
-    const DiretorProducaoAcess = Cookies.get("RoleId")
+    const DiretorProducaoAcess = Cookies.get("roleId")
     if (DiretorProducaoAcess === "2" || DiretorProducaoAcess === "1") {
        return true
     }
@@ -23,7 +23,7 @@ export const DiretorProducaoAcess = async () => {
 }
 
 export const ComercialAcess = async () => {
-    const ComercialAcess = Cookies.get("RoleId")
+    const ComercialAcess = Cookies.get("roleId")
     if (ComercialAcess === "3" || ComercialAcess === "1" || ComercialAcess === "2") {
        return true
     }
@@ -31,7 +31,7 @@ export const ComercialAcess = async () => {
 }
 
 export const LogisticaAcess = async () => {
-    const LogisticaAcess = Cookies.get("RoleId")
+    const LogisticaAcess = Cookies.get("roleId")
     if (LogisticaAcess === "4" || LogisticaAcess === "1" || LogisticaAcess === "2") {
        return true
     }
@@ -39,7 +39,7 @@ export const LogisticaAcess = async () => {
 }
 
 export const RecursosHumanosAcess = async () => {
-    const RecursosHumanosAcess = Cookies.get("RoleId")
+    const RecursosHumanosAcess = Cookies.get("roleId")
     if (RecursosHumanosAcess === "5" || RecursosHumanosAcess === "1" || RecursosHumanosAcess === "2") {
        return true
     }
@@ -47,7 +47,7 @@ export const RecursosHumanosAcess = async () => {
 }
 
 export const ChefeEquipaAcess = async () => {
-    const ChefeEquipaAcess = Cookies.get("RoleId")
+    const ChefeEquipaAcess = Cookies.get("roleId")
     if (ChefeEquipaAcess === "6" || ChefeEquipaAcess === "1" || ChefeEquipaAcess === "2") {
        return true
     }
